@@ -1,103 +1,115 @@
-import Image from "next/image";
+import Navbar from "./Components/Navbar"
 
-export default function Home() {
+export default function App() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      {/* Header*/}
+      <Navbar />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* */}
+      <section id="home" className="bg-[#FF6A3D]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 md:py-20">
+          {/* Desktop */}
+          <div className="md:grid md:grid-cols-2 md:gap-12 md:items-center">
+            {/* Left: headline buttons */}
+            <div>
+              <h1 className="text-[26px] sm:text-[32px] md:text-[40px] font-semibold leading-snug text-[#2B2B2B]">
+                Give Your Clothes a <br />
+                Second Life.
+                <br />
+                <span className="font-extrabold">Seamlessly.</span>
+              </h1>
+
+              {/* Buttons mobile */}
+              <div className="mt-4 flex gap-3">
+                <a
+                  id="join"
+                  href="#mission"
+                  className="px-4 py-1.5 rounded-md bg-[#B7F18A] text-[#0B3B24] text-sm font-semibold shadow-sm hover:opacity-90"
+                >
+                  Join
+                </a>
+                <a
+                  href="#mission"
+                  className="px-4 py-1.5 rounded-md border border-[#FFD1B9] text-[#2B2B2B] text-sm font-semibold hover:bg-[#FFD1B9]/20"
+                >
+                  Learn More
+                </a>
+              </div>
+
+              {/* image under text  */}
+              <div className="mt-6 md:hidden flex justify-center">
+                <div className="w-[260px] rounded-md border-[6px] border-[#D3E6F2] bg-white shadow p-2">
+                  <div className="aspect-[4/3] w-full">
+                    {/* Replacelater   /> */}
+                    <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
+                      <rect width="400" height="300" fill="#e5e7eb" />
+                      <circle cx="345" cy="60" r="12" fill="#d1d5db" />
+                      <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* web right image ( */}
+            <div className="hidden md:flex justify-end">
+              <div className="w-[420px] max-w-full rounded-md border-[6px] border-[#D3E6F2] bg-white shadow p-2">
+                <div className="aspect-[4/3] w-full">
+                  <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
+                    <rect width="400" height="300" fill="#e5e7eb" />
+                    <circle cx="345" cy="60" r="12" fill="#d1d5db" />
+                    <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* SECTION 2: IMAGE + MISSION */}
+      <section id="mission" className="bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+          {/* image left, mission right). Mobile*/}
+          <div className="md:grid md:grid-cols-2 md:gap-10 md:items-start">
+            {/*mobile */}
+            <div className="order-1 md:order-2">
+              <div className="bg-[#4B6378] text-white rounded-[22px] p-6 sm:p-8 shadow-lg max-w-[560px] mx-auto">
+                <h2 className="text-center text-base sm:text-lg md:text-2xl font-semibold">
+                  The SustainWear Mission
+                </h2>
+                <p className="mt-2 text-gray-100 text-sm sm:text-base leading-relaxed text-center">
+                  At SustainWear, we believe fashion can be both stylish and sustainable.
+                  We reduce clothing waste by promoting donations, recycling, and
+                  conscious choices. Together, we give every garment a second life.
+                </p>
+              </div>
+            </div>
+
+            {/* one mob one web */}
+            <div className="order-2 md:order-1 mt-6 md:mt-0">
+              <div className="max-w-[360px] md:max-w-[440px] mx-auto rounded-md border-[6px] border-gray-300 bg-white shadow p-2">
+                <div className="aspect-[4/3] w-full">
+                  {/* need replacing */}
+                  <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
+                    <rect width="400" height="300" fill="#e5e7eb" />
+                    <circle cx="345" cy="60" r="12" fill="#d1d5db" />
+                    <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/*footer*/}
+      <footer className="bg-emerald-600 text-white text-center py-6">
+        <p className="text-sm font-medium">
+          © {new Date().getFullYear()} SustainWear — Promoting Sustainable Fashion
+        </p>
       </footer>
-    </div>
+    </>
   );
 }
