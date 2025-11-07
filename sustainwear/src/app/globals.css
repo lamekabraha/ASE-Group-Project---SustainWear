@@ -15,6 +15,7 @@
   --color-green: #B3E06C;
   --color-white: #FAFAFA;
   --color-gray: #444444;
+  --color-alert: #fb2c36;
 }
 
 /* @media (prefers-color-scheme: dark) {
