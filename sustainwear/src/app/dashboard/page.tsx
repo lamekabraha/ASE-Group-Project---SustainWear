@@ -1,29 +1,14 @@
-'use client'
-import { getServerSession } from 'next-auth';
-import { useSession } from 'next-auth/react';
-import { signOut } from "next-auth/react";
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { redirect } from 'next/navigation';
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+import DashboardPage from "./ClientDashboard";
 
-export default async function dashboard(){
-    const{data: session} = useSession();
-    const sessionInfo = await getServerSession(authOptions)
+export default async function Dashboard() {
+    const session = await getServerSession(authOptions);
 
-    if (sessionInfo==null) {
-        return redirect('/auth/login')
+    if (session == null) {
+        return redirect("/auth/login");
     }
 
-    return(
-        <div>
-
-            <div>
-                name: <span className="font-bold">{session?.user?.firstName} {session?.user?.lastName}</span>
-            </div>
-            <div>
-                email: <span className="font-bold">{session?.user?.email}</span>
-            </div>
-            
-            <button onClick={() => signOut({callbackUrl: '/auth/login'})}>sign out</button>
-        </div>
-    );
+    return <DashboardPage session={session} />;
 }
