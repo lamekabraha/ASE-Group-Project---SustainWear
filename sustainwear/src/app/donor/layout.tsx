@@ -19,7 +19,7 @@ export default async function DonorLayout({
             <div className="bg-orange w-1/5 h-screen">
                 <h1>Sidebar</h1>
             </div>
-            <div>
+            <div className="w-4/5">
                 {children}
             </div>
         </main>

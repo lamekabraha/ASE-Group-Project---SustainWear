@@ -1,4 +1,4 @@
-import DonatedWeight from "../Components/data-cards/donatedWeight";
+import DonatedWeight from "../Components/data-cards/ItemsDonated";
 
 export default function page(){
     return(
