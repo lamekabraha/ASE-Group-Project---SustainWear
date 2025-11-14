@@ -1,21 +1,51 @@
-'use client'
-import {Line, LineChart} from 'recharts';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+import prisma from "../../../../lib/prisma";
+import PieChartClient from "@/app/Components/data-cards/PieChartClient";
 
-export default function step1(){
-    const data = [
-        { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-        { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-        { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-        { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-        { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-        { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-        { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
-      ];
+export default async function CategoryPieChart() {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user){
+        redirect('/auth/login');
+    }
+
+    const userId = session?.user?.userId;
+
+    const countCateg = await prisma.donationItem.groupBy({
+        by: ['categoryId'],
+        where: {
+            donation: {
+                donorId: userId,
+
+            },
+        },
+        _count: {
+            categoryId: true,
+        },
+    });
+
+    const categories = await prisma.category.findMany({
+        where:{
+            categoryId:{
+                in: countCateg.map(item => item.categoryId)
+            }
+        }
+    });
+
+    const mergedData = countCateg.map(group => {
+        const categoryData = categories.find(categories => categories.categoryId === group.categoryId);
+        const categoryName = categoryData?.category || 'Unknown';
+        const capitalCategory = categoryName.replace(/\b\w/g, (char) => char.toUpperCase());
+
+        return {
+            name: capitalCategory,
+            value: group._count.categoryId,
+        }
+    })
+
     return (
-        <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-5">
-            <LineChart style={{ width: '100%', aspectRatio: 1.618, maxWidth: 600 }} responsive data={data}>
-                <Line dataKey="uv" />
-            </LineChart>
-        </div>
+        <PieChartClient data={mergedData}/>
     )
 }

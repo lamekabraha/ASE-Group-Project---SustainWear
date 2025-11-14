@@ -1,3 +1,7 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import prisma from "../../../../lib/prisma";
+import {redirect} from 'next/navigation'
 import ItemsDonated from "@/app/Components/data-cards/ItemsDonated"
 import Co2Saved from "@/app/Components/data-cards/Co2Saved";
 import LandfillReduction from "@/app/Components/data-cards/LandfillReduction";
@@ -6,7 +10,13 @@ import CategoryPieChart from "@/app/Components/data-cards/CategoryPieChart";
 
 
 
-export default function myImpact(){
+export default async function myImpact(){
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user){
+        redirect('/auth/login');
+    }
+
     return(
         <div className="p-10">
             <h1 className="text-4xl font-bold">My Impact</h1>

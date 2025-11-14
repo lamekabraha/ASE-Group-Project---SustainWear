@@ -8,11 +8,11 @@ export default async function DonorLayout({
 }: {
     children: React.ReactNode;
 }) {
-    // const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
 
-    // if (!session) {
-    //     redirect("/auth/login");
-    // }
+    if (!session || session.user.role !== "Donor") {
+        redirect("/auth/login");
+    }
 
     return(
         <main className="flex ">
