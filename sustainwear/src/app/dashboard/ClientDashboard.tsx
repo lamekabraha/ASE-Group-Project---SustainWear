@@ -17,6 +17,8 @@ export default function DashboardPage({ session }: DashboardPageProps) {
             </div>
             <div>
                 <button onClick={() => signOut({callbackUrl: '/'})}>Sign Out</button>
+
+                <h1> hello world </h1>
             </div>
         </div>
     )
