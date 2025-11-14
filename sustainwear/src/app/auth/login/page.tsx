@@ -64,7 +64,7 @@ export default function LoginPage(){
                 <div className="##Left##"></div>
                 <div className="##Right##">
                     <Image
-                        src="/loginImg.png"
+                        src="/login-img.png"
                         alt="Young man at a garage sale"
                         width={2000}
                         height={1000}
