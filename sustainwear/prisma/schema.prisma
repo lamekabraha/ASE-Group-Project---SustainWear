@@ -105,6 +105,8 @@ model DonationItem {
 model Category {
   categoryId Int    @id @default(autoincrement())
   category   String @unique
+  avgWeight  Decimal @db.Decimal(10, 2)
+  avgCo2Saved  Decimal @db.Decimal(10, 2)
   items     DonationItem[]
   inventory Inventory[]
 

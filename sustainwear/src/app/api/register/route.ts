@@ -14,8 +14,6 @@ export async function POST(req: { json: () => PromiseLike<{ firstName: any; last
                 hashedPassword: hashedPassword
             }
         })
-        
-
         return NextResponse.json({message: 'User registered successfully.'}, {status: 201})
     }catch (error){
         return NextResponse.json({message: 'An error occured while registering the user'}, {status: 500})

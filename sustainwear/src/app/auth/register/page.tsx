@@ -74,7 +74,7 @@ export default function RegisterPage(){
                 <div></div>
                 <div>
                     <Image
-                        src="/loginImg.png"
+                        src="/login-img.png"
                         alt="Young man at a garage sale"
                         width={2000}
                         height={1000}

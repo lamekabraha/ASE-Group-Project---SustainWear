@@ -4,7 +4,7 @@ import Form from "next/form";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, getSession, signOut } from "next-auth/react";
 
 export default function LoginPage(){
     const [email, setEmail] = useState('');
@@ -33,8 +33,25 @@ export default function LoginPage(){
                 setError('Invalid Credentials');
                 return;
             }
+
+            const session = await getSession();
+            const userRole = session?.user?.role;
             
-            router.replace('/dashboard');
+            switch(userRole) {
+                case('Admin'):
+                    router.replace('/admin');
+                    return;
+                case('Donor'):
+                    router.replace('/donor');
+                    return;
+                case('Staff'):
+                    router.replace('/staff');
+                    return;
+                default:
+                    setError('Invalid Role');
+                    await signOut();
+                    return;
+            }
 
         }catch (error){
             console.log('Error when logging in: ', {error});
@@ -47,7 +64,7 @@ export default function LoginPage(){
                 <div className="##Left##"></div>
                 <div className="##Right##">
                     <Image
-                        src="/loginImg.png"
+                        src="/login-img.png"
                         alt="Young man at a garage sale"
                         width={2000}
                         height={1000}
