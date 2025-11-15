@@ -20,18 +20,9 @@ const COLORS = [
 ];
 
 export default function PieChartClient({data}: {data:ChartData[]}) {
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="col-span-12 lg:col-span-5 bg-white p-6 rounded-lg shadow-md flex items-center justify-center h-full">
-        <p className="text-gray-500">No donation data to display.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="border-2 border-green rounded-2xl p-5 gap-4 col-span-6">
-      <h3 className="text-2xl font-semibold mb-4 text-center">Donations by Category</h3>
+      <h1 className="text-2xl font-semibold mb-4 text-center">Donations by Category</h1>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
         <Pie

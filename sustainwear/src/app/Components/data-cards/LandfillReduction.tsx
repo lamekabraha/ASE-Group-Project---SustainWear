@@ -10,7 +10,7 @@ export default async function LandfillReduction() {
         redirect("/auth/login");
     }
     
-    const userId = session?.user?.userId;
+    const userId = session?.user?.id;
 
     const weightQuery = await prisma.donationItem.findMany({
         where: {donation: {donorId: userId}},

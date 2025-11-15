@@ -12,7 +12,7 @@ export default async function Co2Saved() {
         redirect('/auth/login')
     }
 
-    const userId = session?.user?.userId
+    const userId = session?.user?.id
 
     const co2Query = await prisma.donationItem.findMany({
         where: {donation: {donorId: userId}},
