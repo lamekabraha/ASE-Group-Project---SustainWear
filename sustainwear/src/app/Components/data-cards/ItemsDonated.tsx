@@ -7,7 +7,7 @@ import prisma from "../../../../lib/prisma";
 
 export default async function ItemsDonated() {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.userId;
+    const userId = session?.user?.id;
 
     if (!session || !session.user){
         redirect('/auth/login');

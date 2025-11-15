@@ -6,7 +6,8 @@ import ItemsDonated from "@/app/Components/data-cards/ItemsDonated"
 import Co2Saved from "@/app/Components/data-cards/Co2Saved";
 import LandfillReduction from "@/app/Components/data-cards/LandfillReduction";
 import SupportedCharities from "@/app/Components/data-cards/SupportedCharities";
-import CategoryPieChart from "@/app/Components/data-cards/CategoryPieChart";
+import CategoryPieChart from "@/app/Components/data-cards/category-pie-chart/CategoryPieChart";
+import HistoryLineGraph from "@/app/Components/data-cards/history-line-graph/HistoryLineGraph";
 
 
 
@@ -26,6 +27,7 @@ export default async function myImpact(){
                 <SupportedCharities/>
                 <Co2Saved/>
                 <CategoryPieChart/>
+                <HistoryLineGraph/>
             </div>
         </div>
     )

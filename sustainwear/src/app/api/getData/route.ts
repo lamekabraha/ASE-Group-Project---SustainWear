@@ -11,7 +11,7 @@ export async function GET(){
             return NextResponse.json({message: 'Unauthorized'}, {status: 401})
         }
 
-        const userId = session?.user?.userId;
+        const userId = session?.user?.id;
 
         const query = await prisma.donationItem.findMany({
             where: {donation: {donorId: userId}},

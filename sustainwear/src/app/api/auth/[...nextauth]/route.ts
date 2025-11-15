@@ -1,31 +1,12 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
+import { User as PrismaUser } from '@prisma/client';
 import prisma from '../../../../../lib/prisma';
 
 const authOptions = {
-    callbacks: {
-        async jwt({ token, user }: { token: any, user: any }){
-            if (user) {
-                token.id = user.id;
-                token.firstName = user.firstName;
-                token.lastName = user.lastName;
-                token.email = user.email;
-                token.role = user.role;
-            }
-            return token;
-        },
-        async session({session, token}: {session: any, token: any}) {
-            if (token) {
-                session.user.id = token.id;
-                session.user.firstName = token.firstName;
-                session.user.lastName = token.lastName;
-                session.user.email = token.email;
-                session.user.role = token.role;
-            }
-            return session;
-        }
-    },
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -35,31 +16,50 @@ const authOptions = {
             },
 
             async authorize(credentials) {
-                const { email, password } = credentials;
-
-                try {
-                    const user = await prisma.user.findFirst({where: {email}});
-
-                    if (!user){
-                        return null;
-                    } 
-
-                    const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-
-                    if (!passwordMatch){
-
-                        return null;
-                    }
-                    return user;
-                }catch (error) {
-                    console.log("Error: ", {error});
+                if (!credentials?.email || !credentials?.password) {
                     return null;
                 }
+                const user = await prisma.user.findUnique({
+                    where: {
+                        email: credentials.email
+                    }
+                });
+                if (!user) {
+                    return null;
+                }
+                const passwordMatch = await bcrypt.compare(credentials.password, (user as PrismaUser).hashedPassword);
+                if (!passwordMatch) {
+                    return null;
+                }
+                return user;
+
             },
         }),
     ],
     session: {
         strategy: 'jwt' as const,
+    },
+    callbacks:{
+        async jwt({token, user}: {token: JWT, user: any}) {
+            if (user) {
+                token.id = user.userId;
+                token.role = user.role;
+                token.firstName = user.firstName;
+                token.lastName = user.lastName;
+                token.email = user.email;
+            }
+            return token;
+        },
+        async session({session, token}: {session: Session, token: JWT}) {
+            if (token && session.user){
+                session.user.id = token.id;
+                session.user.role = token.role;
+                session.user.firstName = token.firstName;
+                session.user.lastName = token.lastName;
+                session.user.email = token.email;
+            }
+            return session
+        }
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
