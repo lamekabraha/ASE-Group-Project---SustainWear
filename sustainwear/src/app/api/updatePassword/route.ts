@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json("Unauthorized", {status: 401});
         }
 
-        const password
+        const userId = session.user.id;
+        const password = await req.json();
+        
     }
 }
