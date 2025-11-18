@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route"; 
 import { redirect } from "next/navigation";
 import React from "react";
+import DonorSidebar from "../Components/DonorSidebar"; 
 
 export default async function DonorLayout({
     children,
@@ -15,11 +16,9 @@ export default async function DonorLayout({
     }
 
     return(
-        <main className="flex ">
-            <div className="bg-orange w-1/5 h-screen">
-                <h1>Sidebar</h1>
-            </div>
-            <div className="w-4/5">
+        <main className="flex h-screen overflow-hidden">
+            <DonorSidebar />
+            <div className="flex-1 overflow-y-auto">
                 {children}
             </div>
         </main>
