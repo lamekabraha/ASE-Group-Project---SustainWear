@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import prisma from "../../../../lib/prisma";
-import PieChartClient from "@/app/Components/data-cards/PieChartClient";
+import prisma from "../../../../../lib/prisma";
+import PieChartClient from "@/app/Components/data-cards/category-pie-chart/PieChartClient";
 
 export default async function CategoryPieChart() {
     const session = await getServerSession(authOptions);
@@ -11,7 +11,7 @@ export default async function CategoryPieChart() {
         redirect('/auth/login');
     }
 
-    const userId = session?.user?.userId;
+    const userId = session?.user?.id;
 
     const countCateg = await prisma.donationItem.groupBy({
         by: ['categoryId'],
