@@ -11,7 +11,7 @@ import HistoryLineGraph from "@/app/Components/data-cards/history-line-graph/His
 
 
 
-export default async function myImpact(){
+export default async function MyImpact(){
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user){

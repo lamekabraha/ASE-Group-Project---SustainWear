@@ -22,7 +22,6 @@ export default async function Page() {
           <p>You’re the reason we can tackle textile waste.</p>
         </div>
 
-
         {/* Last Donation */}
         <div className="flex items-center justify-between">
           <h3 className="text-[28px] font-semibold">Last Donation</h3>
@@ -63,7 +62,6 @@ export default async function Page() {
           </table>
         </div>
 
-
         {/* Impact */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ImpactBox title="Total Weight Donated:" value={`${data.totalWeight} Kg`} />
@@ -74,7 +72,6 @@ export default async function Page() {
     </section>
   );
 }
-
 
 /* ---------- Reusable Components ---------- */
 
