@@ -142,8 +142,15 @@ enum Role {
 }
 
 enum DonationStatus {
-  PENDING
-  SCHEDULED
-  COLLECTED
-  REJECTED
+  PENDING     @map("PENDING")
+  pending     @map("pending")
+
+  SCHEDULED   @map("SCHEDULED")
+  scheduled   @map("scheduled")
+
+  COLLECTED   @map("COLLECTED")
+  collected   @map("collected")
+
+  REJECTED    @map("REJECTED")
+  rejected    @map("rejected")
 }
