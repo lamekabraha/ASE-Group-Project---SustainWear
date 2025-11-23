@@ -69,20 +69,8 @@ export default function RegisterPage(){
     };
 
     return (
-        <div className="relative">
-            <div className="flex justify-between">
-                <div></div>
-                <div>
-                    <Image
-                        src="/login-img.png"
-                        alt="Young man at a garage sale"
-                        width={2000}
-                        height={1000}
-                        className="object-cover w-auto h-screen"
-                    /> 
-                </div>
-            </div>
-            <div className="absolute z-1 top-0 left-0 rounded-r-4xl bg-orange w-2/3 h-screen flex justify-center items-center">
+        <div className="bg-orange h-screen flex relative">
+            <div className="top-0 left-0 rounded-r-4xl w-2/3 h-screen flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Register</h1>
                     <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
@@ -102,6 +90,16 @@ export default function RegisterPage(){
                     </Form>
                     <p className="text-m text-white">Already a member? <Link href='/auth/login' className="text-green">Sign In</Link></p>
                 </div>
+            </div>
+            <div className="absolute right-0 top-0">
+                    <div className="bg-orange h-screen w-1/24 rounded-r-4xl absolute"></div>
+                    <Image
+                        src="/login-img.png"
+                        alt="Young man at a garage sale"
+                        width={2000}
+                        height={1000}
+                        className="object-cover w-auto h-screen"
+                    /> 
             </div>
         </div>
     )
