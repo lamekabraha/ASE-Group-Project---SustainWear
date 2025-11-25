@@ -17,7 +17,7 @@ export default async function page(){
 
     return(
         <div>
-            <h1>welcome {session?.user?.id}</h1>
+            <h1>welcome {session?.user?.firstName}</h1>
             <h1 className="bg-blue-500">Hello World</h1>
             <ItemsDonated/>
             <button><Link href="/donor/my-impact">My Impact</Link></button>

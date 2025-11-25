@@ -6,8 +6,10 @@ import DonorSidebar from "../Components/DonorSidebar";
 
 export default async function DonorLayout({
     children,
+    modal
 }: {
     children: React.ReactNode;
+    modal: React.ReactNode;
 }) {
     const session = await getServerSession(authOptions);
 
@@ -21,6 +23,7 @@ export default async function DonorLayout({
             <div className="flex-1 overflow-y-auto">
                 {children}
             </div>
+            {modal}
         </main>
     )
 }

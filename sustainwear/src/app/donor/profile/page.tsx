@@ -1,6 +1,8 @@
 "use client"; 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'; 
+import Link from 'next/link'; 
+
 
 export default function MyProfilePage() {
   
@@ -9,7 +11,6 @@ export default function MyProfilePage() {
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
   const [email, setemail] = useState("");
-  const [phone, setphone] = useState(""); 
 
   useEffect(() => {
     if (session && session.user) {
@@ -49,7 +50,7 @@ export default function MyProfilePage() {
             <input
               type="text"
               id="firstName"
-              value={firstName}
+              value={firstName.charAt(0).toUpperCase() + firstName.slice(1)}
               onChange={(e) => setFirstname(e.target.value)}
               className="flex-1 bg-white text-gray-900 p-2 rounded-md"
               style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
@@ -63,7 +64,7 @@ export default function MyProfilePage() {
             <input
               type="text"
               id="lastName"
-              value={lastName}
+              value={lastName.charAt(0).toUpperCase() + lastName.slice(1)}
               onChange={(e) => setLastname(e.target.value)}
               className="flex-1 bg-white text-black-900 p-2 rounded-md"
               style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
@@ -84,28 +85,19 @@ export default function MyProfilePage() {
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="phone" className="w-1/3 text-sm font-medium text-black">
-              Phone Number:
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              value={phone}
-              onChange={(e) => setphone(e.target.value)}
-              className="flex-1 bg-white text-gray-900 p-2 rounded-md"
-              style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
-              placeholder="1234 567 890"
-            />
-          </div>
-
           <div className="pt-4 flex justify-between">
             <button
               type="button"
               className="px-4 py-2 text-white font-semibold rounded-md shadow-md hover:opacity-90"
               style={{backgroundColor: 'orange'}} 
             >
-              Change Password
+              <Link
+                href='/donor/@modal/default/newPassword'
+                as='/donor/NewPassword'
+                                className='text-white'
+              >
+                Change Password
+              </Link>
             </button>
             
             <button
