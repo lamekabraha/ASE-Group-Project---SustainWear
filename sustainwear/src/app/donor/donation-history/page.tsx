@@ -26,6 +26,39 @@ export default async function DonationHistory() {
       </h1>
 
       {}
+import prisma from "../../../../lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"; 
+import { redirect } from "next/navigation";
+
+export default async function DonationHistory() {
+
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    redirect("/api/auth/signin");
+  }
+
+  
+  const realDonations = await prisma.donation.findMany({
+    where: {
+      donor: {
+        email: session.user.email as string,
+      },
+    },
+    include: {
+      charity: true, 
+      items: true,   
+    },
+    orderBy: {
+      donationDate: "desc", 
+    },
+  });
+
+  return (
+    <div className="p-10 space-y-6">
+      <h1 className="text-4xl font-bold text-gray-900">Donation History</h1>
+
       <div className="rounded-3xl border-2 border-lime-300 bg-white shadow-sm">
         <div className="m-4 rounded-3xl border border-sky-300 overflow-hidden">
           <table className="min-w-full table-fixed">
