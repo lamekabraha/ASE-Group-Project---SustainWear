@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'; 
-import { useRouter } from 'next/navigation';
-
-import ChangePasswordModal from '@/app/Components/Changepasswordmodal';
-import DeleteAccountModal from '@/app/Components/Deleteaccountmodal';
-import ProfileFormHandler from '@/app/Components/Profileformhandler';
+import Link from 'next/link'; 
 
 
 export default function MyProfilePage() {
@@ -93,15 +89,91 @@ export default function MyProfilePage() {
                 </div>
             </div>
 
-            {/* Modals Render (Rendered outside the main profile box) */}
-            <ChangePasswordModal 
-                isOpen={isPasswordModalOpen} 
-                onClose={() => setIsPasswordModalOpen(false)} 
+      <div 
+        className="max-w-md mx-auto p-8 rounded-lg border-2" 
+        style={{
+          backgroundColor: 'white',
+          borderColor: '#A5D6A7'
+        }}
+      >
+        
+        <form className="space-y-7">
+          
+          <div className="flex items-center">
+            <label htmlFor="firstName" className="w-1/3 text-sm font-medium text-black">
+              First Name:
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              value={firstName.charAt(0).toUpperCase() + firstName.slice(1)}
+              onChange={(e) => setFirstname(e.target.value)}
+              className="flex-1 bg-white text-gray-900 p-2 rounded-md"
+              style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
             />
-            <DeleteAccountModal 
-                isOpen={isDeleteModalOpen} 
-                onClose={() => setIsDeleteModalOpen(false)} 
+          </div>
+
+          <div className="flex items-center">
+            <label htmlFor="lastName" className="w-1/3 text-sm font-medium text-black">
+              Last Name:
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              value={lastName.charAt(0).toUpperCase() + lastName.slice(1)}
+              onChange={(e) => setLastname(e.target.value)}
+              className="flex-1 bg-white text-black-900 p-2 rounded-md"
+              style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
             />
-        </>
-    );
+          </div>
+
+          <div className="flex items-center">
+            <label htmlFor="email" className="w-1/3 text-sm font-medium text-black">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email} 
+              onChange={(e) => setemail(e.target.value)}
+              className="flex-1 bg-white text-gray-900 p-2 rounded-md"
+              style={{borderColor: '#A5D6A7', borderWidth: '1px'}}
+            />
+          </div>
+
+          <div className="pt-4 flex justify-between">
+            <button
+              type="button"
+              className="px-4 py-2 text-white font-semibold rounded-md shadow-md hover:opacity-90"
+              style={{backgroundColor: 'orange'}} 
+            >
+              <Link
+                href='/donor/@modal/default/newPassword'
+                as='/donor/NewPassword'
+                                className='text-white'
+              >
+                Change Password
+              </Link>
+            </button>
+            
+            <button
+              type="button"
+              className="px-4 py-2 text-white font-semibold rounded-md shadow-md hover:opacity-90"
+              style={{backgroundColor: 'red'}} 
+            >
+              Delete Account
+            </button>
+            
+            <button
+              type="submit"
+              className="px-4 py-2 text-white font-semibold rounded-md shadow-md hover:opacity-90"
+              style={{backgroundColor: '#65C158'}}
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }

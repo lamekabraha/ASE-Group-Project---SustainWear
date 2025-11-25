@@ -16,10 +16,12 @@ export default async function Page() {
 
       <div className="mt-6 space-y-10">
 
-        {/* Welcome */}
-        <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6">
-          <h2 className="text-[24px] font-extrabold">Welcome Back!</h2>
-          <p>You’re the reason we can tackle textile waste.</p>
+    return(
+        <div>
+            <h1>welcome {session?.user?.firstName}</h1>
+            <h1 className="bg-blue-500">Hello World</h1>
+            <ItemsDonated/>
+            <button><Link href="/donor/my-impact">My Impact</Link></button>
         </div>
 
         {/* Last Donation */}

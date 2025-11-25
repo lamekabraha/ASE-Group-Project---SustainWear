@@ -13,22 +13,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  Donor
+  Staff
+  Admin
+}
+
+enum ItemStatus {
+  Pending
+  Accepted
+  Rejected
+  Distributed
+}
+
+enum DistStatus {
+  Preparing
+  InTransit
+  Delivered
+  Cancelled
+}
+
 model User {
-  userId         Int        @id @default(autoincrement())
-  email          String     @unique
+  userId         Int       @id @default(autoincrement())
+  email          String    @unique
   firstName      String
   lastName       String
   hashedPassword String
-  role           Role       @default(Donor)
-  charityId Int?
-  charity   Charity?        @relation(fields: [charityId], references: [charityId])
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime?  @updatedAt
+  role           String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
 
-  donationsAsDonor Donation[] @relation("DonorDonations")
-  donationsAsStaff Donation[] @relation("StaffDonations")
+  donationsAsDonor Donation[]     @relation("DonorDonations")
+  donationsAsStaff Donation[]     @relation("StaffDonations")
+  Charity          Charity?       @relation(fields: [charityCharityId], references: [charityId])
+  charityCharityId Int?
+  Distribution     Distribution[]
 
-  @@index([charityId])
   @@map("users")
 }
 
@@ -41,10 +61,11 @@ model Charity {
   updatedAt                 DateTime? @updatedAt
   charityRegistrationNumber String?
 
-  staff     User[]
-  addresses CharityAddress[]
-  donations Donation[]
-  inventory Inventory[]
+  staff         User[]
+  addresses     CharityAddress[]
+  donations     Donation[]
+  inventory     Inventory[]
+  distributions Distribution[]
 
   @@map("charities")
 }
@@ -66,91 +87,115 @@ model CharityAddress {
 model Donation {
   donationId   Int      @id @default(autoincrement())
   donationDate DateTime @default(now())
-  donorId Int
-  donor   User @relation("DonorDonations", fields: [donorId], references: [userId])
-  charityId Int
-  charity   Charity @relation(fields: [charityId], references: [charityId])
+  donorId      Int
+  donor        User     @relation("DonorDonations", fields: [donorId], references: [userId])
   notes        String?
-  status       DonationStatus @default(PENDING)
-  staffId Int?
-  staff   User? @relation("StaffDonations", fields: [staffId], references: [userId])
+  status       String
+  staffId      Int?
+  staff        User?    @relation("StaffDonations", fields: [staffId], references: [userId])
 
-  items DonationItem[]
+  items            DonationItem[]
+  Charity          Charity?       @relation(fields: [charityCharityId], references: [charityId])
+  charityCharityId Int?
 
   @@index([donorId])
-  @@index([charityId])
   @@index([staffId])
-
   @@map("donations")
 }
 
 model DonationItem {
-  itemId      Int     @id @default(autoincrement())
-  photoUrl    String?
-  description String?
-  donationId Int
-  donation   Donation @relation(fields: [donationId], references: [donationId], onDelete: Cascade)
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [categoryId])
-  conditionId Int
-  condition   Condition @relation(fields: [conditionId], references: [conditionId])
+  itemId         Int           @id @default(autoincrement())
+  photoUrl       String?
+  description    String?
+  status         ItemStatus    @default(Pending)
+  donationId     Int
+  donation       Donation      @relation(fields: [donationId], references: [donationId], onDelete: Cascade)
+  categoryId     Int
+  category       Category      @relation(fields: [categoryId], references: [categoryId])
+  conditionId    Int
+  condition      Condition     @relation(fields: [conditionId], references: [conditionId])
+  sizeId         Int
+  size           Size          @relation(fields: [sizeId], references: [sizeId])
+  genderId       Int
+  gender         Gender        @relation(fields: [genderId], references: [genderId])
+  distributionId Int?
+  distribution   Distribution? @relation(fields: [distributionId], references: [distributionId])
 
   @@index([donationId])
   @@index([categoryId])
   @@index([conditionId])
-
+  @@index([sizeId])
+  @@index([genderId])
+  @@index([distributionId])
   @@map("donation_items")
 }
 
 model Category {
-  categoryId Int    @id @default(autoincrement())
-  category   String @unique
-  avgWeight  Decimal @db.Decimal(10, 2)
-  avgCo2Saved  Decimal @db.Decimal(10, 2)
-  items     DonationItem[]
-  inventory Inventory[]
+  categoryId  Int            @id @default(autoincrement())
+  category    String         @unique
+  avgWeight   Decimal        @db.Decimal(10, 2)
+  avgCo2Saved Decimal        @db.Decimal(10, 2)
+  items       DonationItem[]
+  inventory   Inventory[]
 
   @@map("categories")
 }
 
 model Condition {
-  conditionId Int    @id @default(autoincrement())
-  condition   String @unique
-  items DonationItem[]
+  conditionId Int            @id @default(autoincrement())
+  condition   String         @unique
+  items       DonationItem[]
 
   @@map("conditions")
 }
 
-model Inventory {
-  inventoryId Int      @id @default(autoincrement())
-  totalStock  Int      @default(0)
-  updatedAt   DateTime? @updatedAt
-  charityId Int
-  charity   Charity @relation(fields: [charityId], references: [charityId], onDelete: Cascade)
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [categoryId])
-  @@unique([charityId, categoryId])
+model Size {
+  sizeId    Int            @id @default(autoincrement())
+  size      String
+  items     DonationItem[]
+  inventory Inventory[]
 
+  @@map("size")
+}
+
+model Gender {
+  genderId  Int            @id @default(autoincrement())
+  gender    String         @unique
+  items     DonationItem[]
+  inventory Inventory[]
+
+  @@map("genders")
+}
+
+model Inventory {
+  inventoryId      Int       @id @default(autoincrement())
+  totalStock       Int       @default(0)
+  updatedAt        DateTime? @updatedAt
+  categoryId       Int
+  category         Category  @relation(fields: [categoryId], references: [categoryId])
+  sizeId           Int?
+  size             Size?     @relation(fields: [sizeId], references: [sizeId])
+  genderId         Int?
+  gender           Gender?   @relation(fields: [genderId], references: [genderId])
+  Charity          Charity?  @relation(fields: [charityCharityId], references: [charityId])
+  charityCharityId Int?
+
+  @@unique([categoryId, sizeId, genderId])
   @@map("inventory")
 }
 
+model Distribution {
+  distributionId Int            @id @default(autoincrement())
+  Date           DateTime       @default(now())
+  status         DistStatus     @default(Preparing)
+  notes          String?
+  charityId      Int
+  charity        Charity        @relation(fields: [charityId], references: [charityId])
+  staffId        Int
+  staff          User           @relation(fields: [staffId], references: [userId])
+  Items          DonationItem[]
 
-enum Role {
-  Donor
-  Staff
-  Admin
-}
-
-enum DonationStatus {
-  PENDING     @map("PENDING")
-  pending     @map("pending")
-
-  SCHEDULED   @map("SCHEDULED")
-  scheduled   @map("scheduled")
-
-  COLLECTED   @map("COLLECTED")
-  collected   @map("collected")
-
-  REJECTED    @map("REJECTED")
-  rejected    @map("rejected")
+  @@index([charityId])
+  @@index([staffId])
+  @@map("distributions")
 }
