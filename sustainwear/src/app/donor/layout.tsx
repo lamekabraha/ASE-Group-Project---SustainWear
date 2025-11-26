@@ -1,27 +1,23 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route"; 
-import { redirect } from "next/navigation";
-import React from "react";
+"use client";
 
-export default async function DonorLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    const session = await getServerSession(authOptions);
+import Link from "next/link";
+import DonorSidebar from "../Components/DonorSidebar";
 
-    if (!session || session.user.role !== "Donor") {
-        redirect("/auth/login");
-    }
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-[#F5F5F5] flex">
+      <DonorSidebar/> 
+      <main className="flex-1 px-12 py-10">
+        {children}
+      </main>
 
     return(
-        <main className="flex ">
-            <div className="bg-orange w-1/5 h-screen">
-                <h1>Sidebar</h1>
-            </div>
-            <div className="w-4/5">
+        <main className="flex h-screen overflow-hidden">
+            <DonorSidebar />
+            <div className="flex-1 overflow-y-auto">
                 {children}
             </div>
+            {modal}
         </main>
     )
 }

@@ -21,7 +21,7 @@ model User {
   hashedPassword String
   role           String
   createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   donationsAsDonor Donation[]     @relation("DonorDonations")
   donationsAsStaff Donation[]     @relation("StaffDonations")
@@ -34,7 +34,7 @@ model Charity {
   charityId         Int       @id @default(autoincrement())
   charityName       String
   charityEmail      String    @unique
-  charityTeleNumber String
+  charityTeleNumber String    @unique
   charityRegNumber  String    @unique
   createdAt         DateTime  @default(now())
   updatedAt         DateTime? @updatedAt
@@ -56,7 +56,7 @@ model CharityAddress {
   updatedAt DateTime? @updatedAt
 
   @@index([charityId])
-  @@map("charityAddresses")
+  @@map("charity_addresses")
 }
 
 model Donation {
@@ -68,8 +68,7 @@ model Donation {
   donor        User     @relation("DonorDonations", fields: [donorId], references: [userId])
   staffId      Int
   staff        User?    @relation("StaffDonations", fields: [staffId], references: [userId])
-
-  items DonationItem[]
+  items        DonationItem[]
 
   @@index([donorId])
   @@index([staffId])
@@ -100,7 +99,7 @@ model DonationItem {
   @@index([sizeId])
   @@index([genderId])
   @@index([distributionId])
-  @@map("donationItems")
+  @@map("donation_items")
 }
 
 model Distribution {
@@ -161,22 +160,20 @@ model Condition {
   @@map("conditions")
 }
 
-model Gender {
-  genderId Int    @id @default(autoincrement())
-  gender   String @unique
+model Size {
+  sizeId    Int            @id @default(autoincrement())
+  size      String
+  items     DonationItem[]
+  inventory Inventory[]
 
-  items       DonationItem[]
-  inventories Inventory[]
-
-  @@map("genders")
+  @@map("size")
 }
 
-model Size {
-  sizeId Int    @id @default(autoincrement())
-  size   String @unique
+model Gender {
+  genderId  Int            @id @default(autoincrement())
+  gender    String         @unique
+  items     DonationItem[]
+  inventory Inventory[]
 
-  items       DonationItem[]
-  inventories Inventory[]
-
-  @@map("sizes")
+  @@map("genders")
 }

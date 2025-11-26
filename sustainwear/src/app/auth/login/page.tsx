@@ -59,20 +59,8 @@ export default function LoginPage(){
 
     }
     return (
-        <div className="relative">
-            <div className=" bachground flex justify-between">
-                <div className="##Left##"></div>
-                <div className="##Right##">
-                    <Image
-                        src="/login-img.png"
-                        alt="Young man at a garage sale"
-                        width={2000}
-                        height={1000}
-                        className="object-cover w-auto h-screen"
-                    /> 
-                </div>
-            </div>
-            <div className="absolute z-1 top-0 left-0 rounded-r-4xl bg-orange w-2/3 h-screen flex justify-center items-center">
+        <div className="flex justify-between bg-orange">
+            <div className="w-2/3 h-screen flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Sign In</h1>
                     <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
@@ -86,8 +74,18 @@ export default function LoginPage(){
                     <p className="text-m text-white">New to <strong>Sustain</strong>Wear? <Link href='/auth/register' className="text-green">Register</Link></p>
                 </div>
             </div>
-            <div>
+            <div className="absolute right-0">
+                <div className="">
+                    <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
+                    <Image
+                        src="/login-img.png"
+                        alt="Young man at a garage sale"
+                        width={2000}
+                        height={1000}
+                        className="object-cover w-auto h-screen"
+                    /> 
+                </div>
+            </div>
         </div>
-    </div>
     )
 }
