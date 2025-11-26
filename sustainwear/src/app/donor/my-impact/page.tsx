@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../../lib/prisma";
 import {redirect} from 'next/navigation'
 import ItemsDonated from "@/app/Components/data-cards/ItemsDonated"
 import Co2Saved from "@/app/Components/data-cards/Co2Saved";
@@ -22,12 +21,12 @@ export default async function myImpact(){
         <div className="p-10">
             <h1 className="text-4xl font-bold">My Impact</h1>
             <div className="pt-5 grid grid-cols-12 gap-6 mr-25">
-                <ItemsDonated/>
-                <LandfillReduction/>
-                <SupportedCharities/>
-                <Co2Saved/>
-                <CategoryPieChart/>
-                <HistoryLineGraph/>
+            {/* <ItemsDonated/> */}
+            {/* <LandfillReduction/> */}
+            <SupportedCharities/>
+            {/* <HistoryLineGraph/>  */}
+            {/* <Co2Saved/> */}
+            {/*<CategoryPieChart/> */}
             </div>
         </div>
     )
