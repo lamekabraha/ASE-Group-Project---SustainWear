@@ -17,7 +17,7 @@ export default async function LandfillReduction() {
         include: {category: true}
     })
 
-    const totalWeight = weightQuery.reduce((sum, weightQuery) => {
+    const totalWeight = (await weightQuery).reduce((sum, weightQuery) => {
         const weight = Number(weightQuery.category.avgWeight) || 0;
         return sum + weight;
     }, 0);

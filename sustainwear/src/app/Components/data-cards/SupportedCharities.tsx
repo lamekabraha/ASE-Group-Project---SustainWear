@@ -12,10 +12,18 @@ export default async function SupportedCharities() {
         redirect('/auth/login');
     }
 
-    const uniqueCharities = await prisma.donation.findMany({
-        where: {donorId: userId},
+    const uniqueCharities = await prisma.distribution.findMany({
+        where: {
+            items: {
+                some: {
+                    donation: {
+                        donorId: userId
+                    }
+                }
+            }
+        },
         select: {charityId: true},
-        distinct: ['charityId'],
+        distinct: ['charityId']
     });
 
     const data = uniqueCharities.length;

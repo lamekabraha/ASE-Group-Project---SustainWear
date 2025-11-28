@@ -107,10 +107,10 @@ model Distribution {
   date           DateTime       @default(now())
   status         String
   notes          String?
-  charityId      Int
-  charity        Charity        @relation(fields: [charityId], references: [charityId])
-  staffId        Int
-  staff          User           @relation(fields: [staffId], references: [userId])
+  charityId      Int?
+  charity        Charity?        @relation(fields: [charityId], references: [charityId])
+  staffId        Int?
+  staff          User?           @relation(fields: [staffId], references: [userId])
   items          DonationItem[]
 
   @@index([charityId])

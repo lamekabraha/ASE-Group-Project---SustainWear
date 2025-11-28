@@ -10,14 +10,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 px-12 py-10">
         {children}
       </main>
-
-    return(
-        <main className="flex h-screen overflow-hidden">
-            <DonorSidebar />
-            <div className="flex-1 overflow-y-auto">
-                {children}
-            </div>
-            {modal}
-        </main>
-    )
+    </div>
+  )
 }
