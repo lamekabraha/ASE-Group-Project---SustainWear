@@ -1,33 +1,35 @@
 import prisma from "../../../lib/prisma";
 
 export async function getDonorDashboardData(donorId: number) {
-  // 1. Last Donation
+
   const lastDonation = await prisma.donation.findFirst({
     where: { donorId },
     orderBy: { donationDate: "desc" },
     include: {
       charity: true,
-      items: { include: { category: true } }
+      items: { 
+        include: { 
+          category: true 
+        } 
+      }
     }
   });
 
-  // 2. Total Weight Donated
   const allItems = await prisma.donationItem.findMany({
-    where: { donation: { donorId } },
+    where: { donation: { donorId } }, 
     include: { category: true }
   });
 
-  const totalWeight = allItems.reduce((sum, item) => {
+  const totalWeight = allItems.reduce((sum: number, item: any) => {
     return sum + Number(item.category.avgWeight);
   }, 0);
 
-  // 3. Number of Charities Supported
   const charitiesSupported = await prisma.donation.findMany({
     where: { donorId },
-    select: { charityId: true }
+    select: { charityId: true } 
   });
 
-  const uniqueCharities = new Set(charitiesSupported.map(c => c.charityId)).size;
+  const uniqueCharities = new Set(charitiesSupported.map((c: any) => c.charityId)).size;
 
   return {
     lastDonation,
