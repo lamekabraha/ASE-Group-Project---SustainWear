@@ -3,15 +3,15 @@
 import Link from "next/link";
 import DonorSidebar from "../Components/DonorSidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-[#F5F5F5] flex">
-      <DonorSidebar/> 
-      <main className="flex-1 px-12 py-10">
-        {children}
-      </main>
-
-    return(
+// I added 'modal' to the props here so the {modal} inside the return works
+export default function Layout({ 
+  children, 
+  modal 
+}: { 
+  children: React.ReactNode;
+  modal: React.ReactNode; 
+}) {
+    return (
         <main className="flex h-screen overflow-hidden">
             <DonorSidebar />
             <div className="flex-1 overflow-y-auto">
@@ -19,5 +19,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             {modal}
         </main>
-    )
+    );
 }
