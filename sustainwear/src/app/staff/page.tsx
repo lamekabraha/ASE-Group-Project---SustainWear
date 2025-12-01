@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
+import { getStaffDashboardData } from "./data";
 import { authOptions } from "../api/auth/[...nextauth]/route"; 
-import { getDonorDashboardData } from "./data"; 
 import ItemsDonated from "../Components/data-cards/ItemsDonated"; 
 import Link from "next/link";
 
@@ -17,7 +17,7 @@ export default async function Page() {
   }
 
   const donorId = session.user.id;
-  const data = await getDonorDashboardData(Number(donorId));
+  const data = await getStaffDashboardData(Number(donorId));
   const last = data.lastDonation;
 
   return (
