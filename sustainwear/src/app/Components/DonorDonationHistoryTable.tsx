@@ -4,7 +4,7 @@ import prisma from "../../../lib/prisma";
 import { redirect } from "next/navigation";
 
 
-export default async function(){
+export default async function DonorDonationHistoryTable(){
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -46,7 +46,7 @@ export default async function(){
                 <tbody className="bg-white text-sm">
                 {donations.map((row) => {
                     const statusClasses =
-                    row.status === "Pending"
+                    row.status === DonationStatus.PENDING
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-green-100 text-green-800";
 
@@ -71,6 +71,5 @@ export default async function(){
                 </tbody>
             </table>
         </div>
-    )    
-
+    );
 }
