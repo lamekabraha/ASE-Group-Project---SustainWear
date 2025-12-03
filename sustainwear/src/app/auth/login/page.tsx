@@ -68,7 +68,7 @@ export default function LoginPage(){
                         <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                         {error && (
                             <div className="text-alert text-m">{error}</div>
-                        )};
+                        )}
                         <button type="submit" className="bg-green text-white text-2xl rounded-xl p-2">Sign In</button>
                     </Form>
                     <p className="text-m text-white">New to <strong>Sustain</strong>Wear? <Link href='/auth/register' className="text-green">Register</Link></p>
