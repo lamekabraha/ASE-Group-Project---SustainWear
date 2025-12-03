@@ -5,24 +5,31 @@ import Image from "next/image";
 
 export default function NewDonationPage() {
 
-  const [items, setItems] = useState([
-    { id: 1, description: "", category: "", gender: "", size: "", condition: "", image: null as string | null }
-  ]);
+  const [items, setItems] = useState<any[]>([]);
+
+  const [currentId, setCurrentId] = useState(0);
+  const [catagory, setCatagory] = useState("");
+  const [size, setSize] = useState("");
+  const [gender, setGender] = useState("");
+  const [condition, setCondition] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+
+  function handleSaveItem(){
+    if (!catagory || !size || !gender || !condition || !description || !image){
+      
+    }
+  }
 
   // Add another empty item
-  function addItem() {
-    setItems([
-      ...items,
-      {
-        id: items.length + 1,
-        description: "",
-        category: "",
-        gender: "",
-        size: "",
-        condition: "",
-        image: null,
-      }
-    ]);
+  const DonationItem = {
+    id: items.length + 1,
+    category: "",
+    gender: "",
+    size: "",
+    condition: "",
+    description: "",
+    image: null as string | null
   }
 
   // Upload image per item

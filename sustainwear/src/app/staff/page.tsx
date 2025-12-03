@@ -1,83 +1,104 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { getStaffDashboardData } from "./data";
+import { authOptions } from "../api/auth/[...nextauth]/route"; 
+import ItemsDonated from "../Components/data-cards/ItemsDonated"; 
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
 
-type DashboardData = {
-  totalInventory: number;
-  pendingCount: number;
-  distributedKg: number;
-};
-
-export default function StaffHomePage() {
-  const [data, setData] = useState<DashboardData | null>(null);
-
-  useEffect(() => {
-    async function load() {
-      const res = await fetch("/api/staff/dashboard");
-      const json = await res.json();
-      setData(json);
-    }
-    load();
-  }, []);
-
-  if (!data) {
+export default async function Page() {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.id) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center text-xl">
-        Loading dashboard...
-      </div>
+      <section className="mx-auto max-w-7xl p-10">
+        <h1 className="text-xl text-red-600">Authentication Required.</h1>
+      </section>
     );
   }
 
-  const formatKg = (v: number) =>
-    Number.isNaN(v) ? "0" : v % 1 === 0 ? v.toString() : v.toFixed(1);
+  const donorId = session.user.id;
+  const data = await getStaffDashboardData(Number(donorId));
+  const last = data.lastDonation;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
-      <h1 className="text-[34px] font-semibold text-[#2B2B2B]">Home</h1>
+    <section className="mx-auto max-w-7xl">
 
-      <div className="mt-6 space-y-8">
+      <h1 className="text-[34px] font-semibold text-[#2B2B2B]">
+        Welcome, {session?.user?.firstName || 'Donor'}
+      </h1>
 
-        <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6">
-          <h2 className="text-[24px] font-extrabold">Welcome back!</h2>
-          <p className="mt-2 text-[15px] text-[#424A52]">
-            Here’s your summary for today.
-          </p>
+      <div className="mt-6 space-y-10">
+        
+        <div className="flex justify-between items-center bg-[#F7F7F7] p-5 rounded-lg">
+             <h3 className="text-xl font-medium">Dashboard Overview</h3>
+             <ItemsDonated/> 
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <KpiCard label="Total Inventory" value={formatKg(data.totalInventory) + " Kg"} />
-          <KpiCard label="Pending Donations" value={data.pendingCount.toString()} />
-          <KpiCard label="Items Distributed" value={formatKg(data.distributedKg) + " Kg"} />
+        <div className="flex items-center justify-between">
+          <h3 className="text-[28px] font-semibold">Last Donation</h3>
+          <button className="text-sm font-medium text-[#2B2B2B] hover:text-[#FF6A3D]">
+            <Link href="/donor/donation-history">View All</Link>
+          </button>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <Panel title="Monthly Activity">Chart placeholder…</Panel>
-          <Panel title="Inventory Status">Pie chart placeholder…</Panel>
+        <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-4 overflow-x-auto">
+          <table className="min-w-full text-[14px]">
+
+            <thead className="bg-[#F7F7F7] text-[#5B6470]">
+              <tr className="text-left">
+                <Th>Date</Th>
+                <Th>Items</Th>
+                <Th>Charity</Th>
+              <Th>Status</Th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {last ? (
+                <tr className="border-t">
+                  <Td>{new Date(last.donationDate).toLocaleDateString()}</Td> 
+                  <Td>{last.items.length}</Td>
+                  <Td>{last.charity?.charityName || 'N/A'}</Td> 
+                  <Td>
+                    <span className="bg-[#FCEFC3] text-[#9C7A09] border px-3 py-1 rounded-full text-xs font-semibold uppercase">
+                      {last.status.toLowerCase()}
+                    </span>
+                  </Td>
+                </tr>
+              ) : (
+                <tr>
+                  <Td colSpan={4}>No donations yet.</Td>
+                </tr>
+              )}
+            </tbody>
+
+          </table>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ImpactBox title="Total Weight Donated:" value={`${data.totalWeight.toFixed(2)} Kg`} />
+          <ImpactBox title="Charities Supported:" value={String(data.charitiesSupported)} />
+        </div>
+
       </div>
     </section>
   );
 }
 
-function KpiCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-4 rounded-[18px] border-2 border-[#BFE085] bg-white px-6 py-5">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E3F4C5] text-[#7FBF45] text-xl font-bold">
-        kg
-      </div>
-      <div>
-        <p className="text-sm font-medium">{label}</p>
-        <p className="text-3xl font-extrabold">{value}</p>
-      </div>
-    </div>
-  );
+
+function Th({ children }: { children: React.ReactNode }) {
+  return <th className="px-5 py-3 font-semibold">{children}</th>;
 }
 
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+function Td({ children, colSpan }: { children: React.ReactNode; colSpan?: number }) {
+  return <td colSpan={colSpan} className="px-5 py-3">{children}</td>;
+}
+
+function ImpactBox({ title, value }: { title: string; value: string | number }) {
   return (
-    <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6 h-full">
-      <h3 className="text-[20px] font-semibold mb-4">{title}</h3>
-      {children}
+    <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6">
+      <p className="font-medium text-[#333C46]">{title}</p>
+      <p className="text-4xl font-extrabold text-[#222]">{value}</p>
     </div>
   );
 }

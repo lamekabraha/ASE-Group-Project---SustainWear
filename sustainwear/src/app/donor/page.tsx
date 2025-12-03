@@ -11,7 +11,7 @@ export default async function Page() {
   const firstName = session?.user?.firstName;``
 
   return(
-      <div className="p-10">
+      <div className="m-10">
         <div>
           <h1 className="text-4xl font-bold">Home</h1>
         </div>

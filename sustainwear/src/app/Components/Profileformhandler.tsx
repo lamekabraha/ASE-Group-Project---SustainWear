@@ -19,7 +19,7 @@ const ProfileFormHandler: React.FC<ProfileFormHandlerProps> = ({
     setFirstname, 
     setLastname, 
     children 
-}) => {
+    }) => {
     
     const { update } = useSession();
     const [isSubmitting, setIsSubmitting] = useState(false);

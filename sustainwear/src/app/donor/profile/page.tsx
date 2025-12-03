@@ -5,7 +5,6 @@ import Link from 'next/link';
 import ProfileFormHandler from '@/app/Components/Profileformhandler';
 import { useRouter } from 'next/navigation';
 
-import ProfileFormHandler from '@/app/Components/Profileformhandler';
 import ChangePasswordModal from '@/app/Components/Changepasswordmodal';
 import DeleteAccountModal from '@/app/Components/Deleteaccountmodal';
 
