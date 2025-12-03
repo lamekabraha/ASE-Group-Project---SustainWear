@@ -1,5 +1,3 @@
-"use client";
-
 import DonorSidebar from "../Components/DonorSidebar";
 
 export default async function Layout({ 
