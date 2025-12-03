@@ -59,10 +59,8 @@ export default function LoginPage() {
 
 
     return (
-        <div className="relative bg-orange">
-            
-            {/* LEFT SIDE FORM */}
-            <div className="top-0 left-0 rounded-r-4xl w-2/3 h-screen flex justify-center items-center">
+        <div className="flex justify-between bg-orange">
+            <div className="w-2/3 h-screen flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Sign In</h1>
 
@@ -96,20 +94,18 @@ export default function LoginPage() {
                     </p>
                 </div>
             </div>
-
-            {/* RIGHT SIDE IMAGE PANEL */}
-            <div className="absolute right-0 top-0">
-                <div className="bg-orange h-screen w-1/24 rounded-r-4xl absolute"></div>
-
-                <Image
-                    src="/login-img.png"
-                    alt="Young man at a garage sale"
-                    width={2000}
-                    height={1000}
-                    className="object-cover w-auto h-screen"
-                />
+            <div className="absolute right-0">
+                <div className="">
+                    <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
+                    <Image
+                        src="/login-img.png"
+                        alt="Young man at a garage sale"
+                        width={2000}
+                        height={1000}
+                        className="object-cover w-auto h-screen"
+                    /> 
+                </div>
             </div>
-            
         </div>
     );
 }

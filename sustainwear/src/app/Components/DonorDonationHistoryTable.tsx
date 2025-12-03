@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import prisma from "../../../lib/prisma";
 import { redirect } from "next/navigation";
-import { DonationStatus } from "@prisma/client";
 
 
 export default async function DonorDonationHistoryTable(){

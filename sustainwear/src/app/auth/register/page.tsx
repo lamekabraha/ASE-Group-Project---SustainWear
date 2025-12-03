@@ -118,11 +118,9 @@ export default function RegisterPage(){
                     </p>
                 </div>
             </div>
-
             <div className="absolute right-0">
                 <div>
                     <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
-
                     <Image
                         src="/login-img.png"
                         alt="Young man at a garage sale"
