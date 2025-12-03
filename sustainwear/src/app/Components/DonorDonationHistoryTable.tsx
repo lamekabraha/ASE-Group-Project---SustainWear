@@ -4,7 +4,7 @@ import prisma from "../../../lib/prisma";
 import { redirect } from "next/navigation";
 
 
-export default async function(){
+export default async function DonorDonationHistoryTable(){
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -71,6 +71,5 @@ export default async function(){
                 </tbody>
             </table>
         </div>
-    )    
-
+    );
 }

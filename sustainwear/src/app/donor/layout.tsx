@@ -1,8 +1,6 @@
-"use client";
-
 import DonorSidebar from "../Components/DonorSidebar";
 
-export default function Layout({ 
+export default async function Layout({ 
   children, 
   modal 
 }: { 

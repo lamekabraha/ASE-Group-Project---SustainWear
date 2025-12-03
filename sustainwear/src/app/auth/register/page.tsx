@@ -17,8 +17,9 @@ export default function RegisterPage(){
     const [error, setError] = useState('')
     const router = useRouter()
 
-    const handleSubmit = async (e: { preventDefault: () => void; target: any; }) => {
-        e.preventDefault()
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         if (!firstName || !lastName || !email || !password || !confirmPassword){
             setError("Please fill all fields");
             return;
@@ -58,8 +59,8 @@ export default function RegisterPage(){
             });
 
             if (registerRes.ok){
-                const form = e.target;
-                form.reset()
+                const form = e.target as HTMLFormElement;
+                form.reset();
                 const session = await getSession();
                 const userRole = session?.user?.role;
                 
@@ -76,13 +77,13 @@ export default function RegisterPage(){
                     default:
                         setError('Invalid Role');
                         await signOut();
-                return;
-            }
-            }else{
+                        return;
+                }
+            } else {
                 console.log('User registration failed.')
             }
-        }catch(error) {
-            console.log('Error when registratiion: ', {error});
+        } catch(error) {
+            console.log('Error when registration: ', {error});
         }
     };
 
@@ -91,26 +92,34 @@ export default function RegisterPage(){
             <div className="w-2/3 h-screen flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Register</h1>
+
                     <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
                         <section className="gap-x-3 flex flex-row">
                             <input type="text" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                             <input type="text" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                         </section>
+
                         <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
+
                         <section className="gap-x-3 flex flex-row">
                             <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                             <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                         </section>
+
                         {error && (
                             <div className="text-alert text-m">{error}</div>
                         )}
+
                         <button className="bg-green text-white text-2xl rounded-xl p-2">Sign Up</button>
                     </Form>
-                    <p className="text-m text-white">Already a member? <Link href='/auth/login' className="text-green">Sign In</Link></p>
+
+                    <p className="text-m text-white">
+                        Already a member? <Link href='/auth/login' className="text-green">Sign In</Link>
+                    </p>
                 </div>
             </div>
             <div className="absolute right-0">
-                <div className="">
+                <div>
                     <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
                     <Image
                         src="/login-img.png"

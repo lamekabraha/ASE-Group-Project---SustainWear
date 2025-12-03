@@ -5,19 +5,19 @@ import {redirect} from 'next/navigation';
 import prisma from "../../../../lib/prisma";
 
 export default async function LandfillReduction() {
-    const session = getServerSession(authOptions)
+    const session = await getServerSession(authOptions)
     if (!session){
         redirect("/auth/login");
     }
     
     const userId = session?.user?.id;
 
-    const weightQuery = await prisma.donationItem.findMany({
+    const weightQuery = prisma.donationItem.findMany({
         where: {donation: {donorId: userId}},
         include: {category: true}
     })
 
-    const totalWeight = weightQuery.reduce((sum, weightQuery) => {
+    const totalWeight = (await weightQuery).reduce((sum, weightQuery) => {
         const weight = Number(weightQuery.category.avgWeight) || 0;
         return sum + weight;
     }, 0);

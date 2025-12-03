@@ -15,10 +15,11 @@ export default function HistoryLineGraphClient({data}: HistoryLineGraphClientPro
     return (
         <div className="border-2 border-green rounded-2xl p-5 gap-4 col-span-6">
           <h1 className="text-2xl font-semibold mb-4 text-center">Donation History</h1>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer minHeight={0} minWidth={0}>
                 <LineChart
                     data={data}
                     margin={{top: 5, right: 20, left: 0, bottom: 5 }}
+                    className="min-w-0 min-h-0"
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="date"/>
