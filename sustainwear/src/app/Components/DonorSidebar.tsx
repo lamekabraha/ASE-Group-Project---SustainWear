@@ -3,7 +3,7 @@ import React from "react";
 import { FaHome, FaPlus, FaHistory, FaLeaf, FaUser } from 'react-icons/fa';
 import { SignOutBtn } from "./signOut";
 
-export default async function DonorSidebar() {
+export default function DonorSidebar() {
   return (
 
     <div className="w-64 bg-orange flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
@@ -39,7 +39,9 @@ export default async function DonorSidebar() {
           </a>
         </li>
       </ul>
+      <div className="flex justify-center bottom-0">
       <SignOutBtn/>
+      </div>
 
     </div>
   );

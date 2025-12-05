@@ -19,7 +19,7 @@ export default async function MyImpact(){
 
     return(
         <div className="p-10">
-            <h1 className="text-4xl font-bold">My Impact</h1>
+                <h1 className="text-4xl font-bold">My Impact</h1>
             <div className="pt-5 grid grid-cols-12 gap-6 mr-5">
                 <ItemsDonated/>
                 <LandfillReduction/>

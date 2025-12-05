@@ -2,12 +2,13 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from './api/providers/provider';
+import { AlertProvider } from './context/AlertContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'My Next.js App',
-  description: 'A basic Next.js application layout',
+  title: 'SustainWear',
+  description: 'At SustainWear, we believe fashion can be both stylish and sustainable. We reduce clothing waste by promoting donations, recycling, and conscious choices. Together, we give every garment a second life.',
 };
 
 export default function RootLayout({
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <AlertProvider><AuthProvider>{children}</AuthProvider></AlertProvider>
       </body>
     </html>
   );
