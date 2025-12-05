@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React from "react";
 import { FaHome, FaPlus, FaHistory, FaLeaf, FaUser } from 'react-icons/fa';
 import { SignOutBtn } from "./signOut";
