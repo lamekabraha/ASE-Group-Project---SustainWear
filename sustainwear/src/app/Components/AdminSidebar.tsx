@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { SignOutBtn } from "./signOut";
 import { FaHome, FaUser, FaUsers, FaHandsHelping, FaChartLine } from 'react-icons/fa'; 
 
 export default function AdminSidebar() {
@@ -38,6 +39,12 @@ export default function AdminSidebar() {
             <FaUser size={20} className="mr-3" /> My Profile
           </Link>
         </li>
+
+         <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer flex items-center justify-center">
+                   <SignOutBtn />
+                </li>
+
+
       </ul>
     </div>
   );

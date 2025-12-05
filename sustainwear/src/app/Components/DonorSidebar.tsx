@@ -3,9 +3,9 @@ import React from "react";
 import { FaHome, FaPlus, FaHistory, FaLeaf, FaUser } from 'react-icons/fa';
 import { SignOutBtn } from "./signOut";
 
-export default async function DonorSidebar() {
+export default function DonorSidebar() {
+  
   return (
-
     <div className="w-64 bg-orange flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
       <ul className="flex flex-col space-y-9 p-4">
 
@@ -38,9 +38,12 @@ export default async function DonorSidebar() {
             <FaUser size={20} className="mr-3" /> My Profile
           </a>
         </li>
-      </ul>
-      <SignOutBtn/>
 
+        <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer flex items-center justify-center">
+           <SignOutBtn />
+        </li>
+
+      </ul>
     </div>
   );
 }
