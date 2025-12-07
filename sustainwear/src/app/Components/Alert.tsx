@@ -17,7 +17,7 @@ const backgroundColors = {
 
 const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
     return(
-        <div className="alertt-box flex w-full rounded-lg flex-col max-w-[400px] transform items-start justify-start gap-4 bg-white transition delay-200 duration-500 ease-in-out z-100">
+        <div className="alert-box flex w-full rounded-lg flex-col max-w-[400px] transform items-start justify-start gap-4 bg-white transition delay-200 duration-500 ease-in-out z-100">
             <div className="flex w-full items-start justify-between">
                 <span className="font-Inter text-xs font-medium leading-tight text-black">
                     {message}
