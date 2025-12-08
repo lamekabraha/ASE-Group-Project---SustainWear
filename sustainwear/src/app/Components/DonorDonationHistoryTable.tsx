@@ -46,7 +46,15 @@ export default async function DonorDonationHistoryTable() {
         </thead>
 
         <tbody className="bg-white text-sm">
-          {donations.map((row) => {
+          {donations.map(
+  (row: {
+    donationId: number;
+    donationDate: Date;
+    notes: string | null;
+    status: string;
+    _count: { items: number };
+  }) => {
+
             const statusClasses =
               row.status?.toLowerCase() === "pending"
                 ? "bg-yellow-100 text-yellow-800"

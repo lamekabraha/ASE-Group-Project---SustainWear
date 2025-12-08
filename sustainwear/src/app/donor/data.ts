@@ -7,27 +7,39 @@ export async function getDonorDashboardData(donorId: number) {
     orderBy: { donationDate: "desc" },
     include: {
       charity: true,
-      items: { include: { category: true } }
-    }
+      items: { include: { category: true } },
+    },
   });
 
   // 2. Total Weight Donated
   const allItems = await prisma.donationItem.findMany({
     where: { donation: { donorId } },
-    include: { category: true }
+    include: { category: true },
   });
 
-  const totalWeight = allItems.reduce((sum, item) => {
-    return sum + Number(item.category.avgWeight);
-  }, 0);
+  const totalWeight = allItems.reduce(
+    (
+      sum: number,
+      item: {
+        category: {
+          avgWeight: number | string;
+        };
+      }
+    ) => {
+      return sum + Number(item.category.avgWeight);
+    },
+    0
+  );
 
   // 3. Number of Charities Supported
   const charitiesSupported = await prisma.donation.findMany({
     where: { donorId },
-    select: { charityId: true }
+    select: { charityId: true },
   });
 
-  const uniqueCharities = new Set(charitiesSupported.map(c => c.charityId)).size;
+  const uniqueCharities = new Set(
+    charitiesSupported.map((c: { charityId: number | null }) => c.charityId)
+  ).size;
 
   return {
     lastDonation,

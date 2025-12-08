@@ -3,39 +3,46 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import prisma from "../../../../lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export default async function LandfillReduction() {
-  // ✅ MUST be awaited
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
     redirect("/api/auth/signin");
   }
 
-  // ✅ ALWAYS force to number for Prisma safety
+  // ✅ Force user ID to number for Prisma
   const userId = Number(session.user.id);
 
-  // ✅ SAFE QUERY (no status column, no crashes)
-  const weightQuery = await prisma.donationItem.findMany({
-    where: {
-      donation: {
-        donorId: userId,
+  // ✅ Safe, typed query
+  const weightQuery: {
+  category: { avgWeight: number | null };
+}[] = await prisma.donationItem.findMany({
+  where: {
+    donation: {
+      donorId: userId,
+    },
+  },
+  select: {
+    category: {
+      select: {
+        avgWeight: true,
       },
     },
-    select: {
-      category: {
-        select: {
-          avgWeight: true,
-        },
-      },
-    },
-  });
+  },
+});
 
-  // ✅ SAFE REDUCE
-  const totalWeight = weightQuery.reduce((sum, item) => {
-    const weight = Number(item.category?.avgWeight ?? 0);
+
+  // ✅ Fully typed reduce (NO implicit any)
+  const totalWeight = weightQuery.reduce(
+  (sum: number, item: { category: { avgWeight: number | null } }) => {
+    const weight = Number(item.category.avgWeight ?? 0);
     return sum + weight;
-  }, 0);
+  },
+  0
+);
+
 
   return (
     <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">
