@@ -38,12 +38,10 @@ export default function DonorSidebar() {
             <FaUser size={20} className="mr-3" /> My Profile
           </a>
         </li>
-
-        <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer flex items-center justify-center">
-           <SignOutBtn />
-        </li>
-
       </ul>
+      <div className="flex justify-center">
+        <SignOutBtn />
+      </div>
     </div>
   );
 }

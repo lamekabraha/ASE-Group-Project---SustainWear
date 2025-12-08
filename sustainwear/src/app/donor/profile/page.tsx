@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'; 
 import Link from 'next/link'; 
 import { useRouter } from 'next/navigation';
+import ProfileFormHandler from '../../Components/Profileformhandler';
 
 import ChangePasswordModal from '@/app/Components/Changepasswordmodal';
 import DeleteAccountModal from '@/app/Components/Deleteaccountmodal';

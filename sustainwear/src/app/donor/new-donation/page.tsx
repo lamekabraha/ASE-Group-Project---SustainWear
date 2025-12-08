@@ -11,20 +11,17 @@ export default async function NewDonationPage() {
     redirect("/api/auth/signin");
   }
 
-  const [lastItemID, categories, sizes, genders, conditions] = await Promise.all([
-    prisma.donationItem.findMany({select: {itemId: true}, orderBy: {itemId: "desc"}, take: 1,}),
+  const [categories, sizes, genders, conditions] = await Promise.all([
     prisma.category.findMany({select: {categoryId: true, category: true}}),
     prisma.size.findMany({select: {sizeId: true, size: true}}),
     prisma.gender.findMany({select: {genderId: true, gender: true}}),
     prisma.condition.findMany({select: {conditionId: true, condition: true}}),
   ])
 
-  const newItemId = lastItemID[0].itemId + 1;
-
   return (
     <div className="p-10 h-screen">
       <h1 className="text-4xl font-bold">Distribution</h1>
-      <DonationForm newItemId={newItemId} categories={categories} sizes={sizes} genders={genders} conditions={conditions} description={{
+      <DonationForm categories={categories} sizes={sizes} genders={genders} conditions={conditions} description={{
         description: ""
       }} imageUrl={{
         imageUrl: ""

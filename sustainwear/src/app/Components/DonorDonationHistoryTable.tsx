@@ -45,7 +45,8 @@ export default async function DonorDonationHistoryTable(){
 
                 <tbody className="bg-white text-sm">
                 {donations.map((row) => {
-                    const statusClasses =
+                    let statusClasses = row.status.charAt(0).toUpperCase() + row.status.slice(1);
+                    statusClasses =
                     row.status === "Pending"
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-green-100 text-green-800";
