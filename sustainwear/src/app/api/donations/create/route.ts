@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../lib/prisma";
+import prisma from "../../../../../lib/prisma";
 
 export async function GET(request: Request) {
   try {
@@ -23,12 +23,13 @@ export async function GET(request: Request) {
             donationDate: new Date(),
             status: "pending",
             donorId: userId,
+            staffId: null,
             items: {
                 create: items.map((item: any) => ({
                     photoUrl: item.photoUrl,
                     description: item.description,
                     status: item.status,
-                    donationId: newDonation.id,
+                    // donationId: newDonation.donationId,
                     categoryId: Number(item.categoryId),
                     conditionId: Number(item.conditionId),
                     sizeId: Number(item.sizeId),

@@ -19,10 +19,16 @@ export default async function NewDonationPage() {
     prisma.condition.findMany({select: {conditionId: true, condition: true}}),
   ])
 
+  const newItemId = lastItemID[0].itemId + 1;
+
   return (
     <div className="p-10 h-screen">
       <h1 className="text-4xl font-bold">Distribution</h1>
-      <DonationForm lastItemId={lastItemID} categories={categories} sizes={sizes} genders={genders} conditions={conditions} />
+      <DonationForm newItemId={newItemId} categories={categories} sizes={sizes} genders={genders} conditions={conditions} description={{
+        description: ""
+      }} imageUrl={{
+        imageUrl: ""
+      }} />
     </div>
   )
 }
