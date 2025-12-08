@@ -34,37 +34,37 @@ enum DistStatus {
 }
 
 model User {
-  userId         Int      @id @default(autoincrement())
-  email          String   @unique
+  userId         Int       @id @default(autoincrement())
+  email          String    @unique
   firstName      String
   lastName       String
   hashedPassword String
   role           String
-  createdAt      DateTime @default(now())
+  createdAt      DateTime  @default(now())
   updatedAt      DateTime? @updatedAt
 
-  donationsAsDonor Donation[]     @relation("DonorDonations")
-  donationsAsStaff Donation[]     @relation("StaffDonations")
-  
+  donationsAsDonor Donation[] @relation("DonorDonations")
+  donationsAsStaff Donation[] @relation("StaffDonations")
+
   // Cleaned up Charity relation
-  charityId        Int?           @map("charityCharityId")
-  Charity          Charity?       @relation(fields: [charityId], references: [charityId])
-  
-  Distribution     Distribution[] 
+  charityId Int?     @map("charityCharityId")
+  Charity   Charity? @relation(fields: [charityId], references: [charityId])
+
+  Distribution Distribution[]
 
   @@map("users")
 }
 
 model Charity {
-  charityId                 Int       @id @default(autoincrement())
-  charityName               String
-  charityEmail              String    @unique
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime? @updatedAt
-  
+  charityId    Int       @id @default(autoincrement())
+  charityName  String
+  charityEmail String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+
   // FIX: Mapped to correct DB column names
-  charityTeleNum            String    @map("charityTeleNumber")
-  charityRegistrationNumber String?   @map("charityRegNumber")
+  charityTeleNum            String  @map("charityTeleNumber")
+  charityRegistrationNumber String? @map("charityRegNumber")
 
   staff         User[]
   addresses     CharityAddress[]
@@ -94,23 +94,22 @@ model Donation {
   donationId   Int      @id @default(autoincrement())
   donationDate DateTime @default(now())
   notes        String?
-  status       String
-  
-  donorId      Int
-  donor        User     @relation("DonorDonations", fields: [donorId], references: [userId])
-  
-  staffId      Int?
-  staff        User?    @relation("StaffDonations", fields: [staffId], references: [userId])
-  
-  items        DonationItem[]
+
+  donorId Int
+  donor   User @relation("DonorDonations", fields: [donorId], references: [userId])
+
+  staffId Int?
+  staff   User?          @relation("StaffDonations", fields: [staffId], references: [userId])
+  status  DonationStatus @default(PENDING)
+  items   DonationItem[]
 
   // FIX: The critical relation for your dashboard
-  charityId    Int?     @map("charity_id") 
-  charity      Charity? @relation(fields: [charityId], references: [charityId])
+  charityId Int?     @map("charity_id")
+  charity   Charity? @relation(fields: [charityId], references: [charityId])
 
   @@index([donorId])
   @@index([staffId])
-  @@index([charityId]) 
+  @@index([charityId])
   @@map("donations")
 }
 
@@ -156,9 +155,9 @@ model Condition {
   conditionId Int            @id @default(autoincrement())
   condition   String         @unique
   items       DonationItem[]
-  
+
   // FIX: Added this line so Inventory can relate to Condition
-  inventory   Inventory[]
+  inventory Inventory[]
 
   @@map("conditions")
 }
@@ -182,24 +181,24 @@ model Gender {
 }
 
 model Inventory {
-  inventoryId      Int       @id @default(autoincrement())
-  totalStock       Int       @default(0)
-  updatedAt        DateTime? @updatedAt
-  
-  categoryId       Int
-  category         Category  @relation(fields: [categoryId], references: [categoryId])
-  
-  conditionId      Int
-  condition        Condition @relation(fields: [conditionId], references: [conditionId])
+  inventoryId Int       @id @default(autoincrement())
+  totalStock  Int       @default(0)
+  updatedAt   DateTime? @updatedAt
 
-  sizeId           Int?
-  size             Size?     @relation(fields: [sizeId], references: [sizeId])
-  
-  genderId         Int?
-  gender           Gender?   @relation(fields: [genderId], references: [genderId])
-  
-  charityId        Int?      @map("charityCharityId")
-  charity          Charity?  @relation(fields: [charityId], references: [charityId])
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [categoryId])
+
+  conditionId Int
+  condition   Condition @relation(fields: [conditionId], references: [conditionId])
+
+  sizeId Int?
+  size   Size? @relation(fields: [sizeId], references: [sizeId])
+
+  genderId Int?
+  gender   Gender? @relation(fields: [genderId], references: [genderId])
+
+  charityId Int?     @map("charityCharityId")
+  charity   Charity? @relation(fields: [charityId], references: [charityId])
 
   @@unique([categoryId, conditionId, sizeId, genderId])
   @@map("inventories")
@@ -208,7 +207,7 @@ model Inventory {
 model Distribution {
   distributionId Int            @id @default(autoincrement())
   // FIX: Changed 'Date' to 'date' (lowercase) to match database column
-  date           DateTime       @default(now()) 
+  date           DateTime       @default(now())
   status         DistStatus     @default(Preparing)
   notes          String?
   charityId      Int
@@ -220,4 +219,18 @@ model Distribution {
   @@index([charityId])
   @@index([staffId])
   @@map("distributions")
+}
+
+enum DonationStatus {
+  PENDING @map("PENDING")
+  pending @map("pending")
+
+  SCHEDULED @map("SCHEDULED")
+  scheduled @map("scheduled")
+
+  COLLECTED @map("COLLECTED")
+  collected @map("collected")
+
+  REJECTED @map("REJECTED")
+  rejected @map("rejected")
 }

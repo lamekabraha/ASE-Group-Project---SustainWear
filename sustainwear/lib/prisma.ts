@@ -1,26 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
-  const prisma = new PrismaClient();
-
-  // Fix lowercase enum values BEFORE Prisma returns them
-  prisma.$extends({
-    result: {
-      donation: {
-        status: {
-          needs: { status: true },
-          compute({ status }) {
-            if (!status) return status;
-
-            // Convert lowercase→UPPERCASE so Prisma stays happy
-            return status.toUpperCase();
-          },
-        },
-      },
-    },
-  });
-
-  return prisma;
+  return new PrismaClient();
 };
 
 declare global {
@@ -28,6 +9,9 @@ declare global {
 }
 
 const prisma = globalThis.prisma ?? prismaClientSingleton();
-globalThis.prisma = prisma;
+
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prisma = prisma;
+}
 
 export default prisma;

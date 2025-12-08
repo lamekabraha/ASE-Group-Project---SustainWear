@@ -2,7 +2,7 @@ import prisma from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-
+import { DonationStatus } from "@prisma/client"; //
 
 export default async function StaffPendingDonations() {
   const session = await getServerSession(authOptions);
@@ -12,7 +12,7 @@ export default async function StaffPendingDonations() {
   }
 
   const pendingDonations = await prisma.donation.findMany({
-    where: { status: "Pending" }, 
+    where: { status: DonationStatus.pending }, 
     include: {
       donor: true,
       items: true,
