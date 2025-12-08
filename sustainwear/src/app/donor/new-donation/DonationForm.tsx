@@ -40,6 +40,14 @@ export default function DonationForm({
     const [isEditting, setIsEditting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        console.log(file)
+        if (file){
+            processFile(file);
+        };
+    };
+    
     const processFile = (file: File) => {
         if (!file.type.startsWith("image/")){
             showAlert("Error", "Invalid file type. Please upload an image.");
@@ -47,13 +55,6 @@ export default function DonationForm({
         }
         const url = URL.createObjectURL(file);
         setImageUrl(url);
-    };
-
-    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file){
-          processFile(file);
-        };
     };
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -85,6 +86,8 @@ export default function DonationForm({
           return;
         }
 
+        const imgUrl = imageUrl.slice(0, 5);
+
         const categoryName = categories.find(category => category.categoryId === categoryId)?.category;
         const sizeName = sizes.find(size => size.sizeId === sizeId)?.size
         const genderName = genders.find(gender => gender.genderId === genderId)?.gender
@@ -109,6 +112,8 @@ export default function DonationForm({
             imageUrl: imageUrl,
             };
 
+            console.log(imageUrl)
+
             setItems([...items, newItem]);
 
             console.log(items);
@@ -118,14 +123,17 @@ export default function DonationForm({
             const updatedItem = {
                 tempId: tempId,
                 categoryId: categoryId,
+                categoryName: categoryName,
                 sizeId: sizeId,
+                sizeName: sizeName,
                 genderId: genderId,
+                genderName: genderName,
                 conditionId: conditionId,
+                conditionName: conditionName,
                 description: description,
                 imageUrl: imageUrl,
             }
 
-            setItems(prev => prev.map(item => item.tempId === tempId ? updatedItem : item));
             setIsEditting(false);
         }
         
@@ -174,15 +182,13 @@ export default function DonationForm({
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    items: items,
-                }),
+                body: JSON.stringify({items}),
             });
 
             if (res.ok) {
                 showAlert("Success","Donation application submitted successfully!");
                 setItems([]);
-                router.push("donor/donations");
+                router.push("/donor/new-donation");
             }else {
                 showAlert("Error", "Failed to submit donation application.");
             }
@@ -194,7 +200,7 @@ export default function DonationForm({
         }
     }
     return (
-        <div className="p-10 space-y-5 h-screen">
+        <div className="p-10 p-b-5 space-y-5 h-screen">
             <div className="border-2 border-green rounded-2xl p-6 bg-white h-fit">
                 <h2 className="font-bold text-lg mb-4 text-[#333C46]">
                     {items.length === 0 ? "Add New Item" : "Edit Item"}
