@@ -70,13 +70,12 @@ model Donation {
   status       String
   donorId      Int
   donor        User     @relation("DonorDonations", fields: [donorId], references: [userId])
-  staffId      Int
+  staffId      Int?
   staff        User?    @relation("StaffDonations", fields: [staffId], references: [userId])
   items        DonationItem[]
 
   @@index([donorId])
   @@index([staffId])
-  @@index([charityId]) 
   @@map("donations")
 }
 

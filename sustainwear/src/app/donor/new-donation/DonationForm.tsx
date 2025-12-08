@@ -10,15 +10,15 @@ import { FaTrash, FaEdit, FaImage, FaPlus } from "react-icons/fa";
 
 
 interface DonationFormProps {
-    lastItemId: { itemId: number }[];
     categories: { categoryId: number; category: string }[];
     sizes: { sizeId: number; size: string }[];
     genders: { genderId: number; gender: string }[];
     conditions: { conditionId: number; condition: string }[];
+    description: { description: string }
+    imageUrl: {imageUrl: string}
 }
 
 export default function DonationForm({
-    lastItemId,
     categories,
     sizes,
     genders,
@@ -27,7 +27,7 @@ export default function DonationForm({
     const router = useRouter();
 
     const [items, setItems] = useState<any[]>([]);
-    const [currentId, setCurrentId] =useState(0);
+    const [tempId, setTempId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);
     const [sizeId, setSizeId] = useState(0);
     const [genderId, setGenderId] = useState(0);
@@ -37,8 +37,8 @@ export default function DonationForm({
     const [error, setError] = useState("");
     const {showAlert} = useAlert("", "");
     const [dragActive, setDragActive] = useState(false);
+    const [isEditting, setIsEditting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
 
     const processFile = (file: File) => {
         if (!file.type.startsWith("image/")){
@@ -84,43 +84,73 @@ export default function DonationForm({
           showAlert("Error", "Please fill out all fields")
           return;
         }
-        
-        const prevItemId = lastItemId;
 
-        const newItemId = prevItemId[0].itemId + 1;
-        setCurrentId(newItemId);
+        const categoryName = categories.find(category => category.categoryId === categoryId)?.category;
+        const sizeName = sizes.find(size => size.sizeId === sizeId)?.size
+        const genderName = genders.find(gender => gender.genderId === genderId)?.gender
+        const conditionName = conditions.find(condition => condition.conditionId === conditionId)?.condition
+
         
-        const newItem = {
-          currentId : newItemId,
-          categoryId: categoryId,
-          sizeId: sizeId,
-          genderId: genderId,
-          conditionId: conditionId,
-          description: description,
-          imageUrl: imageUrl,
-        };
+
+        if (isEditting === false ){
+            setTempId(tempId + 1);
+
+            const newItem = {
+            tempId: tempId,
+            categoryId: categoryId,
+            categoryName: categoryName,
+            sizeId: sizeId,
+            sizeName: sizeName,
+            genderId: genderId,
+            genderName: genderName,
+            conditionId: conditionId,
+            conditionName: conditionName,
+            description: description,
+            imageUrl: imageUrl,
+            };
+
+            setItems([...items, newItem]);
+
+            console.log(items);
     
-        clearForm();
+            clearForm();
+        } else {
+            const updatedItem = {
+                tempId: tempId,
+                categoryId: categoryId,
+                sizeId: sizeId,
+                genderId: genderId,
+                conditionId: conditionId,
+                description: description,
+                imageUrl: imageUrl,
+            }
+
+            setItems(prev => prev.map(item => item.tempId === tempId ? updatedItem : item));
+            setIsEditting(false);
+        }
+        
     };
 
     function handleEdit(item: any) {
-        setCurrentId(item.itemId);
+        setIsEditting(true);
+        setTempId(item.tempId);
         setCategoryId(item.categoryId);
         setSizeId(item.sizeId);
         setGenderId(item.genderId);
         setConditionId(item.conditionId);
         setDescription(item.description);
         setImageUrl(item.imageUrl);
+
+        // setItems(items.filter((item) => item.tempId !== item.tempId));
     }
     
     function handleDelete(itemId: number){
         if (confirm("Are you sure you want to delete this item?")){
-            setItems(items.filter((item) => item.itemId !== itemId));
+            setItems(items.filter((item) => item !== item.tempId));
         }
     }
 
     function clearForm(){
-        setCurrentId(0);
         setCategoryId(0);
         setSizeId(0);
         setGenderId(0);
@@ -167,7 +197,7 @@ export default function DonationForm({
         <div className="p-10 space-y-5 h-screen">
             <div className="border-2 border-green rounded-2xl p-6 bg-white h-fit">
                 <h2 className="font-bold text-lg mb-4 text-[#333C46]">
-                    {currentId === 0 ? "Add New Item" : "Edit Item"}
+                    {items.length === 0 ? "Add New Item" : "Edit Item"}
                 </h2>
     
                 <div className="space-y-4">
@@ -175,7 +205,7 @@ export default function DonationForm({
                         <label className="block text-sm font-medium mb-1">Category</label>
                         <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
                             <option value={0}>Select...</option>
-                            {categories.map(c => <option key={c.categoryId} value={c.categoryId}>{c.category}</option>)}
+                            {categories.map(category => <option key={category.categoryId} value={category.categoryId}>{category.category}</option>)}
                         </select>
                     </div>
     
@@ -184,14 +214,14 @@ export default function DonationForm({
                             <label className="block text-sm font-medium mb-1">Size</label>
                             <select value={sizeId} onChange={(e) => setSizeId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
                                 <option value={0}>Select...</option>
-                                {sizes.map(s => <option key={s.sizeId} value={s.sizeId}>{s.size}</option>)}
+                                {sizes.map(size => <option key={size.sizeId} value={size.sizeId}>{size.size}</option>)}
                             </select>
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Gender</label>
                             <select value={genderId} onChange={(e) => setGenderId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
                                 <option value={0}>Select...</option>
-                                {genders.map(g => <option key={g.genderId} value={g.genderId}>{g.gender}</option>)}
+                                {genders.map(gender => <option key={gender.genderId} value={gender.genderId}>{gender.gender}</option>)}
                             </select>
                         </div>
                     </div>
@@ -200,7 +230,7 @@ export default function DonationForm({
                         <label className="block text-sm font-medium mb-1">Condition</label>
                         <select value={conditionId} onChange={(e) => setConditionId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
                             <option value={0}>Select...</option>
-                            {conditions.map(c => <option key={c.conditionId} value={c.conditionId}>{c.condition}</option>)}
+                            {conditions.map(condition => <option key={condition.conditionId} value={condition.conditionId}>{condition.condition}</option>)}
                         </select>
                     </div>
     
@@ -227,9 +257,9 @@ export default function DonationForm({
     
                     <div className="flex gap-2">
                         <button onClick={handleSaveItem} className="flex-1 bg-[#98CD56] text-white py-2 rounded-lg font-semibold hover:opacity-90 flex justify-center items-center gap-2">
-                             {currentId === 0 ? <><FaPlus size={18}/> Add Item</> : "Update Item"}
+                             {items.length === 0 ? <><FaPlus size={18}/> Add Item</> : "Update Item"}
                         </button>
-                        {currentId !== 0 && (
+                        {items.length !== 0 && (
                             <button onClick={clearForm} className="px-4 py-2 border rounded-lg text-gray-500">Cancel</button>
                         )}
                     </div>
@@ -246,8 +276,8 @@ export default function DonationForm({
                                {item.imageUrl ? <img src={item.imageUrl} className="w-full h-full object-cover" /> : <span className="text-xs">No Img</span>}
                             </div>
                             <div className="flex-1">
-                                <h3 className="font-bold">Item #{item.tempId}</h3>
-                                <p className="text-sm text-gray-600 line-clamp-1">{item.description}</p>
+                                <h3 className="font-bold">{item.description}</h3>
+                                <p className="text-sm text-gray-600 line-clamp-1">{item.categoryName} • {item.sizeName} • {item.genderName} • {item.conditionName}</p>
                             </div>
                             <div className="flex gap-2">
                                 <button onClick={() => handleEdit(item)} className="p-2 text-blue-500 bg-blue-50 rounded-full"><FaEdit size={16}/></button>
@@ -257,17 +287,15 @@ export default function DonationForm({
                     ))
                 )}
     
-                {items.length > 0 && (
-                    <div className="text-right">
-                        <button 
-                            onClick={handleSubmitDonation} 
-                            disabled={isSubmitting}
-                            className="px-8 py-3 bg-[#2B2B2B] text-white rounded-lg font-bold hover:opacity-90 disabled:opacity-50"
-                        >
-                            {isSubmitting ? "Submitting..." : "Submit Donation"}
-                        </button>
-                    </div>
-                )}
+                <div className="text-right">
+                    <button 
+                        onClick={handleSubmitDonation} 
+                        disabled={isSubmitting}
+                        className="px-8 py-3 bg-green text-navy rounded-lg font-bold hover:opacity-90 disabled:opacity-50"
+                    >
+                        {isSubmitting ? "Submitting..." : "Submit Donation"}
+                    </button>
+                </div>            
             </div>
         </div>
     );
