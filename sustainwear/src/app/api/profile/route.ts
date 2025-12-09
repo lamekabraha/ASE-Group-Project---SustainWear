@@ -5,7 +5,6 @@ import prisma from '../../../../lib/prisma';
 
 export async function PATCH(req: NextRequest) {
     
-    // 1. Authentication and Authorization
     const session = await getServerSession(authOptions); 
     
     if (!session?.user?.email) {

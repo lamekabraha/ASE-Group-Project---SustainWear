@@ -6,7 +6,7 @@ import { SignOutBtn } from "./signOut";
 export default function DonorSidebar() {
   
   return (
-    <div className="w-64 bg-orange flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
+    <div className="w-64 bg-emerald-600 flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
       <ul className="flex flex-col space-y-9 p-4">
 
         <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors">
