@@ -148,7 +148,6 @@ export default function DonationForm({
         setDescription(item.description);
         setImageUrl(item.imageUrl);
 
-        // setItems(items.filter((item) => item.tempId !== item.tempId));
     }
     
     function handleDelete(itemId: number){
