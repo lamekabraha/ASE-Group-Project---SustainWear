@@ -80,7 +80,6 @@ model DonationItem {
   itemId         Int           @id @default(autoincrement())
   photoUrl       String
   description    String?
-  status         String
   donationId     Int
   donation       Donation      @relation(fields: [donationId], references: [donationId])
   categoryId     Int

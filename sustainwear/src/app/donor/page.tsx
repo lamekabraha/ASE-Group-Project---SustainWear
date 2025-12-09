@@ -18,7 +18,7 @@ export default async function Page() {
 
         <div className="border-2 border-green rounded-2xl p-5 mr-5 mt-5 mb-2.5 ">
           <h2 className="text-2xl font-bold"> Welcome Back, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}!</h2>
-          <p>You're the reason we can tackle textile waste! Your contributions are helping us build a circular economy, one garment at a time. Check your Last Donation status below or click My Impact to see how much landfill waste you've diverted this year.</p>
+          <p>Youre the reason we can tackle textile waste! Your contributions are helping us build a circular economy, one garment at a time. Check your Last Donation status below or click My Impact to see how much landfill waste youve diverted this year.</p>
         </div>
 
         {/* Last Donation */}
