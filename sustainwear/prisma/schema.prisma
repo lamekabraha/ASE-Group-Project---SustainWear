@@ -16,16 +16,12 @@ datasource db {
 model User {
   userId         Int      @id @default(autoincrement())
   email          String   @unique
-  userId         Int      @id @default(autoincrement())
-  email          String   @unique
   firstName      String
   lastName       String
   hashedPassword String
   role           String
   createdAt      DateTime @default(now())
   updatedAt      DateTime? @updatedAt
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
 
   donationsAsDonor Donation[]     @relation("DonorDonations")
   donationsAsStaff Donation[]     @relation("StaffDonations")
@@ -76,7 +72,6 @@ model Donation {
 
   @@index([donorId])
   @@index([staffId])
-  @@index([charityId]) 
   @@map("donations")
 }
 
@@ -91,8 +86,6 @@ model DonationItem {
   category       Category      @relation(fields: [categoryId], references: [categoryId])
   conditionId    Int
   condition      Condition     @relation(fields: [conditionId], references: [conditionId])
-  sizeId         Int?
-  size           Size?         @relation(fields: [sizeId], references: [sizeId])
   sizeId         Int?
   size           Size?         @relation(fields: [sizeId], references: [sizeId])
   genderId       Int
