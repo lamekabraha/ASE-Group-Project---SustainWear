@@ -34,7 +34,6 @@ export default function DonationForm({
     const [conditionId, setConditionId] = useState(0);
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const [error, setError] = useState("");
     const {showAlert} = useAlert("", "");
     const [dragActive, setDragActive] = useState(false);
     const [isEditting, setIsEditting] = useState(false);
