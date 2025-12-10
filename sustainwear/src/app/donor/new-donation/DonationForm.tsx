@@ -6,7 +6,7 @@ import Form from 'next/form';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/app/utils/useAlert';
 import prisma from '../../../../lib/prisma';
-import { FaTrash, FaEdit, FaImage, FaPlus } from "react-icons/fa";
+import { Trash2, Pencil, Image as ImageIcon, Plus } from "lucide-react";
 
 
 interface DonationFormProps {
@@ -243,7 +243,7 @@ export default function DonationForm({
                     <div>
                         <label className="block text-sm font-medium mb-1">Description</label>
                         <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded-lg min-h-[80px]" />
-                    </div>    
+                    </div>    
                     <div 
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
@@ -255,7 +255,7 @@ export default function DonationForm({
                             <img src={imageUrl} alt="Preview" className="h-full object-contain p-1" />
                         ) : (
                             <div className="text-center pointer-events-none">
-                                <FaImage className="mx-auto text-[#7FBF45]" />
+                                <ImageIcon className="mx-auto text-[#7FBF45]" /> 
                                 <span className="text-xs text-gray-500">Drag & Drop or Click</span>
                             </div>
                         )}
@@ -263,7 +263,7 @@ export default function DonationForm({
     
                     <div className="flex gap-2">
                         <button onClick={handleSaveItem} className="flex-1 bg-[#98CD56] text-white py-2 rounded-lg font-semibold hover:opacity-90 flex justify-center items-center gap-2">
-                             {items.length === 0 ? <><FaPlus size={18}/> Add Item</> : "Update Item"}
+                            {items.length === 0 ? <><Plus size={18}/> Add Item</> : "Update Item"}
                         </button>
                         {items.length !== 0 && (
                             <button onClick={clearForm} className="px-4 py-2 border rounded-lg text-gray-500">Cancel</button>
@@ -286,8 +286,8 @@ export default function DonationForm({
                                 <p className="text-sm text-gray-600 line-clamp-1">{item.categoryName} • {item.sizeName} • {item.genderName} • {item.conditionName}</p>
                             </div>
                             <div className="flex gap-2">
-                                <button onClick={() => handleEdit(item)} className="p-2 text-blue-500 bg-blue-50 rounded-full"><FaEdit size={16}/></button>
-                                <button onClick={() => handleDelete(item.tempId)} className="p-2 text-red-500 bg-red-50 rounded-full"><FaTrash size={16}/></button>
+                                <button onClick={() => handleEdit(item)} className="p-2 text-blue-500 bg-blue-50 rounded-full"><Pencil size={16}/></button>
+                                <button onClick={() => handleDelete(item.tempId)} className="p-2 text-red-500 bg-red-50 rounded-full"><Trash2 size={16}/></button>
                             </div>
                         </div>
                     ))
@@ -301,7 +301,7 @@ export default function DonationForm({
                     >
                         {isSubmitting ? "Submitting..." : "Submit Donation"}
                     </button>
-                </div>            
+                </div>            
             </div>
         </div>
     );
