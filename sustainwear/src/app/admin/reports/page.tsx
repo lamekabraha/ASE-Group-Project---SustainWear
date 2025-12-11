@@ -1,148 +1,125 @@
-"use client";
+import React from 'react';
 
-import React, { useState } from 'react';
-import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, PieChart, Pie, Cell, Legend
-} from 'recharts';
-import { Cloud, Download, Filter, Calendar, ChevronRight } from 'lucide-react';
-
-// --- MOCK DATA (Matches your wireframe visuals) ---
-const lineData = [
-  { name: 'Jan', data1: 10, data2: 20 },
-  { name: 'Feb', data1: 20, data2: 30 },
-  { name: 'Mar', data1: 30, data2: 50 },
-  { name: 'Apr', data1: 40, data2: 45 },
-  { name: 'May', data1: 30, data2: 50 },
-  { name: 'Jun', data1: 60, data2: 100 },
+const reportStats = [
+  { label: 'Total Reports', value: '12', color: 'border-blue-500' },
+  { label: 'Resolved Issues', value: '8', color: 'border-green-500' },
+  { label: 'Pending Review', value: '4', color: 'border-yellow-500' },
 ];
 
-const barData = [
-  { name: 'Jan', val: 20 },
-  { name: 'Feb', val: 35 },
-  { name: 'Mar', val: 50 },
-  { name: 'Apr', val: 40 },
-  { name: 'May', val: 35 },
-  { name: 'Jun', val: 60 },
+const recentReports = [
+  { id: 101, user: 'p.singh@outlook.com', type: 'System Bug', date: '2025-11-26', status: 'Pending' },
+  { id: 102, user: 'c.rodriguiz@outlook.com', type: 'Donation Issue', date: '2025-11-25', status: 'Resolved' },
+  { id: 103, user: 'a.pattel@outlook.com', type: 'Account Access', date: '2025-11-24', status: 'Resolved' },
 ];
 
-const pieData = [
-  { name: 'Category 1', value: 400 },
-  { name: 'Category 2', value: 300 },
-  { name: 'Category 3', value: 300 },
-  { name: 'Category 4', value: 200 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-export default function ReportsPage() {
+export default function AdminReportsPage() {
   return (
-    <div className="p-8 max-w-7xl mx-auto bg-white min-h-screen">
-      
-      {/* HEADER */}
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Reports</h1>
+    <div className="p-8 bg-gray-50 min-h-screen">
+      {}
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Reports</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {reportStats.map((stat, index) => (
+          <div key={index} className={`bg-white p-6 rounded-xl shadow-sm border-l-4 ${stat.color}`}>
+            <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">{stat.label}</p>
+            <p className="text-4xl font-bold text-gray-900 mt-2">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-6">Report Activity (Last 7 Days)</h2>
         
-        {/* LEFT COLUMN: FILTERS */}
-        <div className="lg:col-span-3 space-y-6">
-          <button className="flex items-center justify-center w-full py-2 border-2 border-gray-300 rounded-lg text-gray-600 font-semibold hover:bg-gray-50">
-            <Filter className="w-4 h-4 mr-2" /> Filter
-          </button>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
-              <span className="font-semibold text-gray-700">Date range</span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </div>
-            <div className="flex justify-between items-center p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50">
-              <span className="font-semibold text-gray-700">Category</span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </div>
+        {}
+        <div className="relative h-64 w-full">
+          {}
+          <div className="absolute left-0 top-0 bottom-6 w-8 flex flex-col justify-between text-xs text-gray-400 text-right pr-2">
+            <span>5</span>
+            <span>4</span>
+            <span>3</span>
+            <span>2</span>
+            <span>1</span>
+            <span>0</span>
           </div>
 
-          <div className="pt-4 space-y-3">
-            <button className="flex items-center justify-center w-full py-2 border border-gray-400 rounded text-gray-600 hover:bg-gray-100 text-sm">
-              <Download className="w-4 h-4 mr-2" /> Download PDF
-            </button>
-            <button className="flex items-center justify-center w-full py-2 border border-gray-400 rounded text-gray-600 hover:bg-gray-100 text-sm">
-              <Download className="w-4 h-4 mr-2" /> Download CSV
-            </button>
+          {}
+          <div className="absolute left-8 right-0 top-2 bottom-6 border-l border-b border-gray-200">
+            {}
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className="absolute w-full border-t border-gray-100 border-dashed" style={{ top: `${i * 20}%` }}></div>
+            ))}
+
+            {}
+            <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+              {}
+              <polyline
+                fill="none"
+                stroke="#4F46E5" 
+                strokeWidth="2"
+                points="0,200 150,160 300,100 450,140 600,80 800,120 1200,40"
+              />
+            </svg>
+          </div>
+
+          {}
+          <div className="absolute left-8 right-0 bottom-0 flex justify-between text-xs text-gray-400 pt-2">
+            <span>Nov 20</span>
+            <span>Nov 21</span>
+            <span>Nov 22</span>
+            <span>Nov 23</span>
+            <span>Nov 24</span>
+            <span>Nov 25</span>
+            <span>Nov 26</span>
           </div>
         </div>
+      </div>
 
-        {/* RIGHT COLUMN: CHARTS */}
-        <div className="lg:col-span-9 space-y-8">
-          
-          {/* 1. LINE CHART: Category Breakdown */}
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
-            <div className="flex-1 w-full h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="data1" stroke="#0ea5e9" strokeWidth={2} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="data2" stroke="#22d3ee" strokeWidth={2} dot={{ r: 4 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4 md:mt-0 md:ml-6 text-xl font-bold text-gray-600 flex items-center">
-               Category <br /> Breakdown
-            </div>
-          </div>
+      {}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-gray-800">Recent Reports</h2>
+          <select className="border border-gray-300 text-gray-600 rounded-md px-3 py-1 text-sm focus:outline-none">
+            <option>All Statuses</option>
+            <option>Pending</option>
+            <option>Resolved</option>
+          </select>
+        </div>
 
-          {/* 2. BAR CHART: CO2 Saving */}
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
-            <div className="flex-1 w-full h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart layout="vertical" data={barData}>
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" width={40} axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Bar dataKey="val" fill="#0ea5e9" radius={[0, 4, 4, 0]} barSize={20} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            
-            {/* The CO2 Badge from your design */}
-            <div className="mt-4 md:mt-0 md:ml-6 flex flex-col items-center justify-center p-6 border-2 border-green-400 rounded-xl bg-green-50">
-              <div className="flex items-center text-green-600 mb-2">
-                <Cloud className="w-8 h-8 mr-2 fill-current" />
-                <span className="font-bold text-lg">CO2 Saving:</span>
-              </div>
-              <span className="text-4xl font-extrabold text-gray-800">4 kgCO2</span>
-            </div>
-          </div>
-
-          {/* 3. PIE CHART: Donations Over Time */}
-          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
-            <div className="flex-1 w-full h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Legend verticalAlign="bottom" height={36}/>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-4 md:mt-0 md:ml-6 text-xl font-bold text-gray-600">
-              Donations Over <br /> Time
-            </div>
-          </div>
-
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">ID</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Submitted By</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Issue Type</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Date</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {recentReports.map((report) => (
+                <tr key={report.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 text-gray-600">#{report.id}</td>
+                  <td className="px-6 py-4 font-medium text-gray-800">{report.user}</td>
+                  <td className="px-6 py-4 text-gray-600">{report.type}</td>
+                  <td className="px-6 py-4 text-gray-500 text-sm">{report.date}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${report.status === 'Resolved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {report.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right space-x-2">
+                    <button className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700">View</button>
+                    <button className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded text-sm hover:bg-gray-200">Archive</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
