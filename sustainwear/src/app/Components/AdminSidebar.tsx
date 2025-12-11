@@ -7,7 +7,7 @@ import { FaHome, FaUser, FaUsers, FaHandsHelping, FaChartLine } from 'react-icon
 export default function AdminSidebar() {
   
   return (
-    <div className="w-64 bg-orange flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
+    <div className="w-64 bg-emerald-600 flex flex-col h-screen justify-center rounded-tr-2xl rounded-br-2xl relative">
       <ul className="flex flex-col space-y-9 p-4">
 
         <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors">
@@ -39,13 +39,10 @@ export default function AdminSidebar() {
             <FaUser size={20} className="mr-3" /> My Profile
           </Link>
         </li>
-
-         <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors cursor-pointer flex items-center justify-center">
-                   <SignOutBtn />
-                </li>
-
-
       </ul>
+      <div className="flex justify-center">
+        <SignOutBtn />
+      </div>
     </div>
   );
 }

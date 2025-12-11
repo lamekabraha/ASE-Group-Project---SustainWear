@@ -1,5 +1,3 @@
-'use client';
-
 import {ChangeEvent, DragEvent, useState} from 'react';
 import Image from 'next/image';
 import Form from 'next/form';
@@ -18,6 +16,7 @@ interface DonationFormProps {
     imageUrl: {imageUrl: string}
 }
 
+
 export default function DonationForm({
     categories,
     sizes,
@@ -25,7 +24,7 @@ export default function DonationForm({
     conditions,
 }: DonationFormProps) {
     const router = useRouter();
-
+    
     const [items, setItems] = useState<any[]>([]);
     const [tempId, setTempId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);
@@ -34,7 +33,6 @@ export default function DonationForm({
     const [conditionId, setConditionId] = useState(0);
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const [error, setError] = useState("");
     const {showAlert} = useAlert("", "");
     const [dragActive, setDragActive] = useState(false);
     const [isEditting, setIsEditting] = useState(false);
@@ -149,7 +147,6 @@ export default function DonationForm({
         setDescription(item.description);
         setImageUrl(item.imageUrl);
 
-        // setItems(items.filter((item) => item.tempId !== item.tempId));
     }
     
     function handleDelete(itemId: number){

@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import {redirect} from 'next/navigation'
 import ItemsDonated from "@/app/Components/data-cards/ItemsDonated"
 import Co2Saved from "@/app/Components/data-cards/Co2Saved";
 import LandfillReduction from "@/app/Components/data-cards/LandfillReduction";
@@ -11,11 +10,6 @@ import HistoryLineGraph from "@/app/Components/data-cards/history-line-graph/His
 
 
 export default async function MyImpact(){
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
 
     return(
         <div className="p-10">
