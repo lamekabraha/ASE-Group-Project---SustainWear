@@ -6,16 +6,11 @@ import { redirect } from "next/navigation";
 export default async function DonorDonationHistoryTable() {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user) {
-    redirect("/api/auth/signin");
-  }
-
-  // ✅ CRITICAL: This MUST be `.id`, not `.userId`
-  const donorId = Number(session.user.id);
+  const donorId = session?.user?.id;
 
   const donations = await prisma.donation.findMany({
     where: {
-      donorId: donorId, // ✅ USER-LOCKED QUERY (NO DATA LEAK POSSIBLE)
+      donorId: donorId,
     },
     select: {
       donationId: true,
@@ -45,20 +40,13 @@ export default async function DonorDonationHistoryTable() {
           </tr>
         </thead>
 
-        <tbody className="bg-white text-sm">
-          {donations.map(
-  (row: {
-    donationId: number;
-    donationDate: Date;
-    notes: string | null;
-    status: string;
-    _count: { items: number };
-  }) => {
-
-            const statusClasses =
-              row.status?.toLowerCase() === "pending"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800";
+                <tbody className="bg-white text-sm">
+                {donations.map((row) => {
+                    let statusClasses = row.status.charAt(0).toUpperCase() + row.status.slice(1);
+                    statusClasses =
+                    row.status === "Pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-green-100 text-green-800";
 
             return (
               <tr

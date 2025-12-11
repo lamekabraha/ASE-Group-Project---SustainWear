@@ -7,42 +7,18 @@ import { Prisma } from "@prisma/client";
 
 export default async function LandfillReduction() {
   const session = await getServerSession(authOptions);
+  
+  const userId = session?.user?.id;
 
-  if (!session || !session.user) {
-    redirect("/api/auth/signin");
-  }
+  const weightQuery = prisma.donationItem.findMany({
+      where: {donation: {donorId: userId}},
+      include: {category: true}
+  })
 
-  // ✅ Force user ID to number for Prisma
-  const userId = Number(session.user.id);
-
-  // ✅ Safe, typed query
-  const weightQuery: {
-  category: { avgWeight: number | null };
-}[] = await prisma.donationItem.findMany({
-  where: {
-    donation: {
-      donorId: userId,
-    },
-  },
-  select: {
-    category: {
-      select: {
-        avgWeight: true,
-      },
-    },
-  },
-});
-
-
-  // ✅ Fully typed reduce (NO implicit any)
-  const totalWeight = weightQuery.reduce(
-  (sum: number, item: { category: { avgWeight: number | null } }) => {
-    const weight = Number(item.category.avgWeight ?? 0);
-    return sum + weight;
-  },
-  0
-);
-
+  const totalWeight = (await weightQuery).reduce((sum, weightQuery) => {
+      const weight = Number(weightQuery.category.avgWeight) || 0;
+      return Math.round((sum + weight) * 100)/100;
+  }, 0);
 
   return (
     <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">

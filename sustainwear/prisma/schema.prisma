@@ -16,8 +16,6 @@ datasource db {
 model User {
   userId         Int      @id @default(autoincrement())
   email          String   @unique
-  userId         Int      @id @default(autoincrement())
-  email          String   @unique
   firstName      String
   lastName       String
   hashedPassword String
@@ -25,8 +23,7 @@ model User {
   
   createdAt      DateTime @default(now())
   updatedAt      DateTime? @updatedAt
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+
 
   donationsAsDonor Donation[]     @relation("DonorDonations")
   donationsAsStaff Donation[]     @relation("StaffDonations")
@@ -41,8 +38,6 @@ model Charity {
   charityEmail String    @unique
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
-
-  // FIX: Mapped to correct DB column names
   charityTeleNumber            String  @map("charityTeleNumber")
   charityRegNumber String? @map("charityRegNumber")
 
@@ -70,22 +65,15 @@ model Donation {
   donationId   Int      @id @default(autoincrement())
   donationDate DateTime @default(now())
   notes        String?
-
-  donorId Int
-  donor   User @relation("DonorDonations", fields: [donorId], references: [userId])
-
-  staffId Int?
-  staff   User?          @relation("StaffDonations", fields: [staffId], references: [userId])
-  status  DonationStatus @default(PENDING)
-  items   DonationItem[]
-
-  // FIX: The critical relation for your dashboard
-  charityId Int?     @map("charity_id")
-  charity   Charity? @relation(fields: [charityId], references: [charityId])
+  status       String
+  donorId      Int
+  donor        User     @relation("DonorDonations", fields: [donorId], references: [userId])
+  staffId      Int?
+  staff        User?    @relation("StaffDonations", fields: [staffId], references: [userId])
+  items        DonationItem[]
 
   @@index([donorId])
   @@index([staffId])
-  @@index([charityId])
   @@map("donations")
 }
 
@@ -100,8 +88,6 @@ model DonationItem {
   category       Category      @relation(fields: [categoryId], references: [categoryId])
   conditionId    Int
   condition      Condition     @relation(fields: [conditionId], references: [conditionId])
-  sizeId         Int?
-  size           Size?         @relation(fields: [sizeId], references: [sizeId])
   sizeId         Int?
   size           Size?         @relation(fields: [sizeId], references: [sizeId])
   genderId       Int
@@ -220,7 +206,6 @@ model Inventory {
 
 model Distribution {
   distributionId Int            @id @default(autoincrement())
-  // FIX: Changed 'Date' to 'date' (lowercase) to match database column
   date           DateTime       @default(now())
   status         DistStatus     @default(Preparing)
   notes          String?

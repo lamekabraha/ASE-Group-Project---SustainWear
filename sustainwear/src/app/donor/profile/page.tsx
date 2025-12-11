@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react'; 
 import Link from 'next/link'; 
 import { useRouter } from 'next/navigation';
+import ProfileFormHandler from '../../Components/Profileformhandler';
 
 import ChangePasswordModal from '@/app/Components/Changepasswordmodal';
 import DeleteAccountModal from '@/app/Components/Deleteaccountmodal';
@@ -21,9 +22,9 @@ export default function MyProfilePage() {
 
     useEffect(() => {
         if (session && session.user && isInitialLoad) {
-            setFirstname(session.user.firstName || ""); 
-            setLastname(session.user.lastName || "");   
-            setemail(session.user.email || ""); 
+            setFirstname(session?.user?.firstName || ""); 
+            setLastname(session?.user?.lastName || "");   
+            setemail(session?.user?.email || ""); 
             
             setIsInitialLoad(false); 
         }

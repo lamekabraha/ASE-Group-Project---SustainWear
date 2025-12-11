@@ -1,32 +1,33 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import {redirect} from 'next/navigation'
 import prisma from "../../../../lib/prisma";
 import Link from "next/link";
+import DistributionModal from "@/app/Components/DistributionModal";
+import DistributionReqTable from "@/app/Components/distribution/DistributionReqTable";
 
 export default async function Distribution(){
     const session = await getServerSession(authOptions);
-
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
-
     const userId = session?.user?.userId;
 
-
-    const request = await prisma.distribution.findMany({
+    const requests = await prisma.distribution.findMany({
         where: {
             status: "Request",
         },
-        select: {
+        select: { 
             distributionId: true,
             date: true,
+            notes: true,
+            status: true,
+            charityId: true,
             charity: {
                 select: {
-                    charityName: true
+                    charityName: true,
+                    charityEmail: true,
+                    charityTeleNumber: true,
+                    charityRegNumber: true,
                 }
             }
-        }
+        },
     })
 
     const history = await prisma.distribution.findMany({
@@ -46,40 +47,12 @@ export default async function Distribution(){
             status: true,
         }
     })
-
     return(
         <div className="p-10 flex flex-col gap-y-20 h-screen">
             <h1 className="text-4xl font-bold">Distribution</h1>
             <div>
                 <h2 className="text-2xl font-bold mb-3.5">Distribution Requests</h2>
-                <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">
-                    <table className="min-w-full table-fixed">
-                        <thead className="bg-gray-50">
-                            <tr className="text-left text-sm font-semibold text-gray-700">
-                                <th className="px-6 py-3 w-1/5">Donation ID</th>
-                                <th className="px-6 py-3 w-1/5">Date</th>
-                                <th className="px-6 py-3 w-1/5">Charity</th>
-                                <th className="px-6 py-3 w-1/5">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {request.length === 0 ? (
-                                <tr className="border-t border-gray-100 hover:bg-gray-50">
-                                    <td className="px-6 py-3">No Requests</td>
-                                </tr>) : (
-                                    request.map((row) => (
-                                        <tr className="border-t border-gray-100 hover:bg-gray-50">
-                                            <td className="px-6 py-3">{row.distributionId}</td>
-                                            <td className="px-6 py-3">{new Date(row.date).toLocaleDateString()}</td>
-                                            <td className="px-6 py-3">{row.charity?.charityName}</td>
-                                            <td className="px-6 py-3"><button className="border-2 border-navy bg-navy text-white rounded px-2 py-0.5"><Link href={"/"}>View</Link></button></td>
-
-                                        </tr>
-                                    )
-                                ))}
-                        </tbody>
-                    </table>
-                </div>
+                <DistributionReqTable request={requests}/>
             </div>
             <div>
                 <h2 className="text-2xl font-bold mb-3.5">Distribution History</h2>
@@ -95,7 +68,7 @@ export default async function Distribution(){
                             </tr>
                         </thead>
                         <tbody>
-                            {request.length === 0 ? (
+                            {history.length === 0 ? (
                                 <tr className="border-t border-gray-100 hover:bg-gray-50">
                                     <td className="px-6 py-3">No Requests</td>
                                 </tr>) : (
@@ -114,6 +87,8 @@ export default async function Distribution(){
                     </table>
                 </div>
             </div>
+            
+
         </div>
     )
 }

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../lib/prisma";
+import prisma from "../../../../../lib/prisma";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
@@ -14,6 +14,10 @@ export async function GET(request: Request) {
     const body = await request.json();
     const {items} = body;
 
+    items.forEach((item: any) => {
+     console.log(item);
+    });
+
     if (!items || items.lenth === 0){
         return NextResponse.json({message: "No items provided"}, {status: 400});
     }
@@ -21,14 +25,14 @@ export async function GET(request: Request) {
     const newDonation = await prisma.donation.create({
         data: {
             donationDate: new Date(),
-            status: "pending",
+            status: "Pending",
             donorId: userId,
+            staffId: null,
             items: {
                 create: items.map((item: any) => ({
-                    photoUrl: item.photoUrl,
+                    photoUrl: item.imageUrl,
                     description: item.description,
-                    status: item.status,
-                    donationId: newDonation.id,
+                    status: "Pending",
                     categoryId: Number(item.categoryId),
                     conditionId: Number(item.conditionId),
                     sizeId: Number(item.sizeId),

@@ -60,7 +60,6 @@ async function getManageUsersData(): Promise<AdminDashboardData> {
 
     const totalItemsQuery = prisma.donationItem.count();
 
-    // Execute queries concurrently for better performance
     const [usersData, uniqueDonors, totalItems] = await Promise.all([
         usersQuery,
         activeDonorsQuery,

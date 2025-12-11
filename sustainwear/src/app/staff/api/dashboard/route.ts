@@ -5,13 +5,10 @@ const toNumber = (v: number | string | null | undefined): number =>
 
 export async function GET() {
   try {
-    // ✅ DEBUG: SHOW WHICH DATABASE WE ARE USING
     const dbName = await prisma.$queryRaw<{ db: string }[]>`
       SELECT DATABASE() as db
     `;
-    console.log("✅ CONNECTED DATABASE:", dbName);
 
-    // ✅ 1) TOTAL INVENTORY
     let inventoryRows: {
       totalStock: number;
       category: { avgWeight: number | string | null } | null;
@@ -34,14 +31,12 @@ export async function GET() {
       0
     );
 
-    // ✅ 2) PENDING DONATIONS (matches your DB = lowercase "pending")
     const pendingCount = await prisma.donation.count({
       where: {
         status: "pending",
       },
     });
 
-    // ✅ 3) DISTRIBUTED KG (uses collected only)
     const distributedItems = await prisma.donationItem.findMany({
       where: {
         donation: {
@@ -61,7 +56,6 @@ export async function GET() {
       0
     );
 
-    // ✅ 4) MONTHLY DONATION DATA (REAL DB → REAL CHART)
     const donations = await prisma.donation.findMany({
       select: { donationDate: true },
     });

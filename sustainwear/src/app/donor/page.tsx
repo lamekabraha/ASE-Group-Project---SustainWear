@@ -9,21 +9,13 @@ import DonorDonationHistoryTable from "../Components/DonorDonationHistoryTable";
 export default async function Page() {
   const session = await getServerSession(authOptions);
 
-  // 🔐 BLOCK IF NOT LOGGED IN
-  if (!session || !session.user) {
-    redirect("/api/auth/signin");
-  }
 
-  // 🔐 BLOCK IF NOT A DONOR
-  if (session.user.role !== "Donor") {
-    redirect("/unauthorized");
-  }
 
-  const donorId = session.user.id;
-  const firstName = session.user.firstName;
+  const donorId = session?.user?.id;
+  const firstName = session?.user?.firstName;
 
   return (
-    <>
+    <div className="p-10">
       <div>
         <h1 className="text-4xl font-bold">Home</h1>
       </div>
@@ -38,7 +30,6 @@ export default async function Page() {
         </p>
       </div>
 
-      {/* Last Donation */}
       <div className="mr-5 mt-5">
         <div className="flex items-center justify-between mb-2.5">
           <h3 className="text-[28px] font-semibold">Last Donation</h3>
@@ -46,12 +37,9 @@ export default async function Page() {
             <Link href="/donor/donation-history">View All Donations</Link>
           </button>
         </div>
-
-        {/* ✅ PASS donorId DOWN */}
         <DonorDonationHistoryTable />
       </div>
 
-      {/* Impact */}
       <div className="mr-5 mt-5">
         <div className="flex items-center justify-between mb-2.5">
           <h3 className="text-[28px] font-semibold">My Impact</h3>
@@ -61,11 +49,10 @@ export default async function Page() {
         </div>
 
         <div className="grid grid-cols-12 gap-6">
-          {/* ✅ PASS donorId DOWN */}
           <LandfillReduction  />
           <ItemsDonated  />
         </div>
       </div>
-    </>
+    </div>
   );
 }

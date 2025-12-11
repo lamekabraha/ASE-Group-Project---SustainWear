@@ -7,15 +7,8 @@ import prisma from "../../../../lib/prisma";
 export default async function ItemsDonated() {
   const session = await getServerSession(authOptions);
 
-  // ✅ HARD AUTH BLOCK
-  if (!session || !session.user) {
-    redirect("/api/auth/signin");
-  }
+  const userId = session?.user?.id;
 
-  // ✅ FORCE TO NUMBER FOR PRISMA SAFETY
-  const userId = Number(session.user.id);
-
-  // ✅ USER-LOCKED COUNT (NO DATA LEAK POSSIBLE)
   const data = await prisma.donationItem.count({
     where: {
       donation: {
