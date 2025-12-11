@@ -10,7 +10,7 @@ export default async function SupportedCharities() {
 
     const uniqueCharities = await prisma.distribution.findMany({
         where: {
-            items: {
+            Items: {
                 some: {
                     donation: {
                         donorId: userId
