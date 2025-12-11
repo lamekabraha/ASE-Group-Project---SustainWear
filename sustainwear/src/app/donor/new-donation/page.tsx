@@ -7,10 +7,6 @@ import DonationForm from "./DonationForm";
 export default async function NewDonationPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user || session.user.role !== "Donor") {
-    redirect("/api/auth/signin");
-  }
-
   const [categories, sizes, genders, conditions] = await Promise.all([
     prisma.category.findMany({select: {categoryId: true, category: true}}),
     prisma.size.findMany({select: {sizeId: true, size: true}}),

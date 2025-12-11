@@ -7,10 +7,6 @@ import PieChartClient from "@/app/Components/data-cards/category-pie-chart/PieCh
 export default async function CategoryPieChart() {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
-
     const userId = session?.user?.id;
 
     const countCateg = await prisma.donationItem.groupBy({

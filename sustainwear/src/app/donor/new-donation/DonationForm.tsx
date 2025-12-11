@@ -1,5 +1,3 @@
-'use client';
-
 import {ChangeEvent, DragEvent, useState} from 'react';
 import Image from 'next/image';
 import Form from 'next/form';
@@ -18,6 +16,7 @@ interface DonationFormProps {
     imageUrl: {imageUrl: string}
 }
 
+
 export default function DonationForm({
     categories,
     sizes,
@@ -25,7 +24,7 @@ export default function DonationForm({
     conditions,
 }: DonationFormProps) {
     const router = useRouter();
-
+    
     const [items, setItems] = useState<any[]>([]);
     const [tempId, setTempId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);

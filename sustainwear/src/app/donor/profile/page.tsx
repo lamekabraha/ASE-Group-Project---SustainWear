@@ -22,9 +22,9 @@ export default function MyProfilePage() {
 
     useEffect(() => {
         if (session && session.user && isInitialLoad) {
-            setFirstname(session.user.firstName || ""); 
-            setLastname(session.user.lastName || "");   
-            setemail(session.user.email || ""); 
+            setFirstname(session?.user?.firstName || ""); 
+            setLastname(session?.user?.lastName || "");   
+            setemail(session?.user?.email || ""); 
             
             setIsInitialLoad(false); 
         }

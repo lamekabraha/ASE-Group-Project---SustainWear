@@ -8,10 +8,6 @@ import HistoryLineGraphClient from "@/app/Components/data-cards/history-line-gra
 export default async function HistoryLineGraph(){
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
-
     const userId = session?.user?.id;
 
     const data: {count: number, date: string}[] = await prisma.$queryRaw`

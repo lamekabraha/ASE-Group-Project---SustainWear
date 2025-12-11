@@ -8,10 +8,6 @@ export default async function SupportedCharities() {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
 
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
-
     const uniqueCharities = await prisma.distribution.findMany({
         where: {
             items: {

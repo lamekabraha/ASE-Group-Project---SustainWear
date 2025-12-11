@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useAlert } from '../utils/useAlert';
 
 interface ProfileFormHandlerProps {
     firstName: string;
@@ -23,12 +24,11 @@ const ProfileFormHandler: React.FC<ProfileFormHandlerProps> = ({
     
     const { update } = useSession();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [message, setMessage] = useState('');
+    const {showAlert} = useAlert("", "");
 
     const handleProfileSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setMessage('');
 
         const updatedData = {
             firstName,
@@ -57,26 +57,20 @@ const ProfileFormHandler: React.FC<ProfileFormHandlerProps> = ({
                     }
                 }); 
 
-                setMessage('Profile updated successfully! 🎉');
+                showAlert("Success", 'Profile updated successfully! 🎉');
             } else {
-                setMessage(`Error: ${data.message || 'Failed to update profile.'}`);
+                showAlert("Error",`${data.message || 'Failed to update profile.'}`);
             }
         } catch (error) {
             console.error('Update error:', error);
-            setMessage('An unexpected error occurred during profile update.');
+            showAlert("Error",'An unexpected error occurred during profile update.');
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <>
-            {message && (
-                <div className={`p-3 mb-4 rounded-md text-sm ${message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                    {message}
-                </div>
-            )}
-            
+        <>           
             <form className="space-y-7" onSubmit={handleProfileSubmit}>
                                 
                 <div className="flex items-center">
