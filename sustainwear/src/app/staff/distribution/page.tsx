@@ -1,8 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../../lib/prisma";
+import prisma from "../../../lib/prisma";
 import Link from "next/link";
-import DistributionModal from "@/app/Components/DistributionModal";
 import DistributionReqTable from "@/app/Components/distribution/DistributionReqTable";
 
 export default async function Distribution(){
@@ -26,9 +25,35 @@ export default async function Distribution(){
                     charityTeleNumber: true,
                     charityRegNumber: true,
                 }
-            }
+            },
         },
     })
+
+    const [category, size, gender, condition] = await Promise.all([
+        prisma.category.findMany({select: {categoryId: true, category: true}}),
+        prisma.size.findMany({select: {sizeId: true, size: true}}),
+        prisma.gender.findMany({select: {genderId: true, gender: true}}),
+        prisma.condition.findMany({select: {conditionId: true, condition: true}}),
+    ])
+    const filterOptions = {category, size, gender, condition}
+
+    const distributionItem = await prisma.donationItem.findMany({
+        where: {
+            distributionId: null,
+            status: "Approved"
+        },
+        select: {
+            itemId: true,
+            photoUrl: true,
+            description: true,
+            status: true,
+            categoryId: true,
+            sizeId: true,
+            genderId: true,
+            conditionId: true
+        }
+    })
+
 
     const history = await prisma.distribution.findMany({
         where: {
@@ -52,7 +77,7 @@ export default async function Distribution(){
             <h1 className="text-4xl font-bold">Distribution</h1>
             <div>
                 <h2 className="text-2xl font-bold mb-3.5">Distribution Requests</h2>
-                <DistributionReqTable request={requests}/>
+                <DistributionReqTable request={requests} filters={filterOptions} items={distributionItem}/>
             </div>
             <div>
                 <h2 className="text-2xl font-bold mb-3.5">Distribution History</h2>
@@ -60,7 +85,7 @@ export default async function Distribution(){
                     <table className="min-w-full table-fixed">
                         <thead className="bg-gray-50">
                             <tr className="text-left text-sm font-semibold text-gray-700">
-                                <th className="px-6 py-3 w-1/5">Donation ID</th>
+                                <th className="px-6 py-3 w-1/5">Distribution Id</th>
                                 <th className="px-6 py-3 w-1/5">Date</th>
                                 <th className="px-6 py-3 w-1/5">Charity</th>
                                 <th className="px-6 py-3 w-1/5">Status</th>
@@ -73,7 +98,7 @@ export default async function Distribution(){
                                     <td className="px-6 py-3">No Requests</td>
                                 </tr>) : (
                                     history.map((row) => (
-                                        <tr className="border-t border-gray-100 hover:bg-gray-50">
+                                        <tr key={row.distributionId} className="border-t border-gray-100 hover:bg-gray-50">
                                             <td className="px-6 py-3">{row.distributionId}</td>
                                             <td className="px-6 py-3">{new Date(row.date).toLocaleDateString()}</td>
                                             <td className="px-6 py-3">{row.charity?.charityName}</td>

@@ -50,9 +50,9 @@ export default function DonorSidebar() {
         
       </ul>
       
-    <div className="flex justify-center mb-4"> 
-      <SignOutBtn />
-    </div>
+      <div className="flex justify-center mb-4"> 
+        <SignOutBtn />
+      </div>
     </div>
   );
 }
