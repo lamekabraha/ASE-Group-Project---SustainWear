@@ -1,9 +1,8 @@
+'use client';
+
 import {ChangeEvent, DragEvent, useState} from 'react';
-import Image from 'next/image';
-import Form from 'next/form';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/app/utils/useAlert';
-import prisma from '../../../../lib/prisma';
 import { Trash2, Pencil, Image as ImageIcon, Plus } from "lucide-react";
 
 
