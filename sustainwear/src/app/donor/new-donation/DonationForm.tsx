@@ -1,9 +1,8 @@
+'use client';
+
 import {ChangeEvent, DragEvent, useState} from 'react';
-import Image from 'next/image';
-import Form from 'next/form';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/app/utils/useAlert';
-import prisma from '../../../../lib/prisma';
 import { Trash2, Pencil, Image as ImageIcon, Plus } from "lucide-react";
 
 
@@ -12,8 +11,6 @@ interface DonationFormProps {
     sizes: { sizeId: number; size: string }[];
     genders: { genderId: number; gender: string }[];
     conditions: { conditionId: number; condition: string }[];
-    description: { description: string }
-    imageUrl: {imageUrl: string}
 }
 
 
@@ -38,21 +35,38 @@ export default function DonationForm({
     const [isEditting, setIsEditting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         console.log(file)
         if (file){
-            processFile(file);
+            await processFile(file);
         };
     };
     
-    const processFile = (file: File) => {
+    const processFile = async (file: File) => {
         if (!file.type.startsWith("image/")){
             showAlert("Error", "Invalid file type. Please upload an image.");
             return;
         }
-        const url = URL.createObjectURL(file);
-        setImageUrl(url);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setImageUrl(data.url);
+            } else {
+                showAlert("Error", data.error || "Image upload failed.");
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            showAlert("Error", "Image upload failed.");
+        }
     };
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -67,14 +81,14 @@ export default function DonationForm({
         setDragActive(false);
     };
     
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
         
         const file = e.dataTransfer.files?.[0];
         if (file){
-          processFile(file);
+          await processFile(file);
         };
     };
 
@@ -83,8 +97,6 @@ export default function DonationForm({
           showAlert("Error", "Please fill out all fields")
           return;
         }
-
-        const imgUrl = imageUrl.slice(0, 5);
 
         const categoryName = categories.find(category => category.categoryId === categoryId)?.category;
         const sizeName = sizes.find(size => size.sizeId === sizeId)?.size
@@ -151,7 +163,7 @@ export default function DonationForm({
     
     function handleDelete(itemId: number){
         if (confirm("Are you sure you want to delete this item?")){
-            setItems(items.filter((item) => item !== item.tempId));
+            setItems(items.filter((item) => item.tempId !== itemId));
         }
     }
 

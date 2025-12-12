@@ -1,10 +1,20 @@
 'use client';
 
 import {useState } from "react";
-import DistributionModal, {DistributionData} from "@/app/Components/distribution/DistributionModal";
+import DistributionModal, {DistributionData, FilterOptions} from "@/app/Components/distribution/DistributionModal";
 
+export interface DonationItem{
+    itemId: number;
+    photoUrl: string;
+    description: string | null;
+    status: string;
+    categoryId: number;
+    sizeId: number | null;
+    genderId: number;
+    conditionId: number;
+}
 
-export default function DistributionReqTable({request}: {request: DistributionData[]}) {
+export default function DistributionReqTable({request, filters, items}: {request: DistributionData[], filters: FilterOptions, items: DonationItem[]}) {
     const [requestModal, setRequestModal] = useState<DistributionData | null>(null);
     return(
         <div>
@@ -30,7 +40,7 @@ export default function DistributionReqTable({request}: {request: DistributionDa
                                         <td className="px-6 py-3">{new Date(row.date).toLocaleDateString()}</td>
                                         <td className="px-6 py-3">{row.charity?.charityName}</td>
                                         <td className="px-6 py-3">{row.notes}</td>
-                                        <td className="px-6 py-3"><button onClick={() => setRequestModal(row)} className="border-2 border-navy bg-navy text-white rounded px-2 py-0.5">Action</button></td> 
+                                        <td className="px-6 py-3"><button type="button" onClick={() => setRequestModal(row)} className="border-2 border-navy bg-navy text-white rounded px-2 py-0.5">Action</button></td> 
 
                                     </tr>
                                 )
@@ -42,6 +52,8 @@ export default function DistributionReqTable({request}: {request: DistributionDa
                 onClose={() => setRequestModal(null)}
                 isOpen={!!requestModal}
                 data={requestModal}
+                filters={filters}
+                items={items}
             />
         </div>
 

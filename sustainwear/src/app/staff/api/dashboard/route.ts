@@ -1,4 +1,4 @@
-import prisma from "../../../../../lib/prisma";
+import prisma from "../../../../lib/prisma";
 
 const toNumber = (v: number | string | null | undefined): number =>
   v ? Number(v) : 0;

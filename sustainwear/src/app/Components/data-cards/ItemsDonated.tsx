@@ -2,7 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import prisma from "../../../../lib/prisma";
+import prisma from "../../../lib/prisma";
 
 export default async function ItemsDonated() {
   const session = await getServerSession(authOptions);
