@@ -85,7 +85,7 @@ export default async function Distribution(){
                     <table className="min-w-full table-fixed">
                         <thead className="bg-gray-50">
                             <tr className="text-left text-sm font-semibold text-gray-700">
-                                <th className="px-6 py-3 w-1/5">Donation ID</th>
+                                <th className="px-6 py-3 w-1/5">Distribution Id</th>
                                 <th className="px-6 py-3 w-1/5">Date</th>
                                 <th className="px-6 py-3 w-1/5">Charity</th>
                                 <th className="px-6 py-3 w-1/5">Status</th>

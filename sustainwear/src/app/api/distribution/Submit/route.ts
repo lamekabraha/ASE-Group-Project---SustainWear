@@ -16,6 +16,16 @@ export async function updateDistributionItems(distributionId: number, items: num
                 status: 'Distributed'
             }
         });
+
+        await prisma.distribution.updateMany({
+            where: {
+                distributionId: distributionId,
+            },
+            data: {
+                date: new Date(),
+                status: "Distributed"
+            }
+        })
     }
     catch(error){
         console.log(error);

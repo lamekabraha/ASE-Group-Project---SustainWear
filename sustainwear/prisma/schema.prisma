@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,33 +18,33 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime? @updatedAt
 
-
-  donationsAsDonor Donation[]     @relation("DonorDonations")
-  donationsAsStaff Donation[]     @relation("StaffDonations")
+  donationsAsDonor Donation[]      @relation("DonorDonations")
+  donationsAsStaff Donation[]      @relation("StaffDonations")
   Distributions    Distribution[]
 
   @@map("users")
 }
 
 model Charity {
-  charityId    Int       @id @default(autoincrement())
-  charityName  String
-  charityEmail String    @unique
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @updatedAt
-  charityTeleNumber            String  @map("charityTeleNumber")
-  charityRegNumber String? @map("charityRegNumber")
+  charityId         Int      @id @default(autoincrement())
+  charityName       String
+  charityEmail      String   @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime? @updatedAt
+  charityTeleNumber String   @map("charityTeleNumber")
+  charityRegNumber  String?  @map("charityRegNumber")
 
   charityAddress CharityAddress[]
   Distribution   Distribution[]
+  Inventory      Inventory[]    // <--- THIS WAS THE MISSING LINE
 
   @@map("charities")
 }
 
 model CharityAddress {
-  addressId Int       @id @default(autoincrement())
+  addressId Int     @id @default(autoincrement())
   charityId Int
-  charity   Charity   @relation(fields: [charityId], references: [charityId], onDelete: Cascade)
+  charity   Charity @relation(fields: [charityId], references: [charityId], onDelete: Cascade)
   street    String
   postCode  String
   city      String
@@ -80,7 +74,7 @@ model Donation {
 model DonationItem {
   itemId         Int           @id @default(autoincrement())
   photoUrl       String
-  description    String?
+  description    String
   status         String
   donationId     Int
   donation       Donation      @relation(fields: [donationId], references: [donationId])
@@ -88,8 +82,8 @@ model DonationItem {
   category       Category      @relation(fields: [categoryId], references: [categoryId])
   conditionId    Int
   condition      Condition     @relation(fields: [conditionId], references: [conditionId])
-  sizeId         Int?
-  size           Size?         @relation(fields: [sizeId], references: [sizeId])
+  sizeId         Int
+  size           Size         @relation(fields: [sizeId], references: [sizeId])
   genderId       Int
   gender         Gender        @relation(fields: [genderId], references: [genderId])
   distributionId Int?
@@ -102,42 +96,6 @@ model DonationItem {
   @@index([genderId])
   @@index([distributionId])
   @@map("donation_items")
-}
-
-model Distribution {
-  distributionId Int            @id @default(autoincrement())
-  date           DateTime       @default(now())
-  status         String
-  notes          String?
-  charityId      Int?
-  charity        Charity?        @relation(fields: [charityId], references: [charityId])
-  staffId        Int?
-  staff          User?           @relation(fields: [staffId], references: [userId])
-  items          DonationItem[]
-
-  @@index([charityId])
-  @@index([staffId])
-  @@map("distributions")
-}
-
-model Inventory {
-  inventoryId Int       @id @default(autoincrement())
-  totalStock  Int       @default(0)
-  updatedAt   DateTime? @updatedAt
-  categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [categoryId])
-  conditionId Int
-  condition   Condition @relation(fields: [conditionId], references: [conditionId])
-  sizeId      Int?
-  size        Size?     @relation(fields: [sizeId], references: [sizeId])
-  genderId    Int
-  gender      Gender    @relation(fields: [genderId], references: [genderId])
-
-  @@index([categoryId])
-  @@index([conditionId])
-  @@index([sizeId])
-  @@index([genderId])
-  @@map("inventories")
 }
 
 model Category {
@@ -153,8 +111,8 @@ model Category {
 }
 
 model Condition {
-  conditionId Int    @id @default(autoincrement())
-  condition   String @unique
+  conditionId Int     @id @default(autoincrement())
+  condition   String  @unique
 
   items       DonationItem[]
   inventories Inventory[]
@@ -221,15 +179,13 @@ model Distribution {
 }
 
 enum DonationStatus {
-  PENDING @map("PENDING")
-  pending @map("pending")
-
+  PENDING   @map("PENDING")
+  pending   @map("pending")
   SCHEDULED @map("SCHEDULED")
   scheduled @map("scheduled")
-
   COLLECTED @map("COLLECTED")
   collected @map("collected")
-
-  REJECTED @map("REJECTED")
-  rejected @map("rejected")
+  REJECTED  @map("REJECTED")
+  rejected  @map("rejected")
 }
+

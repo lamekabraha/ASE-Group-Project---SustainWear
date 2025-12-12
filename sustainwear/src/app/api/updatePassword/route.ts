@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
         const userId = session.user.id;
         const password = await req.json();
-        
+
     }catch(error){
         console.error("Error: Failed to update password,", {error});
     }

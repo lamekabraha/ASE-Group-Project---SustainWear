@@ -22,7 +22,7 @@ export default function DistributionReqTable({request, filters, items}: {request
                 <table className="min-w-full table-fixed">
                     <thead className="bg-gray-50">
                         <tr className="text-left text-sm font-semibold text-gray-700">
-                            <th className="px-6 py-3 w-1/5">Donation ID</th>
+                            <th className="px-6 py-3 w-1/5">Distribution ID</th>
                             <th className="px-6 py-3 w-1/5">Date</th>
                             <th className="px-6 py-3 w-1/5">Charity</th>
                             <th className="px-6 py-3 w-1/5">Request</th>
