@@ -1,118 +1,131 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Home, ClipboardList, Truck } from 'lucide-react'; 
-import { useSession } from "next-auth/react"; 
+import React from "react";
+import { useSession } from "next-auth/react";
+import { Users, Heart, Package, Truck } from 'lucide-react';
 
-type DashboardData = {
-  totalInventory: number;
-  pendingCount: number;
-  distributedKg: number;
-};
+// --- Components ---
 
-export default function StaffHomePage() {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const { data: session } = useSession(); 
+// 1. KPI Card (Green Border Style)
+const KpiCard = ({ title, value, subtext, icon }: any) => (
+  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm flex items-start justify-between">
+    <div>
+      <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">{title}</p>
+      <h3 className="text-3xl font-bold text-gray-800 mt-2">{value}</h3>
+      <p className="text-sm text-green-600 mt-2 font-medium">{subtext}</p>
+    </div>
+    <div className="p-3 bg-[#f0fdf4] text-green-600 rounded-lg">
+      {icon}
+    </div>
+  </div>
+);
 
-  const firstName = session?.user?.name || "Staff Member"; 
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/staff/dashboard");
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (error) {
-        console.error("Failed to load dashboard data", error);
-      }
-    }
-    load();
-  }, []);
-
-  if (!data) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center text-xl text-gray-500">
-        Loading dashboard...
+// 2. Simple Line Chart (Visual Only - No libraries needed)
+const ActivityChart = () => (
+  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm h-full">
+    <h3 className="text-lg font-bold text-gray-800 mb-6">Monthly Activity</h3>
+    <div className="relative h-48 w-full border-l border-b border-gray-200">
+      {/* Grid Lines */}
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="absolute w-full border-t border-gray-100 border-dashed" style={{ bottom: `${i * 33}%` }}></div>
+      ))}
+      
+      {/* Green Line (Activity) */}
+      <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+        <polyline
+          fill="none"
+          stroke="#84cc16" // Lime-500
+          strokeWidth="3"
+          points="0,150 100,120 200,80 300,100 400,60 500,40 600,20"
+        />
+        {/* Gradient Fill under line */}
+        <polygon 
+           fill="#ecfccb" // Lime-100
+           opacity="0.5"
+           points="0,200 0,150 100,120 200,80 300,100 400,60 500,40 600,20 600,200"
+        />
+      </svg>
+      
+      {/* Labels */}
+      <div className="absolute -bottom-6 left-0 right-0 flex justify-between text-xs text-gray-400">
+        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
       </div>
-    );
-  }
+    </div>
+  </div>
+);
 
-  const formatKg = (v: number) =>
-    Number.isNaN(v) ? "0" : v % 1 === 0 ? v.toString() : v.toFixed(1);
+// 3. Simple Donut Chart (CSS Only)
+const InventoryChart = () => (
+  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm h-full">
+    <h3 className="text-lg font-bold text-gray-800 mb-6">Inventory Status</h3>
+    <div className="flex flex-col items-center justify-center">
+      {/* Conic Gradient for Pie Chart */}
+      <div className="relative w-40 h-40 rounded-full"
+           style={{ background: 'conic-gradient(#84cc16 0% 40%, #facc15 40% 70%, #f87171 70% 100%)' }}>
+        {/* White center to make it a donut */}
+        <div className="absolute inset-0 m-auto w-24 h-24 bg-white rounded-full flex items-center justify-center">
+          <span className="text-xl font-bold text-gray-700">Total<br/>100%</span>
+        </div>
+      </div>
+      
+      {/* Legend */}
+      <div className="mt-6 w-full space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-lime-500 rounded-full mr-2"></span>Available</span>
+          <span className="font-bold">40%</span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-yellow-400 rounded-full mr-2"></span>Pending</span>
+          <span className="font-bold">30%</span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-red-400 rounded-full mr-2"></span>Distributed</span>
+          <span className="font-bold">30%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function AdminHomePage() {
+  const { data: session } = useSession();
+  
+  // Safe name fallback
+  const firstName = session?.user?.name || "Admin";
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
-      <h1 className="text-[34px] font-semibold text-[#2B2B2B]">Home</h1>
+    <section className="p-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Dashboard Overview</h1>
 
-      <div className="border-2 border-[#BFE085] bg-white rounded-2xl p-6 mt-5 mb-8">
+      {/* 1. Welcome Card - Matches 'My Impact' style */}
+      <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm mb-8">
         <h2 className="text-2xl font-bold text-gray-800">
           Welcome Back, {firstName}!
         </h2>
-        <p className="mt-2 text-gray-600">
-          You’re the reason we can tackle textile waste! Your contributions are
-          helping us build a circular economy, one garment at a time.
+        <p className="mt-2 text-gray-600 max-w-2xl">
+          Hello Admin, here is your overview
         </p>
       </div>
 
-      <div className="mt-6 space-y-8">
-        {/* KPI Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <KpiCard 
-            icon={<Home size={28} />} 
-            label="Total Inventory" 
-            value={formatKg(data.totalInventory) + " Kg"} 
-          />
-          <KpiCard 
-            icon={<ClipboardList size={28} />} 
-            label="Pending Donations" 
-            value={data.pendingCount.toString()} 
-          />
-          <KpiCard 
-            icon={<Truck size={28} />} 
-            label="Items Distributed" 
-            value={formatKg(data.distributedKg) + " Kg"} 
-          />
-        </div>
+      {}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <KpiCard title="Total Users" value="155" subtext="+12 this week" icon={<Users size={24} />} />
+        <KpiCard title="Charities" value="30" subtext="Active Partners" icon={<Heart size={24} />} />
+        <KpiCard title="Total Donations" value="546" subtext="Items processed" icon={<Package size={24} />} />
+        <KpiCard title="Distributed" value="423" subtext="Items delivered" icon={<Truck size={24} />} />
+      </div>
 
-        {/* Charts Grid */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <Panel title="Monthly Activity">
-             <div className="flex items-center justify-center h-40 text-gray-400 italic bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                Chart coming soon...
-             </div>
-          </Panel>
-          <Panel title="Inventory Status">
-             <div className="flex items-center justify-center h-40 text-gray-400 italic bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                Pie chart coming soon...
-             </div>
-          </Panel>
+      {/* 3. Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Chart takes up 2 columns */}
+        <div className="lg:col-span-2">
+          <ActivityChart />
+        </div>
+        {/* Side Pie Chart takes up 1 column */}
+        <div className="lg:col-span-1">
+          <InventoryChart />
         </div>
       </div>
     </section>
-  );
-}
-
-function KpiCard({ icon, label, value }: { icon: React.ReactNode, label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-4 rounded-[18px] border-2 border-[#BFE085] bg-white px-6 py-5 shadow-sm">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E3F4C5] text-[#7FBF45]">
-        {icon}
-      </div>
-      <div>
-        <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">{label}</p>
-        <p className="text-3xl font-extrabold text-gray-800">{value}</p>
-      </div>
-    </div>
-  );
-}
-
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6 h-full shadow-sm">
-      <h3 className="text-[20px] font-semibold mb-4 text-gray-800">{title}</h3>
-      {children}
-    </div>
   );
 }
