@@ -16,7 +16,7 @@ export default function StaffHomePage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const session =  getServerSession(authOptions)
 
-  const firstName = session?.user?.firstName;list
+  const firstName = session?.user?.firstName;
 
   useEffect(() => {
     async function load() {
