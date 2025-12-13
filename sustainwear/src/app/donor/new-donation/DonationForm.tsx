@@ -1,16 +1,11 @@
 'use client';
 
 import {ChangeEvent, DragEvent, useState} from 'react';
-import Image from 'next/image';
-import Form from 'next/form';
 import { useRouter } from 'next/navigation';
 import { useAlert } from '@/app/utils/useAlert';
-import prisma from '../../../../lib/prisma';
-import { FaTrash, FaEdit, FaImage, FaPlus } from "react-icons/fa";
-
+import { Trash2, Pencil, Image as ImageIcon, Plus } from "lucide-react";
 
 interface DonationFormProps {
-    lastItemId: { itemId: number }[];
     categories: { categoryId: number; category: string }[];
     sizes: { sizeId: number; size: string }[];
     genders: { genderId: number; gender: string }[];
@@ -18,7 +13,6 @@ interface DonationFormProps {
 }
 
 export default function DonationForm({
-    lastItemId,
     categories,
     sizes,
     genders,
@@ -27,33 +21,50 @@ export default function DonationForm({
     const router = useRouter();
 
     const [items, setItems] = useState<any[]>([]);
-    const [currentId, setCurrentId] =useState(0);
+    const [tempId, setTempId] = useState(0);
     const [categoryId, setCategoryId] = useState(0);
     const [sizeId, setSizeId] = useState(0);
     const [genderId, setGenderId] = useState(0);
     const [conditionId, setConditionId] = useState(0);
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const [error, setError] = useState("");
-    const {showAlert} = useAlert("", "");
+    const { showAlert } = useAlert("", "");
     const [dragActive, setDragActive] = useState(false);
+    const [isEditting, setIsEditting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-    const processFile = (file: File) => {
+    const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        console.log(file)
+        if (file){
+            await processFile(file);
+        };
+    };
+    
+    const processFile = async (file: File) => {
         if (!file.type.startsWith("image/")){
             showAlert("Error", "Invalid file type. Please upload an image.");
             return;
         }
-        const url = URL.createObjectURL(file);
-        setImageUrl(url);
-    };
 
-    const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file){
-          processFile(file);
-        };
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setImageUrl(data.url);
+            } else {
+                showAlert("Error", data.error || "Image upload failed.");
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            showAlert("Error", "Image upload failed.");
+        }
     };
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -61,50 +72,75 @@ export default function DonationForm({
         e.stopPropagation();
         setDragActive(true);
     };
-    
+
     const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
     };
     
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
-        
+
         const file = e.dataTransfer.files?.[0];
         if (file){
-          processFile(file);
+          await processFile(file);
         };
     };
 
-    async function handleSaveItem(){
-        if (!categoryId || !sizeId || !genderId || !conditionId || !description || !imageUrl){
-          showAlert("Error", "Please fill out all fields")
-          return;
+    async function handleSaveItem() {
+        if (!categoryId || !sizeId || !genderId || !conditionId || !description || !imageUrl) {
+            showAlert("Error", "Please fill out all fields")
+            return;
         }
-        
-        const prevItemId = lastItemId;
 
-        const newItemId = prevItemId[0].itemId + 1;
-        setCurrentId(newItemId);
-        
-        const newItem = {
-          currentId : newItemId,
-          categoryId: categoryId,
-          sizeId: sizeId,
-          genderId: genderId,
-          conditionId: conditionId,
-          description: description,
-          imageUrl: imageUrl,
-        };
-    
-        clearForm();
+        const categoryName = categories.find(category => category.categoryId === categoryId)?.category;
+        const sizeName = sizes.find(size => size.sizeId === sizeId)?.size
+        const genderName = genders.find(gender => gender.genderId === genderId)?.gender
+        const conditionName = conditions.find(condition => condition.conditionId === conditionId)?.condition
+
+        if (isEditting === false) {
+            setTempId(tempId + 1);
+
+            const newItem = {
+                tempId: tempId,
+                categoryId: categoryId,
+                categoryName: categoryName,
+                sizeId: sizeId,
+                sizeName: sizeName,
+                genderId: genderId,
+                genderName: genderName,
+                conditionId: conditionId,
+                conditionName: conditionName,
+                description: description,
+                imageUrl: imageUrl,
+            };
+
+            setItems([...items, newItem]);
+            clearForm();
+        } else {
+            const updatedItem = {
+                tempId: tempId,
+                categoryId: categoryId,
+                categoryName: categoryName,
+                sizeId: sizeId,
+                sizeName: sizeName,
+                genderId: genderId,
+                genderName: genderName,
+                conditionId: conditionId,
+                conditionName: conditionName,
+                description: description,
+                imageUrl: imageUrl,
+            }
+            setIsEditting(false);
+        }
     };
 
     function handleEdit(item: any) {
-        setCurrentId(item.itemId);
+        setIsEditting(true);
+        setTempId(item.tempId);
         setCategoryId(item.categoryId);
         setSizeId(item.sizeId);
         setGenderId(item.genderId);
@@ -115,12 +151,11 @@ export default function DonationForm({
     
     function handleDelete(itemId: number){
         if (confirm("Are you sure you want to delete this item?")){
-            setItems(items.filter((item) => item.itemId !== itemId));
+            setItems(items.filter((item) => item.tempId !== itemId));
         }
     }
 
-    function clearForm(){
-        setCurrentId(0);
+    function clearForm() {
         setCategoryId(0);
         setSizeId(0);
         setGenderId(0);
@@ -130,112 +165,140 @@ export default function DonationForm({
     }
 
     async function handleSubmitDonation() {
-        if (items.length === 0){
+        if (items.length === 0) {
             showAlert("Error", "Please add at least one item to your donation.");
             return;
         }
-
         setIsSubmitting(true);
-
-
         try {
             const res = await fetch("/api/donations/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    items: items,
-                }),
+                body: JSON.stringify({ items }),
             });
 
             if (res.ok) {
-                showAlert("Success","Donation application submitted successfully!");
+                showAlert("Success", "Donation application submitted successfully!");
                 setItems([]);
-                router.push("donor/donations");
-            }else {
+                router.push("/donor/new-donation");
+            } else {
                 showAlert("Error", "Failed to submit donation application.");
             }
-        } catch (error){
+        } catch (error) {
             console.error(error);
             showAlert("Error", "Failed to submit donation application.");
         } finally {
             setIsSubmitting(false);
         }
     }
+
     return (
-        <div className="p-10 space-y-5 h-screen">
+        <div className="p-10 p-b-5 space-y-5 h-screen">
             <div className="border-2 border-green rounded-2xl p-6 bg-white h-fit">
                 <h2 className="font-bold text-lg mb-4 text-[#333C46]">
-                    {currentId === 0 ? "Add New Item" : "Edit Item"}
+                    {items.length === 0 ? "Add New Item" : "Edit Item"}
                 </h2>
-    
+
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Category</label>
-                        <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
+                        <label htmlFor="category" className="block text-sm font-medium mb-1">Category</label>
+                        <select 
+                            id="category"
+                            value={categoryId} 
+                            onChange={(e) => setCategoryId(Number(e.target.value))} 
+                            className="w-full p-2 border rounded-lg"
+                        >
                             <option value={0}>Select...</option>
-                            {categories.map(c => <option key={c.categoryId} value={c.categoryId}>{c.category}</option>)}
+                            {categories.map(category => <option key={category.categoryId} value={category.categoryId}>{category.category}</option>)}
                         </select>
                     </div>
-    
+
                     <div className="grid grid-cols-2 gap-2">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Size</label>
-                            <select value={sizeId} onChange={(e) => setSizeId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
+                            <label htmlFor="size" className="block text-sm font-medium mb-1">Size</label>
+                            <select 
+                                id="size"
+                                value={sizeId} 
+                                onChange={(e) => setSizeId(Number(e.target.value))} 
+                                className="w-full p-2 border rounded-lg"
+                            >
                                 <option value={0}>Select...</option>
-                                {sizes.map(s => <option key={s.sizeId} value={s.sizeId}>{s.size}</option>)}
+                                {sizes.map(size => <option key={size.sizeId} value={size.sizeId}>{size.size}</option>)}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">Gender</label>
-                            <select value={genderId} onChange={(e) => setGenderId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
+                            <label htmlFor="gender" className="block text-sm font-medium mb-1">Gender</label>
+                            <select 
+                                id="gender"
+                                value={genderId} 
+                                onChange={(e) => setGenderId(Number(e.target.value))} 
+                                className="w-full p-2 border rounded-lg"
+                            >
                                 <option value={0}>Select...</option>
-                                {genders.map(g => <option key={g.genderId} value={g.genderId}>{g.gender}</option>)}
+                                {genders.map(gender => <option key={gender.genderId} value={gender.genderId}>{gender.gender}</option>)}
                             </select>
                         </div>
                     </div>
-    
+
                     <div>
-                        <label className="block text-sm font-medium mb-1">Condition</label>
-                        <select value={conditionId} onChange={(e) => setConditionId(Number(e.target.value))} className="w-full p-2 border rounded-lg">
+                        <label htmlFor="condition" className="block text-sm font-medium mb-1">Condition</label>
+                        <select 
+                            id="condition"
+                            value={conditionId} 
+                            onChange={(e) => setConditionId(Number(e.target.value))} 
+                            className="w-full p-2 border rounded-lg"
+                        >
                             <option value={0}>Select...</option>
-                            {conditions.map(c => <option key={c.conditionId} value={c.conditionId}>{c.condition}</option>)}
+                            {conditions.map(condition => <option key={condition.conditionId} value={condition.conditionId}>{condition.condition}</option>)}
                         </select>
                     </div>
-    
+
                     <div>
-                        <label className="block text-sm font-medium mb-1">Description</label>
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded-lg min-h-[80px]" />
-                    </div>    
-                    <div 
+                        <label htmlFor="description" className="block text-sm font-medium mb-1">Description</label>
+                        <textarea 
+                            id="description"
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)} 
+                            className="w-full p-2 border rounded-lg min-h-[80px]" 
+                        />
+                    </div>
+
+                    <div
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                         className={`border-2 border-dashed rounded-xl h-32 flex flex-col items-center justify-center relative transition-colors ${dragActive ? 'border-green-500 bg-green-50' : 'border-[#BFE085] hover:bg-gray-50'}`}
                     >
-                        <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={handleImageUpload} />
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10" 
+                            onChange={handleImageUpload} 
+                            aria-label="Upload donation image"
+                        />
                         {imageUrl ? (
                             <img src={imageUrl} alt="Preview" className="h-full object-contain p-1" />
                         ) : (
                             <div className="text-center pointer-events-none">
-                                <FaImage className="mx-auto text-[#7FBF45]" />
+                                <ImageIcon className="mx-auto text-[#7FBF45]" />
                                 <span className="text-xs text-gray-500">Drag & Drop or Click</span>
                             </div>
                         )}
                     </div>
-    
+
                     <div className="flex gap-2">
-                        <button onClick={handleSaveItem} className="flex-1 bg-[#98CD56] text-white py-2 rounded-lg font-semibold hover:opacity-90 flex justify-center items-center gap-2">
-                             {currentId === 0 ? <><FaPlus size={18}/> Add Item</> : "Update Item"}
+                        <button onClick={handleSaveItem} className="flex-1 bg-[#65a30d] text-white py-2 rounded-lg font-semibold hover:opacity-90 flex justify-center items-center gap-2">
+                            {items.length === 0 ? <><Plus size={18} /> Add Item</> : "Update Item"}
                         </button>
-                        {currentId !== 0 && (
+                        {items.length !== 0 && (
                             <button onClick={clearForm} className="px-4 py-2 border rounded-lg text-gray-500">Cancel</button>
                         )}
                     </div>
                 </div>
             </div>
-    
+
             <div className="space-y-4">
                 {items.length === 0 ? (
                     <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">No items added yet.</div>
@@ -243,31 +306,29 @@ export default function DonationForm({
                     items.map((item) => (
                         <div key={item.tempId} className="border-2 border-[#BFE085] rounded-[22px] bg-white p-4 flex gap-4 items-center shadow-sm">
                             <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                               {item.imageUrl ? <img src={item.imageUrl} className="w-full h-full object-cover" /> : <span className="text-xs">No Img</span>}
+                                {item.imageUrl ? <img src={item.imageUrl} alt={item.description} className="w-full h-full object-cover" /> : <span className="text-xs">No Img</span>}
                             </div>
                             <div className="flex-1">
-                                <h3 className="font-bold">Item #{item.tempId}</h3>
-                                <p className="text-sm text-gray-600 line-clamp-1">{item.description}</p>
+                                <h3 className="font-bold">{item.description}</h3>
+                                <p className="text-sm text-gray-600 line-clamp-1">{item.categoryName} • {item.sizeName} • {item.genderName} • {item.conditionName}</p>
                             </div>
                             <div className="flex gap-2">
-                                <button onClick={() => handleEdit(item)} className="p-2 text-blue-500 bg-blue-50 rounded-full"><FaEdit size={16}/></button>
-                                <button onClick={() => handleDelete(item.tempId)} className="p-2 text-red-500 bg-red-50 rounded-full"><FaTrash size={16}/></button>
+                                <button onClick={() => handleEdit(item)} className="p-2 text-blue-500 bg-blue-50 rounded-full" aria-label="Edit Item"><Pencil size={16} /></button>
+                                <button onClick={() => handleDelete(item.tempId)} className="p-2 text-red-500 bg-red-50 rounded-full" aria-label="Delete Item"><Trash2 size={16} /></button>
                             </div>
                         </div>
                     ))
                 )}
-    
-                {items.length > 0 && (
-                    <div className="text-right">
-                        <button 
-                            onClick={handleSubmitDonation} 
-                            disabled={isSubmitting}
-                            className="px-8 py-3 bg-[#2B2B2B] text-white rounded-lg font-bold hover:opacity-90 disabled:opacity-50"
-                        >
-                            {isSubmitting ? "Submitting..." : "Submit Donation"}
-                        </button>
-                    </div>
-                )}
+
+                <div className="text-right">
+                    <button
+                        onClick={handleSubmitDonation}
+                        disabled={isSubmitting}
+                        className="px-8 py-3 bg-green text-navy rounded-lg font-bold hover:opacity-90 disabled:opacity-50"
+                    >
+                        {isSubmitting ? "Submitting..." : "Submit Donation"}
+                    </button>
+                </div>
             </div>
         </div>
     );

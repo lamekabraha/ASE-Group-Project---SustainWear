@@ -59,8 +59,8 @@ export default function LoginPage() {
 
 
     return (
-        <div className="flex justify-between bg-orange">
-            <div className="w-2/3 h-screen flex justify-center items-center">
+        <div className="flex justify-between bg-orange h-screen">
+            <div className="w-2/3 flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Sign In</h1>
 
@@ -94,17 +94,17 @@ export default function LoginPage() {
                     </p>
                 </div>
             </div>
-            <div className="absolute right-0">
-                <div className="">
-                    <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
-                    <Image
-                        src="/login-img.png"
-                        alt="Young man at a garage sale"
-                        width={2000}
-                        height={1000}
-                        className="object-cover w-auto h-screen"
-                    /> 
-                </div>
+            
+            <div className="relative w-1/3 h-full"> 
+                <div className="h-full w-full bg-orange absolute rounded-r-4xl"></div> 
+                
+                <Image
+                    src="/login-img.png"
+                    alt="Young man at a garage sale"
+                    priority 
+                    fill
+                    className="object-cover rounded-r-4xl" 
+                /> 
             </div>
         </div>
     );

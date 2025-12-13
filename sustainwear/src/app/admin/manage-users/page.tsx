@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../../lib/prisma";
+import prisma from "../../../lib/prisma";
 import UsersTable from "@/app/Components/Userstable";
 import SummaryCards from "@/app/Components/Summarycards";
 
@@ -60,7 +60,6 @@ async function getManageUsersData(): Promise<AdminDashboardData> {
 
     const totalItemsQuery = prisma.donationItem.count();
 
-    // Execute queries concurrently for better performance
     const [usersData, uniqueDonors, totalItems] = await Promise.all([
         usersQuery,
         activeDonorsQuery,

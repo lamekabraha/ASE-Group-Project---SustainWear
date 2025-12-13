@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Home, PlusCircle, History, Leaf, User } from 'lucide-react';
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
 
 type DashboardData = {
   totalInventory: number;
@@ -10,6 +14,9 @@ type DashboardData = {
 
 export default function StaffHomePage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const session =  getServerSession(authOptions)
+
+  const firstName = session?.user?.firstName;list
 
   useEffect(() => {
     async function load() {
@@ -35,6 +42,16 @@ export default function StaffHomePage() {
     <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
       <h1 className="text-[34px] font-semibold text-[#2B2B2B]">Home</h1>
 
+      <div className="border-2 border-green rounded-2xl p-5 mr-5 mt-5 mb-2.5 ">
+        <h2 className="text-2xl font-bold">
+          Welcome Back, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}!
+        </h2>
+        <p>
+          You’re the reason we can tackle textile waste! Your contributions are
+          helping us build a circular economy, one garment at a time.
+        </p>
+      </div>
+
       <div className="mt-6 space-y-8">
 
         <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6">
@@ -45,7 +62,7 @@ export default function StaffHomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <KpiCard label="Total Inventory" value={formatKg(data.totalInventory) + " Kg"} />
+          <KpiCard icon={Home} label="Total Inventory" value={formatKg(data.totalInventory) + " Kg"} />
           <KpiCard label="Pending Donations" value={data.pendingCount.toString()} />
           <KpiCard label="Items Distributed" value={formatKg(data.distributedKg) + " Kg"} />
         </div>
@@ -59,11 +76,11 @@ export default function StaffHomePage() {
   );
 }
 
-function KpiCard({ label, value }: { label: string; value: string }) {
+function KpiCard({icon, label, value }: {icon: string, label: string; value: string }) {
   return (
     <div className="flex items-center gap-4 rounded-[18px] border-2 border-[#BFE085] bg-white px-6 py-5">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E3F4C5] text-[#7FBF45] text-xl font-bold">
-        kg
+        {icon}
       </div>
       <div>
         <p className="text-sm font-medium">{label}</p>
@@ -73,7 +90,7 @@ function KpiCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+function Panel({title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-[18px] border-2 border-[#BFE085] bg-white p-6 h-full">
       <h3 className="text-[20px] font-semibold mb-4">{title}</h3>

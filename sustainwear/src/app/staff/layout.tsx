@@ -1,23 +1,25 @@
-"use client";
 
 import CharityStaffSidebar from "../Components/CharityStaffSidebar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import {redirect} from 'next/navigation'
 
-export default function StaffLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex min-h-screen">
-      
-      {/* Staff Sidebar */}
-      <CharityStaffSidebar />
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions);
+  const role = session?.user?.role;
 
-      {/* Main Content */}
-      <div className="flex-1 bg-white p-8 overflow-auto">
-        {children}
-      </div>
+  if (role !== "Staff") {
+    redirect("/")
+  }
 
-    </div>
-  );
+
+
+    return(
+        <main className="flex h-screen overflow-hidden">
+            <CharityStaffSidebar/>
+            <div className="flex-1 overflow-y-auto">
+                {children}
+            </div>
+        </main>
+    )
 }

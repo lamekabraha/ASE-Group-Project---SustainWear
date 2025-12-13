@@ -2,19 +2,14 @@ import Image from 'next/image';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
-import prisma from '../../../../lib/prisma';
+import prisma from '../../../lib/prisma';
  
 export default async function SupportedCharities() {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
-
-    if (!session || !session.user){
-        redirect('/auth/login');
-    }
-
     const uniqueCharities = await prisma.distribution.findMany({
         where: {
-            items: {
+            Items: {
                 some: {
                     donation: {
                         donorId: userId

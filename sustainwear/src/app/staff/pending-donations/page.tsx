@@ -1,22 +1,15 @@
-import prisma from "../../../../lib/prisma";
+import prisma from "../../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
-
 
 export default async function StaffPendingDonations() {
   const session = await getServerSession(authOptions);
-
-  if (!session || !session.user) {
-    redirect("/api/auth/signin");
-  }
 
   const pendingDonations = await prisma.donation.findMany({
     where: { status: "Pending" }, 
     include: {
       donor: true,
       items: true,
-      charity: true, 
     },
     orderBy: { donationDate: "asc" },
   });
@@ -27,7 +20,7 @@ export default async function StaffPendingDonations() {
         <h1 className="text-3xl font-bold text-gray-900">Pending Donations</h1>
         <span className="bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 rounded-full">
           {pendingDonations.length} To Review
-        </span>
+      </span>
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
@@ -37,7 +30,6 @@ export default async function StaffPendingDonations() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Charity (Assigned)</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
@@ -65,11 +57,7 @@ export default async function StaffPendingDonations() {
                     {donation.items.length} Items
                   </td>
                   {}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {donation.charity?.charityName ?? (
-                        <span className="text-red-500 font-medium">Unassigned</span>
-                    )}
-                  </td>
+                  
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2.5 py-0.5 rounded border border-yellow-200">
                       PENDING
