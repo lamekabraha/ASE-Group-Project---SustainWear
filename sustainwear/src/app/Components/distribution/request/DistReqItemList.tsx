@@ -1,7 +1,7 @@
 'use client';
 
-import {DonationItem} from'./DistributionReqTable';
-import {FilterOptions} from './DistributionModal';
+import {DonationItem} from'./DistReqTable';
+import {FilterOptions} from './DistReqModal';
 import Image from 'next/image';
 import Link from 'next/link';
 
