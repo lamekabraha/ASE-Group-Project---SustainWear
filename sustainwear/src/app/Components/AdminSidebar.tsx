@@ -29,6 +29,12 @@ export default function AdminSidebar() {
         </li>
 
         <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors">
+          <Link href="/admin/inventory" className="flex items-center justify-center w-full p-3">
+            <FaHandsHelping size={20} className="mr-3" /> Inventory
+          </Link>
+        </li>
+
+        <li className="rounded-full font-semibold border border-navy text-navy hover:bg-navy hover:text-white transition-colors">
           <Link href="/admin/reports" className="flex items-center justify-center w-full p-3">
             <FaChartLine size={20} className="mr-3" /> Reports
           </Link>
