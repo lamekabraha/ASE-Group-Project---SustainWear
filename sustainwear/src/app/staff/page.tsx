@@ -45,7 +45,6 @@ const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon, color }) => (
   </div>
 );
 
-// ---------------- COMPONENT ----------------
 export default function StaffHomePage() {
   const [data, setData] = useState<DashboardData>({
     totalInventory: 0,
@@ -57,7 +56,7 @@ export default function StaffHomePage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/staff/dashboard?t=${Date.now()}`, {
+        const res = await fetch(`/api/dashboard?t=${Date.now()}`, {
           cache: "no-store",
           headers: {
             "Pragma": "no-cache",
@@ -85,12 +84,9 @@ export default function StaffHomePage() {
 
   return (
     <div className="p-10">
-      {/* HEADER */}
       <div>
         <h1 className="text-4xl font-bold">Dashboard</h1>
       </div>
-
-      {/* KPI SECTION */}
       <div className="mr-5 mt-5">
         <h3 className="text-[28px] font-semibold mb-2.5">Overview</h3>
 
@@ -115,14 +111,10 @@ export default function StaffHomePage() {
           />
         </div>
       </div>
-
-      {/* CHARTS SECTION */}
       <div className="mr-5 mt-5">
         <h3 className="text-[28px] font-semibold mb-2.5">Analytics</h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Monthly Activity */}
           <div className="col-span-1 lg:col-span-7 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
             <h4 className="text-xl font-bold mb-4">Monthly Activity (kg)</h4>
             <div className="h-[300px] w-full">
@@ -177,8 +169,6 @@ export default function StaffHomePage() {
               </ResponsiveContainer>
             </div>
           </div>
-
-          {/* Pie Chart */}
           <div className="col-span-1 lg:col-span-5 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
             <h4 className="text-xl font-bold mb-4">Inventory Distribution</h4>
             <div className="h-[300px] w-full">
