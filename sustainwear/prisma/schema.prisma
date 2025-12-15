@@ -189,3 +189,10 @@ enum DonationStatus {
   rejected  @map("rejected")
 }
 
+enum DistStatus {
+  Preparing
+  Pending
+  Shipped
+  Delivered
+  Completed
+}
