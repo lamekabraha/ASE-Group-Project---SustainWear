@@ -60,8 +60,8 @@ export default function LoginPage() {
 
     return (
         <div className="flex justify-between bg-orange h-screen">
-            <div className="w-2/3 flex justify-center items-center">
-                <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
+            <div className="md:w-2/3 flex justify-center items-center">
+                <div className="mx-5  bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Sign In</h1>
 
                     <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                             <div className="text-alert text-m">{error}</div>
                         )}
 
-                        <button type="submit" className="bg-green text-white text-2xl rounded-xl p-2">
+                        <button type="submit" className="bg-green text-white text-2xl rounded-xl p-2 active:bg-green-500 active:transition">
                             Sign In
                         </button>
                     </Form>
@@ -95,15 +95,15 @@ export default function LoginPage() {
                 </div>
             </div>
             
-            <div className="relative w-1/3 h-full"> 
-                <div className="h-full w-full bg-orange absolute rounded-r-4xl"></div> 
+            <div className="hidden md:flex relative w-1/3 h-full"> 
+                <div className="h-full w-1/24 bg-orange absolute rounded-r-4xl z-10"/> 
                 
                 <Image
                     src="/login-img.png"
                     alt="Young man at a garage sale"
                     priority 
                     fill
-                    className="object-cover rounded-r-4xl" 
+                    className="object-cover" 
                 /> 
             </div>
         </div>

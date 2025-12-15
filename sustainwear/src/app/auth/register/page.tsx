@@ -89,19 +89,19 @@ export default function RegisterPage(){
 
     return (
         <div className="flex justify-between bg-orange h-screen">
-            <div className="w-2/3 flex justify-center items-center">
+            <div className="mx-5 md:w-2/3 flex justify-center items-center">
                 <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Register</h1>
 
-                    <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
-                        <section className="gap-x-3 flex flex-row">
+                    <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 md:flex md:flex-col">
+                        <section className="md:gap-3 space-y-3 md:space-y-0 md:flex md:flex-row">
                             <input type="text" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                             <input type="text" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                         </section>
 
-                        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
+                        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="my-3 md:my-0 w-full text-2xl rounded-xl p-2 bg-white"/>
 
-                        <section className="gap-x-3 flex flex-row">
+                        <section className="md:gap-3 space-y-3 md:space-y-0 md:flex md:flex-row">
                             <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                             <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPassword(e.target.value)} className="w-full text-2xl rounded-xl p-2 bg-white"/>
                         </section>
@@ -110,7 +110,7 @@ export default function RegisterPage(){
                             <div className="text-alert text-m">{error}</div>
                         )}
 
-                        <button className="bg-green text-white text-2xl rounded-xl p-2">Sign Up</button>
+                        <button className="bg-green text-white text-2xl rounded-xl p-2 my-3 md:my-0">Sign Up</button>
                     </Form>
 
                     <p className="text-m text-white">
@@ -119,14 +119,14 @@ export default function RegisterPage(){
                 </div>
             </div>
 
-            <div className="relative w-1/3 h-full">
-                <div className="h-full w-full bg-orange absolute rounded-r-4xl"></div>
+            <div className="hidden md:flex relative w-1/3 h-full">
+                <div className="h-full w-1/24 bg-orange absolute rounded-r-4xl z-10"></div>
                 <Image
                     src="/login-img.png"
                     alt="Young man at a garage sale"
                     priority
                     fill
-                    className="object-cover rounded-r-4xl"
+                    className="object-cover"
                 /> 
             </div>
         </div>

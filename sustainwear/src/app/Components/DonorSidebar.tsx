@@ -38,7 +38,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ href, icon: Icon, label }) =>
 export default function DonorSidebar() {
   
   return (
-    <div className="w-64 bg-orange flex flex-col h-screen rounded-tr-2xl rounded-br-2xl relative p-4"> 
+    <div className="w-70 bg-orange flex flex-col h-screen rounded-tr-2xl rounded-br-2xl relative p-4"> 
       
       <ul className="flex flex-col space-y-9 p-4 mt-auto mb-auto"> 
 
