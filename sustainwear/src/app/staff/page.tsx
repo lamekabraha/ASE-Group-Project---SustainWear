@@ -12,7 +12,9 @@ import {
   PieChart,
   Pie,
   Cell,
+  ResponsiveContainer,
 } from "recharts";
+import { Weight, Check, Truck } from "lucide-react";
 
 // ---------------- TYPES ----------------
 type DashboardData = {
@@ -26,42 +28,52 @@ type DashboardData = {
   }[];
 };
 
+interface KpiCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  color: string;
+}
 
-// ---------------- COMPONENT ----------------
+const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon, color }) => (
+  <div className="col-span-1 md:col-span-4 border-2 border-[#BFE085] rounded-2xl p-5 flex items-center gap-4 bg-white">
+    <div className={`p-3 rounded-full ${color}`}>{icon}</div>
+    <div>
+      <p className="text-sm text-gray-500 font-medium uppercase">{label}</p>
+      <p className="text-3xl font-bold text-gray-900">{value}</p>
+    </div>
+  </div>
+);
+
 export default function StaffHomePage() {
-  const [data, setData] = useState<DashboardData | null>(null);
-
+  const [data, setData] = useState<DashboardData>({
+    totalInventory: 0,
+    pendingCount: 0,
+    distributedKg: 0,
+    monthlyData: [],
+  });
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/staff/api/dashboard");
+        const res = await fetch(`/api/dashboard?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache",
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch");
         const json = await res.json();
         setData(json);
       } catch (err) {
-  console.error("Dashboard API failed:", err);
-  setData({
-    totalInventory: 0,
-    pendingCount: 0,
-    distributedKg: 0,
-    monthlyData: [], 
-  });
-}
-
+        console.error("Dashboard API failed:", err);
+      }
     }
-
     load();
   }, []);
 
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Loading dashboard...
-      </div>
-    );
-  }
-
-  // ✅ PIE DATA FROM LIVE API
   const pieData = [
     { name: "Available", value: data.totalInventory },
     { name: "Pending", value: data.pendingCount },
@@ -71,79 +83,128 @@ export default function StaffHomePage() {
   const COLORS = ["#7FBF45", "#FF6B35", "#3BA9FF"];
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-8">
-      <h1 className="text-3xl font-semibold mb-6">Home</h1>
-
-      {/* KPI CARDS */}
-      <div className="grid gap-6 md:grid-cols-3 mb-8">
-        <KpiCard label="Total Inventory" value={data.totalInventory + " kg"} />
-        <KpiCard label="Pending Approval" value={data.pendingCount.toString()} />
-        <KpiCard label="Items Distributed" value={data.distributedKg + " kg"} />
-      </div>
-
-      {/* CHARTS */}
-      <div className="grid gap-6 md:grid-cols-2">
-
-        {/* ✅ MONTHLY ACTIVITY — SAFE */}
-        <Panel title="Monthly Activity">
-          <LineChart width={420} height={260} data={data.monthlyData}>
-
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="donations" stroke="#FF6B35" />
-            <Line type="monotone" dataKey="distributed" stroke="#3BA9FF" />
-          </LineChart>
-        </Panel>
-
-        
-        <Panel title="Inventory Status">
-          <PieChart width={340} height={260}>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              outerRadius={90}
-              label
-              dataKey="value"
-            >
-              {pieData.map((_, i) => (
-                <Cell key={i} fill={COLORS[i]} />
-              ))}
-            </Pie>
-            <Legend />
-            <Tooltip />
-          </PieChart>
-        </Panel>
-
-      </div>
-    </section>
-  );
-}
-
-// ---------------- UI COMPONENTS ----------------
-
-function KpiCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-4 rounded-2xl border-2 border-[#BFE085] bg-white px-6 py-5">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E3F4C5] text-[#7FBF45] text-xl font-bold">
-        kg
-      </div>
+    <div className="p-10">
       <div>
-        <p className="text-sm font-medium">{label}</p>
-        <p className="text-3xl font-extrabold">{value}</p>
+        <h1 className="text-4xl font-bold">Dashboard</h1>
       </div>
-    </div>
-  );
-}
+      <div className="mr-5 mt-5">
+        <h3 className="text-[28px] font-semibold mb-2.5">Overview</h3>
 
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border-2 border-[#BFE085] bg-white p-6">
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
-      {children}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <KpiCard
+            label="Total Inventory"
+            value={`${data.totalInventory} kg`}
+            icon={<Weight className="h-6 w-6" />}
+            color="bg-[#E3F4C5] text-[#7FBF45]"
+          />
+          <KpiCard
+            label="Pending Approval"
+            value={data.pendingCount.toString()}
+            icon={<Check className="h-6 w-6" />}
+            color="bg-[#FFE5D9] text-[#FF6B35]"
+          />
+          <KpiCard
+            label="Items Distributed"
+            value={`${data.distributedKg} kg`}
+            icon={<Truck className="h-6 w-6" />}
+            color="bg-[#D6EBFF] text-[#3BA9FF]"
+          />
+        </div>
+      </div>
+      <div className="mr-5 mt-5">
+        <h3 className="text-[28px] font-semibold mb-2.5">Analytics</h3>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="col-span-1 lg:col-span-7 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+            <h4 className="text-xl font-bold mb-4">Monthly Activity (kg)</h4>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer minHeight={0} minWidth={0}>
+                <LineChart
+                  data={data.monthlyData}
+                  margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                  className="min-w-0 min-h-0"
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    interval={0}
+                    tick={{ fill: "#6B7280", fontSize: 12 }}
+                    dy={10}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: "#6B7280", fontSize: 12 }}
+                    width={30}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Legend verticalAlign="top" height={36} />
+                  <Line
+                    name="Received"
+                    type="monotone"
+                    dataKey="donations"
+                    stroke="#FF6B35"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#FF6B35" }}
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line
+                    name="Distributed"
+                    type="monotone"
+                    dataKey="distributed"
+                    stroke="#3BA9FF"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#3BA9FF" }}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="col-span-1 lg:col-span-5 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+            <h4 className="text-xl font-bold mb-4">Inventory Distribution</h4>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value, name) => [`${value} kg`, name]}
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

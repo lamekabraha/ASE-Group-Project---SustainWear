@@ -1,7 +1,7 @@
 'use client';
 
 import {useState } from "react";
-import DistributionModal, {DistributionData, FilterOptions} from "@/app/Components/distribution/DistributionModal";
+import DistributionModal, {DistributionData, FilterOptions} from "./DistReqModal";
 
 export interface DonationItem{
     itemId: number;

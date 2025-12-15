@@ -10,12 +10,11 @@ export default function InventoryPage() {
   const [search, setSearch] = useState("");
   const [inventory, setInventory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [categories, setCategories] = useState<any[]>([]);
   const [conditions, setConditions] = useState<any[]>([]);
-  const [sizes, setSizes] = useState<any[]>([]); 
+  const [sizes, setSizes] = useState<any[]>([]);
   const [genders, setGenders] = useState<any[]>([]);
-
 
   const [totalItems, setTotalItems] = useState(0);
   const [availableItems, setAvailableItems] = useState(0);
@@ -28,56 +27,74 @@ export default function InventoryPage() {
     genderId: 0,
   });
 
-  
-  const CATEGORY_OPTIONS = [
-    { id: 1, label: "Clothing" },
-    { id: 2, label: "Footwear" },
-    { id: 3, label: "Accessories" },
-  ];
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/inventory/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      console.error("Failed to load categories", err);
+    }
+  };
 
-  const CONDITION_OPTIONS = [
-    { id: 1, label: "New" },
-    { id: 2, label: "Good" },
-    { id: 3, label: "Used" },
-    { id: 4, label: "Damaged" },
-  ];
+  const fetchSizes = async () => {
+    try {
+      const res = await fetch("/api/inventory/sizes");
+      const data = await res.json();
+      setSizes(data);
+    } catch (err) {
+      console.error("Failed to load sizes", err);
+    }
+  };
 
-  const GENDER_OPTIONS = [
-    { id: 1, label: "Male" },
-    { id: 2, label: "Female" },
-    { id: 3, label: "Unisex" },
-  ];
+  const fetchGenders = async () => {
+    try {
+      const res = await fetch("/api/inventory/genders");
+      const data = await res.json();
+      setGenders(data);
+    } catch (err) {
+      console.error("Failed to load genders", err);
+    }
+  };
 
-  const SIZE_OPTIONS = [
-    { id: 1, label: "XS" },
-    { id: 2, label: "S" },
-    { id: 3, label: "M" },
-    { id: 4, label: "L" },
-    { id: 5, label: "XL" },
-    { id: 6, label: "No Size" },
-  ];
-
-
+  const fetchConditions = async () => {
+    try {
+      const res = await fetch("/api/inventory/conditions");
+      const data = await res.json();
+      setConditions(data);
+    } catch (err) {
+      console.error("Failed to load conditions", err);
+    }
+  };
 
   const fetchInventory = async () => {
-  try {
-    const res = await fetch("/api/inventory");
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/inventory");
+      const data = await res.json();
 
-    setInventory(data);
+      if (!Array.isArray(data)) {
+        console.error("API did not return an array", data);
+        setInventory([]);
+        return;
+      }
 
-    setTotalItems(data.length);
-    setAvailableItems(data.filter((i: any) => i.totalStock > 0).length);
-    setDistributedItems(data.filter((i: any) => i.totalStock === 0).length);
-  } catch (err) {
-    console.error("Failed to load inventory", err);
-  } finally {
-    setLoading(false);
-  }
-};
+      setInventory(data);
+      setTotalItems(data.length);
+      setAvailableItems(data.filter((i: any) => i.totalStock > 0).length);
+      setDistributedItems(data.filter((i: any) => i.totalStock === 0).length);
+    } catch (err) {
+      console.error("Failed to load inventory", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchInventory();
+    fetchCategories();
+    fetchSizes();
+    fetchGenders();
+    fetchConditions();
   }, []);
 
   const handleEdit = (item: any) => {
@@ -89,8 +106,6 @@ export default function InventoryPage() {
       genderId: item.gender.genderId,
     });
   };
-
-
 
   const handleSave = async (inventoryId: number) => {
     try {
@@ -104,39 +119,35 @@ export default function InventoryPage() {
       });
 
       setEditingId(null);
-      fetchInventory(); 
+      fetchInventory();
     } catch (err) {
       console.error("Failed to update inventory", err);
     }
   };
 
-  
   const handleDelete = async (id: number) => {
-  const confirmed = confirm("Are you sure you want to delete this item?");
-  if (!confirmed) return;
+    const confirmed = confirm("Are you sure you want to delete this item?");
+    if (!confirmed) return;
 
-  try {
-    const res = await fetch("/api/inventory/delete", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    try {
+      const res = await fetch("/api/inventory/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
 
-    if (!res.ok) {
-      alert("Failed to delete item");
-      return;
+      if (!res.ok) {
+        alert("Failed to delete item");
+        return;
+      }
+
+      setInventory((prev) => prev.filter((item) => item.inventoryId !== id));
+      alert("Item deleted successfully!");
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Error deleting item.");
     }
-
-    setInventory((prev) => prev.filter((item) => item.inventoryId !== id));
-
-    alert("Item deleted successfully!");
-  } catch (error) {
-    console.error("Delete error:", error);
-    alert("Error deleting item.");
-  }
   };
-
-
 
   const filteredInventory = inventory.filter((item) => {
     const matchCategory =
@@ -145,8 +156,7 @@ export default function InventoryPage() {
     const matchCondition =
       condition === "" || item.condition?.condition === condition;
 
-    const matchStatus =
-      status === "" || item.status === status;
+    const matchStatus = status === "" || item.status === status;
 
     const matchSearch =
       search === "" ||
@@ -162,12 +172,11 @@ export default function InventoryPage() {
       <h1 className="text-3xl font-semibold mb-7">Inventory</h1>
 
       <div className="grid grid-cols-3 gap-6 mb-8">
-        <StatCard label="Total Items" value={totalItems}/>
-        <StatCard label="Available" value={availableItems}/>
-        <StatCard label="Distributed" value={distributedItems}/>
+        <StatCard label="Total Items" value={totalItems} />
+        <StatCard label="Available" value={availableItems} />
+        <StatCard label="Distributed" value={distributedItems} />
       </div>
 
-      
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center bg-white rounded-xl px-4 py-2 flex-1 shadow-sm border">
           <Search className="w-4 h-4 text-gray-400 mr-2" />
@@ -176,14 +185,15 @@ export default function InventoryPage() {
             placeholder="Search by Item, Size or Gender"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full outline-none"/>
+            className="w-full outline-none"
+          />
         </div>
 
         <button className="bg-[#9EE37D] text-black px-5 py-2 rounded-lg shadow-sm">
           Filter
         </button>
       </div>
-      
+
       <div className="grid grid-cols-3 gap-6 mb-6">
         <div className="flex flex-col">
           <label className="text-gray-600 text-sm mb-1">Category</label>
@@ -193,30 +203,32 @@ export default function InventoryPage() {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">All</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Footwear">Footwear</option>
+            {categories.map((c) => (
+              <option key={c.categoryId} value={c.category}>
+                {c.category}
+              </option>
+            ))}
           </select>
         </div>
 
-        
         <div className="flex flex-col">
-          <label className="text-gray-600 text-sm mb-1">Condition</label>
+          <label className="text-gray text-sm mb-1">Condition</label>
           <select
             className="border rounded-lg p-2 bg-white shadow-sm outline-none"
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
           >
             <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Good">Good</option>
-            <option value="Used">Used</option>
-            <option value="Damaged">Damaged</option>
+            {conditions.map((c) => (
+              <option key={c.conditionId} value={c.condition}>
+                {c.condition}
+              </option>
+            ))}
           </select>
         </div>
 
-        
         <div className="flex flex-col">
-          <label className="text-gray-600 text-sm mb-1">Status</label>
+          <label className="text-gray text-sm mb-1">Status</label>
           <select
             className="border rounded-lg p-2 bg-white shadow-sm outline-none"
             value={status}
@@ -227,51 +239,60 @@ export default function InventoryPage() {
             <option value="Distributed">Distributed</option>
           </select>
         </div>
-
       </div>
 
-      
       <div className="bg-white border border-[#B5E48C] rounded-xl overflow-hidden shadow-sm">
         <table className="w-full text-left">
           <thead className="bg-[#ECFCE5] text-gray-600">
             <tr>
-              {["Category", "Size", "Gender", "Condition", "Status", "Last Updated", "Action"].map(
-                (h) => (
-                  <th key={h} className="p-4 text-sm font-semibold">{h}</th>
-                )
-              )}
+              {[
+                "Category",
+                "Size",
+                "Gender",
+                "Condition",
+                "# In Stock",
+                "Status",
+                "Last Updated",
+                "Action",
+              ].map((h) => (
+                <th key={h} className="p-4 text-sm font-semibold">
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7} className="p-6 text-center text-gray-500">
+                <td colSpan={8} className="p-6 text-center text-gray-500">
                   Loading inventory...
                 </td>
               </tr>
             ) : filteredInventory.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-6 text-center text-gray-500">
+                <td colSpan={8} className="p-6 text-center text-gray-500">
                   No matching items found.
                 </td>
               </tr>
-            ) : 
-              filteredInventory.map((item: any) => ((
+            ) : (
+              filteredInventory.map((item: any) => (
                 <tr key={item.inventoryId} className="border-t">
-                  
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select
                         className="border rounded p-1 w-full"
                         value={editForm.categoryId}
                         onChange={(e) =>
-                          setEditForm({ ...editForm, categoryId: Number(e.target.value) })
+                          setEditForm({
+                            ...editForm,
+                            categoryId: Number(e.target.value),
+                          })
                         }
                       >
-                        {CATEGORY_OPTIONS.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.label}
+                        {categories.map((c) => (
+                          <option key={c.categoryId} value={c.categoryId}>
+                            {c.category}
                           </option>
                         ))}
                       </select>
@@ -279,7 +300,6 @@ export default function InventoryPage() {
                       item.category.category
                     )}
                   </td>
-
 
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
@@ -289,13 +309,15 @@ export default function InventoryPage() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            sizeId: e.target.value ? Number(e.target.value) : null,
+                            sizeId: e.target.value
+                              ? Number(e.target.value)
+                              : null,
                           })
                         }
                       >
-                        {SIZE_OPTIONS.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.label}
+                        {sizes.map((s) => (
+                          <option key={s.sizeId} value={s.sizeId}>
+                            {s.size}
                           </option>
                         ))}
                       </select>
@@ -304,19 +326,21 @@ export default function InventoryPage() {
                     )}
                   </td>
 
-
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select
                         className="border rounded p-1 w-full"
                         value={editForm.genderId}
                         onChange={(e) =>
-                          setEditForm({ ...editForm, genderId: Number(e.target.value) })
+                          setEditForm({
+                            ...editForm,
+                            genderId: Number(e.target.value),
+                          })
                         }
                       >
-                        {GENDER_OPTIONS.map((g) => (
-                          <option key={g.id} value={g.id}>
-                            {g.label}
+                        {genders.map((g) => (
+                          <option key={g.genderId} value={g.genderId}>
+                            {g.gender}
                           </option>
                         ))}
                       </select>
@@ -331,12 +355,15 @@ export default function InventoryPage() {
                         className="border rounded p-1 w-full"
                         value={editForm.conditionId}
                         onChange={(e) =>
-                          setEditForm({ ...editForm, conditionId: Number(e.target.value) })
+                          setEditForm({
+                            ...editForm,
+                            conditionId: Number(e.target.value),
+                          })
                         }
                       >
-                        {CONDITION_OPTIONS.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.label}
+                        {conditions.map((c) => (
+                          <option key={c.conditionId} value={c.conditionId}>
+                            {c.condition}
                           </option>
                         ))}
                       </select>
@@ -344,6 +371,8 @@ export default function InventoryPage() {
                       item.condition.condition
                     )}
                   </td>
+
+                  <td className="p-4">{item.totalStock}</td>
 
                   <td className="p-4">
                     {item.totalStock > 0 ? "Available" : "Distributed"}
@@ -359,7 +388,7 @@ export default function InventoryPage() {
                     {editingId === item.inventoryId ? (
                       <>
                         <button
-                          className="px-3 py-1 text-sm bg-green-500 text-white rounded"
+                          className="px-3 py-1 text-sm bg-green text-white rounded"
                           onClick={() => handleSave(item.inventoryId)}
                         >
                           Save
@@ -375,11 +404,11 @@ export default function InventoryPage() {
                     ) : (
                       <>
                         <Edit
-                          className="w-4 h-4 cursor-pointer text-green-600"
+                          className="w-4 h-4 cursor-pointer text-green-800"
                           onClick={() => handleEdit(item)}
                         />
                         <Delete
-                          className="w-4 h-4 cursor-pointer text-red-600"
+                          className="w-4 h-4 cursor-pointer text-alert"
                           onClick={() => handleDelete(item.inventoryId)}
                         />
                       </>
@@ -397,8 +426,8 @@ export default function InventoryPage() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="border border-[#B5E48C] bg-white rounded-xl p-6 text-center shadow-sm">
-      <p className="text-gray-500 text-sm">{label}</p>
+    <div className="border border-green bg-white rounded-xl p-6 text-center shadow-sm">
+      <p className="text-gray text-sm">{label}</p>
       <p className="text-3xl font-bold mt-2">{value}</p>
     </div>
   );

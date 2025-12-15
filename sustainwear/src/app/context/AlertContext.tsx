@@ -36,7 +36,7 @@ export const AlertProvider: React.FC<AlertContextProvider> = ({children}) => {
                 clearInterval(interval);
                 return prevItems;
             })
-        }, 10000);
+        }, 1200);
         return () => clearInterval(interval);
     }, []);
 

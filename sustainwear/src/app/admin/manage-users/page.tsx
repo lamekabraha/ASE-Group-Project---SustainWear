@@ -1,39 +1,11 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 import UsersTable from "@/app/Components/Userstable";
 import SummaryCards from "@/app/Components/Summarycards";
 
-export const metadata = {
-    title: 'Admin | Manage Users',
-};
-
-type UserSummaryRecord = {
-    userId: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-    role: string;
-    totalDonations: number;
-    totalItemsDonated: number;
-    lastDonationDate: Date | null;
-    donationHistory: Array<{
-        date: Date;
-        itemCount: number;
-    }>;
-};
-
-type AdminDashboardData = {
-    users: UserSummaryRecord[];
-    summaryMetrics: {
-        totalUsers: number;
-        activeDonorCount: number;
-        totalItemsDonated: number;
-    };
-};
-
-async function getManageUsersData(): Promise<AdminDashboardData> {
+async function getManageUsersData() {
     const usersQuery = prisma.user.findMany({
         select: {
             userId: true,
@@ -50,7 +22,7 @@ async function getManageUsersData(): Promise<AdminDashboardData> {
                 orderBy: { donationDate: 'desc' },
             },
         },
-        orderBy: { lastName: 'asc' },
+        orderBy: { userId: 'asc' },
     });
 
     const activeDonorsQuery = prisma.donation.findMany({
@@ -116,10 +88,17 @@ export default async function ManageUsersPage() {
     const { users, summaryMetrics } = await getManageUsersData();
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">User Account Management</h1>
-            <SummaryCards metrics={summaryMetrics} />
-            <UsersTable initialUsers={users} />
+        <div className="p-10 flex flex-col gap-y-10 min-h-screen">
+            <h1 className="text-4xl font-bold text-[#2B2B2B]">User Management</h1>
+            <div className="">
+                <SummaryCards metrics={summaryMetrics} />
+            </div>
+            <div>
+                <h2 className="text-2xl font-bold mb-4 text-[#2B2B2B]">All Users</h2>
+                <div className="border-2 border-[#BFE085] rounded-[22px] p-5 bg-white shadow-sm">
+                    <UsersTable initialUsers={users} />
+                </div>
+            </div>
         </div>
     );
 }

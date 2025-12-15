@@ -4,8 +4,8 @@ import { X, Calendar, Truck, Package, ChevronDown} from 'lucide-react';
 import { format } from 'date-fns';
 import Form from 'next/form';
 import { useState } from 'react';
-import DistributionItemList from './DistributionItemList';
-import { DonationItem } from './DistributionReqTable';
+import DistributionItemList from './DistReqItemList';
+import { DonationItem } from './DistReqTable';
 import { updateDistributionItems } from '@/app/api/distribution/Submit/route';
 
 export interface DistributionData {

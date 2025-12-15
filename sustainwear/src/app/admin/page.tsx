@@ -1,131 +1,209 @@
 "use client";
 
-import React from "react";
-import { useSession } from "next-auth/react";
-import { Users, Heart, Package, Truck } from 'lucide-react';
+import { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+} from "recharts";
+import { Weight, Check, Truck } from "lucide-react";
 
-// --- Components ---
+type DashboardData = {
+  totalInventory: number;
+  pendingCount: number;
+  distributedKg: number;
+  monthlyData: {
+    month: string;
+    donations: number;
+    distributed: number;
+  }[];
+};
 
-// 1. KPI Card (Green Border Style)
-const KpiCard = ({ title, value, subtext, icon }: any) => (
-  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm flex items-start justify-between">
+interface KpiCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon, color }) => (
+  <div className="col-span-1 md:col-span-4 border-2 border-[#BFE085] rounded-2xl p-5 flex items-center gap-4 bg-white">
+    <div className={`p-3 rounded-full ${color}`}>{icon}</div>
     <div>
-      <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">{title}</p>
-      <h3 className="text-3xl font-bold text-gray-800 mt-2">{value}</h3>
-      <p className="text-sm text-green-600 mt-2 font-medium">{subtext}</p>
-    </div>
-    <div className="p-3 bg-[#f0fdf4] text-green-600 rounded-lg">
-      {icon}
-    </div>
-  </div>
-);
-
-// 2. Simple Line Chart (Visual Only - No libraries needed)
-const ActivityChart = () => (
-  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm h-full">
-    <h3 className="text-lg font-bold text-gray-800 mb-6">Monthly Activity</h3>
-    <div className="relative h-48 w-full border-l border-b border-gray-200">
-      {/* Grid Lines */}
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="absolute w-full border-t border-gray-100 border-dashed" style={{ bottom: `${i * 33}%` }}></div>
-      ))}
-      
-      {/* Green Line (Activity) */}
-      <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
-        <polyline
-          fill="none"
-          stroke="#84cc16" // Lime-500
-          strokeWidth="3"
-          points="0,150 100,120 200,80 300,100 400,60 500,40 600,20"
-        />
-        {/* Gradient Fill under line */}
-        <polygon 
-           fill="#ecfccb" // Lime-100
-           opacity="0.5"
-           points="0,200 0,150 100,120 200,80 300,100 400,60 500,40 600,20 600,200"
-        />
-      </svg>
-      
-      {/* Labels */}
-      <div className="absolute -bottom-6 left-0 right-0 flex justify-between text-xs text-gray-400">
-        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
-      </div>
-    </div>
-  </div>
-);
-
-// 3. Simple Donut Chart (CSS Only)
-const InventoryChart = () => (
-  <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm h-full">
-    <h3 className="text-lg font-bold text-gray-800 mb-6">Inventory Status</h3>
-    <div className="flex flex-col items-center justify-center">
-      {/* Conic Gradient for Pie Chart */}
-      <div className="relative w-40 h-40 rounded-full"
-           style={{ background: 'conic-gradient(#84cc16 0% 40%, #facc15 40% 70%, #f87171 70% 100%)' }}>
-        {/* White center to make it a donut */}
-        <div className="absolute inset-0 m-auto w-24 h-24 bg-white rounded-full flex items-center justify-center">
-          <span className="text-xl font-bold text-gray-700">Total<br/>100%</span>
-        </div>
-      </div>
-      
-      {/* Legend */}
-      <div className="mt-6 w-full space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-lime-500 rounded-full mr-2"></span>Available</span>
-          <span className="font-bold">40%</span>
-        </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-yellow-400 rounded-full mr-2"></span>Pending</span>
-          <span className="font-bold">30%</span>
-        </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="flex items-center text-gray-600"><span className="w-3 h-3 bg-red-400 rounded-full mr-2"></span>Distributed</span>
-          <span className="font-bold">30%</span>
-        </div>
-      </div>
+      <p className="text-sm text-gray-500 font-medium uppercase">{label}</p>
+      <p className="text-3xl font-bold text-gray-900">{value}</p>
     </div>
   </div>
 );
 
 export default function AdminHomePage() {
-  const { data: session } = useSession();
-  
-  // Safe name fallback
-  const firstName = session?.user?.name || "Admin";
+  const [data, setData] = useState<DashboardData>({
+    totalInventory: 0,
+    pendingCount: 0,
+    distributedKg: 0,
+    monthlyData: [],
+  });
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch(`/api/dashboardData?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache",
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch");
+        const json = await res.json();
+        setData(json);
+      } catch (err) {
+        console.error("Dashboard API failed:", err);
+      }
+    }
+    load();
+  }, []);
+
+  const pieData = [
+    { name: "Available", value: data.totalInventory },
+    { name: "Pending", value: data.pendingCount },
+    { name: "Distributed", value: data.distributedKg },
+  ];
+
+  const COLORS = ["#7FBF45", "#FF6B35", "#3BA9FF"];
 
   return (
-    <section className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Dashboard Overview</h1>
-
-      {/* 1. Welcome Card - Matches 'My Impact' style */}
-      <div className="bg-white p-6 rounded-xl border-2 border-[#BFE085] shadow-sm mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Welcome Back, {firstName}!
-        </h2>
-        <p className="mt-2 text-gray-600 max-w-2xl">
-          Hello Admin, here is your overview
-        </p>
+    <div className="p-10">
+      <div>
+        <h1 className="text-4xl font-bold">Dashboard</h1>
       </div>
+      <div className="mr-5 mt-5">
+        <h3 className="text-[28px] font-semibold mb-2.5">Overview</h3>
 
-      {}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <KpiCard title="Total Users" value="155" subtext="+12 this week" icon={<Users size={24} />} />
-        <KpiCard title="Charities" value="30" subtext="Active Partners" icon={<Heart size={24} />} />
-        <KpiCard title="Total Donations" value="546" subtext="Items processed" icon={<Package size={24} />} />
-        <KpiCard title="Distributed" value="423" subtext="Items delivered" icon={<Truck size={24} />} />
-      </div>
-
-      {/* 3. Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Chart takes up 2 columns */}
-        <div className="lg:col-span-2">
-          <ActivityChart />
-        </div>
-        {/* Side Pie Chart takes up 1 column */}
-        <div className="lg:col-span-1">
-          <InventoryChart />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <KpiCard
+            label="Total Inventory"
+            value={`${data.totalInventory} kg`}
+            icon={<Weight className="h-6 w-6" />}
+            color="bg-[#E3F4C5] text-[#7FBF45]"
+          />
+          <KpiCard
+            label="Pending Approval"
+            value={data.pendingCount.toString()}
+            icon={<Check className="h-6 w-6" />}
+            color="bg-[#FFE5D9] text-[#FF6B35]"
+          />
+          <KpiCard
+            label="Items Distributed"
+            value={`${data.distributedKg} kg`}
+            icon={<Truck className="h-6 w-6" />}
+            color="bg-[#D6EBFF] text-[#3BA9FF]"
+          />
         </div>
       </div>
-    </section>
+      <div className="mr-5 mt-5">
+        <h3 className="text-[28px] font-semibold mb-2.5">Analytics</h3>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="col-span-1 lg:col-span-7 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+            <h4 className="text-xl font-bold mb-4">Monthly Activity (kg)</h4>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer minHeight={0} minWidth={0}>
+                <LineChart
+                  data={data.monthlyData}
+                  margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                  className="min-w-0 min-h-0"
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    interval={0}
+                    tick={{ fill: "#6B7280", fontSize: 12 }}
+                    dy={10}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: "#6B7280", fontSize: 12 }}
+                    width={30}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Legend verticalAlign="top" height={36} />
+                  <Line
+                    name="Received"
+                    type="monotone"
+                    dataKey="donations"
+                    stroke="#FF6B35"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#FF6B35" }}
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line
+                    name="Distributed"
+                    type="monotone"
+                    dataKey="distributed"
+                    stroke="#3BA9FF"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#3BA9FF" }}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="col-span-1 lg:col-span-5 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+            <h4 className="text-xl font-bold mb-4">Inventory Distribution</h4>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value, name) => [`${value} kg`, name]}
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

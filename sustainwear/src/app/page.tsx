@@ -1,66 +1,53 @@
 import Navbar from "./Components/Navbar"
-
+import Link from 'next/link'
+import Image from 'next/image'
+import {Shirt, Recycle, Heart} from 'lucide-react'
+ 
 export default function App() {
   return (
-    <>
-      {/* Header*/}
+    <div className="relative h-screen">
       <Navbar />
-
-      {/* */}
-      <section id="home" className="bg-[#FF6A3D]">
+      <section id="home" className="bg-orange">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 md:py-20">
-          {/* Desktop */}
-          <div className="md:grid md:grid-cols-2 md:gap-12 md:items-center">
-            {/* Left: headline buttons */}
+          <div className="md:grid md:grid-cols-2 md:gap-8 md:items-center">
             <div>
-              <h1 className="text-[26px] sm:text-[32px] md:text-[40px] font-semibold leading-snug text-[#2B2B2B]">
+              <h1 className="text-4xl md:text-4 lg:text-5xl font-semibold leading-snug text-gray">
                 Give Your Clothes a <br />
                 Second Life.
                 <br />
                 <span className="font-extrabold">Seamlessly.</span>
               </h1>
 
-              {/* Buttons mobile */}
               <div className="mt-4 flex gap-3">
-                <a
-                  id="join"
-                  href="#mission"
-                  className="px-4 py-1.5 rounded-md bg-[#B7F18A] text-[#0B3B24] text-sm font-semibold shadow-sm hover:opacity-90"
+                <Link
+                  href="auth/login"
+                  className="px-4 py-1.5 rounded-md bg-[#B7F18A] text-[#0B3B24] text-sm font-semibold shadow-sm hover:opacity-90 lg:text-lg"
                 >
                   Join
-                </a>
-                <a
-                  href="#mission"
-                  className="px-4 py-1.5 rounded-md border border-[#FFD1B9] text-[#2B2B2B] text-sm font-semibold hover:bg-[#FFD1B9]/20"
-                >
-                  Learn More
-                </a>
+                </Link>
               </div>
 
-              {/* image under text  */}
-              <div className="mt-6 md:hidden flex justify-center">
-                <div className="w-[260px] rounded-md border-[6px] border-[#D3E6F2] bg-white shadow p-2">
-                  <div className="aspect-[4/3] w-full">
-                    {/* Replacelater   /> */}
-                    <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
-                      <rect width="400" height="300" fill="#e5e7eb" />
-                      <circle cx="345" cy="60" r="12" fill="#d1d5db" />
-                      <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
-                    </svg>
-                  </div>
-                </div>
+              <div className="md:hidden flex justify-center mt-4 gap-3">
+                <Image
+                  src="/landing-img.jpg"
+                  alt="Volunteers donating clothes"
+                  width={340}
+                  height={340}
+                  className="md:hidden flex justify-center aspect-auto rounded-md" 
+                />
               </div>
             </div>
 
-            {/* web right image ( */}
             <div className="hidden md:flex justify-end">
-              <div className="w-[420px] max-w-full rounded-md border-[6px] border-[#D3E6F2] bg-white shadow p-2">
-                <div className="aspect-[4/3] w-full">
-                  <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
-                    <rect width="400" height="300" fill="#e5e7eb" />
-                    <circle cx="345" cy="60" r="12" fill="#d1d5db" />
-                    <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
-                  </svg>
+              <div className="">
+                <div className="w-fit">
+                <Image
+                    src="/landing-img.jpg"
+                    alt="Volunteers donating clothes"
+                    width={520}
+                    height={520}
+                    className="w-fill rounded-md" 
+                /> 
                 </div>
               </div>
             </div>
@@ -68,14 +55,11 @@ export default function App() {
         </div>
       </section>
 
-      {/* SECTION 2: IMAGE + MISSION */}
-      <section id="mission" className="bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-          {/* image left, mission right). Mobile*/}
+      <section id="mission" className="bg-white">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-14">
           <div className="md:grid md:grid-cols-2 md:gap-10 md:items-start">
-            {/*mobile */}
             <div className="order-1 md:order-2">
-              <div className="bg-[#4B6378] text-white rounded-[22px] p-6 sm:p-8 shadow-lg max-w-[560px] mx-auto">
+              <div className="bg-[#4B6378] text-white rounded-3xl p-6 sm:p-8 shadow-lg max-w-[560px] mx-auto">
                 <h2 className="text-center text-base sm:text-lg md:text-2xl font-semibold">
                   The SustainWear Mission
                 </h2>
@@ -86,30 +70,50 @@ export default function App() {
                 </p>
               </div>
             </div>
-
-            {/* one mob one web */}
-            <div className="order-2 md:order-1 mt-6 md:mt-0">
-              <div className="max-w-[360px] md:max-w-[440px] mx-auto rounded-md border-[6px] border-gray-300 bg-white shadow p-2">
-                <div className="aspect-[4/3] w-full">
-                  {/* need replacing */}
-                  <svg viewBox="0 0 400 300" className="w-full h-full" aria-hidden="true">
-                    <rect width="400" height="300" fill="#e5e7eb" />
-                    <circle cx="345" cy="60" r="12" fill="#d1d5db" />
-                    <polygon points="60,220 170,140 240,200 300,160 360,230 40,230" fill="#cfd4da" />
-                  </svg>
-                </div>
-              </div>
+            <div className="order-2 md:order-1 mt-6 md:mt-0 flex justify-center">
+              <Image
+                src="/landing-img1.jpg"
+                alt="Staff managing donations"
+                width={360}
+                height={360}
+                className="rounded-md"
+              />
             </div>
           </div>
         </div>
       </section>
+      <section className="bg-orange py-5">
+        <h2 className="text-center text-2xl font-semibold text-white">How SustainWear Works</h2>
+        <div className="md:flex md:justify-center md:items-center md:mx-2 ">
+          <div className="bg-navy rounded-3xl p-5 m-2 w-fit items-center space-y-2 lg:w-100">
+            <div className="bg-green-200 rounded-full flex w-fit p-3 mx-auto">
+              <Shirt size={60} className="text-green" />
+            </div>
+            <h3 className="text-white text-center font-semibold text-xl">Donate Clothes</h3>
+            <p className="text-white text-center">Log and track your clothing donations through our easy-to-use platform.</p>
+          </div>
+          <div className="bg-navy rounded-3xl p-5 m-2 w-fit items-center space-y-2 lg:w-100">
+            <div className="bg-green-200 rounded-full flex w-fit p-3 mx-auto">
+              <Recycle size={60} className="text-green" />
+            </div>
+            <h3 className="text-white text-center font-semibold text-xl">Track Impact</h3>
+            <p className="text-white text-center">See your environmental impact through metrics like CO₂ saved and landfill reduction.</p>
+          </div>
+          <div className="bg-navy rounded-3xl p-5 m-2 w-fit items-center space-y-2 lg:w-100">
+            <div className="bg-green-200 rounded-full flex w-fit p-3 mx-auto">
+              <Heart size={60} className="text-green" />
+            </div>
+            <h3 className="text-white text-center font-semibold text-xl">Track Impact</h3>
+            <p className="text-text-dark">Your donations directly help those in need through our network of charity partners.</p>
+          </div>
+        </div>
+      </section>
 
-      {/*footer*/}
       <footer className="bg-emerald-600 text-white text-center py-6">
         <p className="text-sm font-medium">
           © {new Date().getFullYear()} SustainWear — Promoting Sustainable Fashion
         </p>
       </footer>
-    </>
+    </div>
   );
 }
