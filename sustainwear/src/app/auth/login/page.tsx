@@ -59,9 +59,9 @@ export default function LoginPage() {
 
 
     return (
-        <div className="flex justify-between bg-orange">
-            <div className="w-2/3 h-screen flex justify-center items-center">
-                <div className="bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
+        <div className="flex justify-between bg-orange h-screen">
+            <div className="md:w-2/3 flex justify-center items-center">
+                <div className="mx-5  bg-navy p-6 rounded-4xl gap-y-4 flex flex-col justify-center text-center">
                     <h1 className="text-green text-5xl">Sign In</h1>
 
                     <Form action="submit" onSubmit={handleSubmit} className="gap-y-3 flex flex-col">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                             <div className="text-alert text-m">{error}</div>
                         )}
 
-                        <button type="submit" className="bg-green text-white text-2xl rounded-xl p-2">
+                        <button type="submit" className="bg-green text-white text-2xl rounded-xl p-2 active:bg-green-500 active:transition">
                             Sign In
                         </button>
                     </Form>
@@ -94,17 +94,17 @@ export default function LoginPage() {
                     </p>
                 </div>
             </div>
-            <div className="absolute right-0">
-                <div className="">
-                    <div className="h-screen w-1/24 bg-orange absolute rounded-r-4xl"></div>
-                    <Image
-                        src="/login-img.png"
-                        alt="Young man at a garage sale"
-                        width={2000}
-                        height={1000}
-                        className="object-cover w-auto h-screen"
-                    /> 
-                </div>
+            
+            <div className="hidden md:flex relative w-1/3 h-full"> 
+                <div className="h-full w-1/24 bg-orange absolute rounded-r-4xl z-10"/> 
+                
+                <Image
+                    src="/login-img.png"
+                    alt="Young man at a garage sale"
+                    priority 
+                    fill
+                    className="object-cover" 
+                /> 
             </div>
         </div>
     );

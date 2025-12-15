@@ -74,7 +74,7 @@ model Donation {
 model DonationItem {
   itemId         Int           @id @default(autoincrement())
   photoUrl       String
-  description    String?
+  description    String
   status         String
   donationId     Int
   donation       Donation      @relation(fields: [donationId], references: [donationId])
@@ -82,8 +82,8 @@ model DonationItem {
   category       Category      @relation(fields: [categoryId], references: [categoryId])
   conditionId    Int
   condition      Condition     @relation(fields: [conditionId], references: [conditionId])
-  sizeId         Int?
-  size           Size?         @relation(fields: [sizeId], references: [sizeId])
+  sizeId         Int
+  size           Size         @relation(fields: [sizeId], references: [sizeId])
   genderId       Int
   gender         Gender        @relation(fields: [genderId], references: [genderId])
   distributionId Int?
@@ -189,10 +189,3 @@ enum DonationStatus {
   rejected  @map("rejected")
 }
 
-enum DistStatus {
-  Preparing
-  Ready
-  Dispatched
-  Delivered
-  Cancelled
-}

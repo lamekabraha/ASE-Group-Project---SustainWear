@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import prisma from "../../../../lib/prisma";
+import prisma from "../../../lib/prisma";
 
 
 export default async function Co2Saved() {

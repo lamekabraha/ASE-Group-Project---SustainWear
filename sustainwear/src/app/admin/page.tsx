@@ -5,7 +5,6 @@ import { Home, PlusCircle, History, Leaf, User } from 'lucide-react';
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
-
 type DashboardData = {
   totalInventory: number;
   pendingCount: number;
@@ -16,7 +15,7 @@ export default function StaffHomePage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const session =  getServerSession(authOptions)
 
-  const firstName = session?.user?.firstName;
+  const firstName = session?.user?.firstName;list
 
   useEffect(() => {
     async function load() {

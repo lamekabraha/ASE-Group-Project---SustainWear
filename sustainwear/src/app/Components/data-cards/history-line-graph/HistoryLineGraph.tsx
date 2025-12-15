@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import prisma from "../../../../../lib/prisma";
+import prisma from "../../../../lib/prisma";
 import { format, parseISO } from 'date-fns';
 import HistoryLineGraphClient from "@/app/Components/data-cards/history-line-graph/HistoryLineGraphClient";
 
