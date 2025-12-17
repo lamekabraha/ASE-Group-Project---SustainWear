@@ -104,7 +104,7 @@ export default function App() {
               <Heart size={60} className="text-green" />
             </div>
             <h3 className="text-white text-center font-semibold text-xl">Track Impact</h3>
-            <p className="text-text-dark">Your donations directly help those in need through our network of charity partners.</p>
+            <p className="text-white">Your donations directly help those in need through our network of charity partners.</p>
           </div>
         </div>
       </section>

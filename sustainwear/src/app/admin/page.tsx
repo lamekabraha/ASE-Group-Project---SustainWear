@@ -35,7 +35,7 @@ interface KpiCardProps {
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({ label, value, icon, color }) => (
-  <div className="col-span-1 md:col-span-4 border-2 border-[#BFE085] rounded-2xl p-5 flex items-center gap-4 bg-white">
+  <div className="col-span-1 md:col-span-4 border-3 border-[#BFE085] rounded-2xl p-5 flex items-center gap-4 bg-white">
     <div className={`p-3 rounded-full ${color}`}>{icon}</div>
     <div>
       <p className="text-sm text-gray-500 font-medium uppercase">{label}</p>
@@ -114,7 +114,7 @@ export default function AdminHomePage() {
         <h3 className="text-[28px] font-semibold mb-2.5">Analytics</h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="col-span-1 lg:col-span-7 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+          <div className="col-span-1 lg:col-span-7 border-3 border-[#BFE085] rounded-2xl p-5 bg-white">
             <h4 className="text-xl font-bold mb-4">Monthly Activity (kg)</h4>
             <div className="h-[300px] w-full">
               <ResponsiveContainer minHeight={0} minWidth={0}>
@@ -168,7 +168,7 @@ export default function AdminHomePage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="col-span-1 lg:col-span-5 border-2 border-[#BFE085] rounded-2xl p-5 bg-white">
+          <div className="col-span-1 lg:col-span-5 border-3 border-[#BFE085] rounded-2xl p-5 bg-white">
             <h4 className="text-xl font-bold mb-4">Inventory Distribution</h4>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">

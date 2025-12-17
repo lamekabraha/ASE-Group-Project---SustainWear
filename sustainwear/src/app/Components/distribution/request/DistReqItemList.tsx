@@ -39,7 +39,7 @@ export default function DistributionItemList({items, selectedItems, onToggle, fi
                         {items.length === 0 ? (
                             <tr><td colSpan={7} className='px-4 py-4 text-center text-gray'>Can't find any items that match your filters.</td></tr>
                         ) : items.map((item) => (
-                            <tr key={item.itemId} className='hover:bg-gray cursor-pointer' onClick={() => onToggle(Number(item.itemId))}>
+                            <tr key={item.itemId} className='hover:bg-green cursor-pointer' onClick={() => onToggle(Number(item.itemId))}>
                                 <td className="px-4 py-2">
                                     <input type="checkbox" className="rounded border-gray text-navy focus:ring-navy" checked={selectedItems.includes(Number(item.itemId))} onChange={() => onToggle(Number(item.itemId))} />
                                 </td>
@@ -63,7 +63,7 @@ export default function DistributionItemList({items, selectedItems, onToggle, fi
                     </tbody>
                 </table>
             </div>
-            <div className="bg-gray px-4 py-2 text-xs text-white border-t border-gray flex justify-between">
+            <div className="bg-green px-4 py-2 text-xs  border-t border-gray flex justify-between">
                 <p>{items.length} items found</p>
                 <p>{selectedItems.length} selected</p> 
             </div>

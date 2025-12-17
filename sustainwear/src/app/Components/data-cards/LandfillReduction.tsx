@@ -21,7 +21,7 @@ export default async function LandfillReduction() {
   }, 0);
 
   return (
-    <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">
+    <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-7">
       <Image
         src="/icons/landfill-icon.png"
         alt="weight icon"

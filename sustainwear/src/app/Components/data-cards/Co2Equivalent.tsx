@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Co2Equivalent() {
     return(
-        <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-4">
+        <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-4">
         <Image
                 src="/icons/co2-icon.png"
                 alt="CO2 icon"

@@ -13,18 +13,11 @@
   --color-orange: #F59A4E;
   --color-navy: #4E657D;
   --color-green: #B3E06C;
-  --color-darkGreen: #59A52C;
   --color-white: #FAFAFA;
   --color-gray: #444444;
   --color-alert: #fb2c36;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 
 body {
   background: var(--background);

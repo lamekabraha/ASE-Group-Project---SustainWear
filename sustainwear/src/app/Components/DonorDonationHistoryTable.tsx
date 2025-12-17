@@ -29,7 +29,7 @@ export default async function DonorDonationHistoryTable() {
   });
 
   return (
-    <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">
+    <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-7">
       <table className="min-w-full table-fixed">
         <thead className="bg-gray-50">
           <tr className="text-left text-sm font-semibold text-gray-700">

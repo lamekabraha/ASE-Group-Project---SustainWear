@@ -44,7 +44,7 @@ export default function ReportsPage() {
         
         {/* LEFT COLUMN: FILTERS */}
         <div className="lg:col-span-3 space-y-6">
-          <button className="flex items-center justify-center w-full py-2 border-2 border-gray-300 rounded-lg text-gray-600 font-semibold hover:bg-gray-50">
+          <button className="flex items-center justify-center w-full py-2 border-3 border-gray-300 rounded-lg text-gray-600 font-semibold hover:bg-gray-50">
             <Filter className="w-4 h-4 mr-2" /> Filter
           </button>
 
@@ -106,7 +106,7 @@ export default function ReportsPage() {
             </div>
             
             {/* The CO2 Badge from your design */}
-            <div className="mt-4 md:mt-0 md:ml-6 flex flex-col items-center justify-center p-6 border-2 border-green-400 rounded-xl bg-green-50">
+            <div className="mt-4 md:mt-0 md:ml-6 flex flex-col items-center justify-center p-6 border-3 border-green-400 rounded-xl bg-green-50">
               <div className="flex items-center text-green-600 mb-2">
                 <Cloud className="w-8 h-8 mr-2 fill-current" />
                 <span className="font-bold text-lg">CO2 Saving:</span>

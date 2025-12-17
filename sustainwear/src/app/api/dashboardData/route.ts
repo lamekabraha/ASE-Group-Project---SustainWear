@@ -97,7 +97,7 @@ async function getMonthlyActivity() {
         return date.getMonth() === iterMonth && date.getFullYear() === iterYear;
       })
       .reduce((acc, d) => {
-         return acc + d.items.reduce((sum, item) => sum + (Number(item.category.avgWeight) || 0), 0);
+         return acc + d.items.reduce((sum, item) => sum + (Number(item.category.avgWeight) || 0), 0); // Assuming 'Items' is the correct property name for distribution items
       }, 0);
 
     chartData.push({

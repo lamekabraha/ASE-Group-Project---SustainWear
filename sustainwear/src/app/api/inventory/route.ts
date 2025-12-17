@@ -21,6 +21,6 @@ export async function GET() {
     return NextResponse.json(
       { error: "Failed to fetch inventory" },
       { status: 500 }
-    );
+    ), NextResponse.json(error);
   }
 }
