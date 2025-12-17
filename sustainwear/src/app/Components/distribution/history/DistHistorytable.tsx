@@ -60,7 +60,7 @@ export default async function DistributionHistoryTable() {
     });
 
     return (
-        <div className="border-2 border-green-500 rounded-2xl p-5 flex gap-4 col-span-7">
+        <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-7">
             <div className="w-full">
                 <table className="min-w-full table-fixed">
                     <tbody>
@@ -72,18 +72,18 @@ export default async function DistributionHistoryTable() {
                             </tr>
                         ) : (
                             formattedData.map((row) => (
-                                <tr key={row.distributionId} className="grid grid-cols-2 h-fit">
-                                    <div className="grid grid-rows-4 gap-0.5 flex justify-start items-center">
-                                        <td className="px-6 py-1 font-semibold text-gray-800 text-xl">
+                                <tr key={row.distributionId} className="grid grid-cols-2 h-fit hover:bg-gray-100">
+                                    <td className="grid grid-rows-4 gap-0.5 justify-start items-center">
+                                        <p className="px-6 py-1 font-semibold text-gray-800 text-xl">
                                             {row.charityName}
-                                        </td>
-                                        <td className="px-6 py-1 text-gray-600">
+                                        </p>
+                                        <p className="px-6 py-1 text-gray-600">
                                             {new Date(row.date).toLocaleDateString()} • {row.staffName} 
-                                        </td>
-                                        <td className="px-6 py-1 text-gray-600">
+                                        </p>
+                                        <p className="px-6 py-1 text-gray-600">
                                             {row.numItems} Items • {row.totalWeight} Kg • {row.categoryCount} Types
-                                        </td>
-                                    </div>
+                                        </p>
+                                    </td>
                                     <td className="px-6 flex justify-end items-center">
                                         <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold uppercase border border-green-200">
                                             {row.status}

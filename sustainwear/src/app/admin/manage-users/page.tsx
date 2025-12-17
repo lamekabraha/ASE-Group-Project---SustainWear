@@ -95,7 +95,7 @@ export default async function ManageUsersPage() {
             </div>
             <div>
                 <h2 className="text-2xl font-bold mb-4 text-[#2B2B2B]">All Users</h2>
-                <div className="border-2 border-[#BFE085] rounded-[22px] p-5 bg-white shadow-sm">
+                <div className="border-3 border-[#BFE085] rounded-[22px] p-5 bg-white shadow-sm">
                     <UsersTable initialUsers={users} />
                 </div>
             </div>

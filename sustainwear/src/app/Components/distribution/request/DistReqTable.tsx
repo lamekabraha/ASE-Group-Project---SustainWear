@@ -18,7 +18,7 @@ export default function DistributionReqTable({request, filters, items}: {request
     const [requestModal, setRequestModal] = useState<DistributionData | null>(null);
     return(
         <div>
-            <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-7">
+            <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-7">
                 <table className="min-w-full table-fixed">
                     <thead className="bg-gray-50">
                         <tr className="text-left text-sm font-semibold text-gray-700">
@@ -40,7 +40,7 @@ export default function DistributionReqTable({request, filters, items}: {request
                                         <td className="px-6 py-3">{new Date(row.date).toLocaleDateString()}</td>
                                         <td className="px-6 py-3">{row.charity?.charityName}</td>
                                         <td className="px-6 py-3">{row.notes}</td>
-                                        <td className="px-6 py-3"><button type="button" onClick={() => setRequestModal(row)} className="border-2 border-navy bg-navy text-white rounded px-2 py-0.5">Action</button></td> 
+                                        <td className="px-6 py-3"><button type="button" onClick={() => setRequestModal(row)} className="border-3 border-navy bg-navy text-white rounded px-2 py-0.5">Action</button></td> 
 
                                     </tr>
                                 )

@@ -21,7 +21,7 @@ const COLORS = [
 
 export default function PieChartClient({data}: {data:ChartData[]}) {
   return (
-    <div className="border-2 border-green rounded-2xl p-5 gap-4 col-span-6">
+    <div className="border-3 border-green rounded-2xl p-5 gap-4 col-span-6">
       <h1 className="text-2xl font-semibold mb-4 text-center">Donations by Category</h1>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>

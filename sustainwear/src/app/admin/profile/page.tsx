@@ -46,7 +46,7 @@ export default function MyProfilePage() {
                 <h1 className="text-3xl font-semibold mb-8">My Profile</h1>
 
                 <div 
-                    className="max-w-md mx-auto p-8 rounded-lg border-2" 
+                    className="max-w-md mx-auto p-8 rounded-lg border-3" 
                     style={{
                         backgroundColor: 'white',
                         borderColor: '#A5D6A7'

@@ -63,9 +63,9 @@ export default function Modal({isOpen, onClose, data, filters, items}: ModalProp
 	const filteredItems = items.filter(item => {
 		return (
 			(selectedCategories.length === 0 || selectedCategories.includes(item.categoryId)) &&
-			/*(selectedSizes.length === 0 || selectedSizes.includes(item.sizeId)) &&*/
-			(selectedGenders.length === 0 || selectedGenders.includes(item.genderId)) &&
-			(selectedConditions.length === 0 || selectedConditions.includes(item.conditionId))
+			(selectedSizes.length === 0 || (item.sizeId !== null && selectedSizes.includes(item.sizeId))) &&
+			(selectedGenders.length === 0 || (item.genderId !== null && selectedGenders.includes(item.genderId))) &&
+			(selectedConditions.length === 0 || (item.conditionId !== null && selectedConditions.includes(item.conditionId)))
 		)
 	})
 
@@ -113,13 +113,13 @@ export default function Modal({isOpen, onClose, data, filters, items}: ModalProp
 
 	return(
 		<div className="fixed inset-0 z-100 flex items-center justify-center bg-navy/30 backdrop-blur p-4">
-			<div className="bg-white rounded-2xl shadow-xl w-3xl max-h-5/6 overflow-auto animate border-2 border-green">
-				<div className="bg-white -skew-x-6 py-4 px-6 border-b border-white flex justify-between items-center">
+			<div className="bg-white rounded-2xl shadow-xl w-3xl max-h-5/6 overflow-auto animate border-3 border-green">
+				<div className="bg-white py-4 px-6 border-b border-white flex justify-between items-center">
 					<div>
 						<h2 className="text-xl font-bold text-navy">Distribution Details</h2>
 						<p className="text-sm text-navy">Batch #{data.distributionId}</p>
 					</div>
-					<button onClick={onClose} className="b-2 hover:bg-white rounded-full transition-colors text-navy">
+					<button onClick={onClose} className=" rounded-full transition-colors text-navy">
 						<X size={20}/>
 					</button>
 				</div>

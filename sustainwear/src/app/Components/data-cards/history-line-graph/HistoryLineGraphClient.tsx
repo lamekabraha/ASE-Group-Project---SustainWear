@@ -13,7 +13,7 @@ interface HistoryLineGraphClientProps {
 
 export default function HistoryLineGraphClient({data}: HistoryLineGraphClientProps){
     return (
-        <div className="border-2 border-green rounded-2xl p-5 gap-4 col-span-6">
+        <div className="border-3 border-green rounded-2xl p-5 gap-4 col-span-6">
           <h1 className="text-2xl font-semibold mb-4 text-center">Donation History</h1>
             <ResponsiveContainer minHeight={0} minWidth={0}>
                 <LineChart

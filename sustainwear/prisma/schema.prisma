@@ -32,11 +32,10 @@ model Charity {
   createdAt         DateTime @default(now())
   updatedAt         DateTime? @updatedAt
   charityTeleNumber String   @map("charityTeleNumber")
-  charityRegNumber  String?  @map("charityRegNumber")
+  charityRegNumber  String  @map("charityRegNumber")
 
   charityAddress CharityAddress[]
   Distribution   Distribution[]
-  Inventory      Inventory[]    // <--- THIS WAS THE MISSING LINE
 
   @@map("charities")
 }
@@ -155,8 +154,6 @@ model Inventory {
   genderId Int?
   gender   Gender? @relation(fields: [genderId], references: [genderId])
 
-  charityId Int?     @map("charityCharityId")
-  charity   Charity? @relation(fields: [charityId], references: [charityId])
 
   @@unique([categoryId, conditionId, sizeId, genderId])
   @@map("inventories")
@@ -169,9 +166,9 @@ model Distribution {
   notes          String?
   charityId      Int
   charity        Charity        @relation(fields: [charityId], references: [charityId])
-  staffId        Int
-  staff          User           @relation(fields: [staffId], references: [userId])
-  Items          DonationItem[]
+  staffId        Int?
+  staff          User?           @relation(fields: [staffId], references: [userId])
+  items          DonationItem[]
 
   @@index([charityId])
   @@index([staffId])
@@ -181,6 +178,8 @@ model Distribution {
 enum DonationStatus {
   PENDING   @map("PENDING")
   pending   @map("pending")
+  APPROVED  @map("APPROVED")
+  approved  @map("approved")
   SCHEDULED @map("SCHEDULED")
   scheduled @map("scheduled")
   COLLECTED @map("COLLECTED")
@@ -190,9 +189,11 @@ enum DonationStatus {
 }
 
 enum DistStatus {
+  Request
   Preparing
   Pending
   Shipped
   Delivered
   Completed
+  InTransit
 }
