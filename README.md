@@ -112,13 +112,13 @@ A role-based system aiming to promote sustainability by creating a streamlined p
 - Staff
 ```bash
     email: aisha.pattel1945@outlook.com
-    password: Pass123
+    password: Pass123!
 ```
 
 - Admin
 ```bash
     email: carlos.rodriguiz1973@outlook.com
-    password: Pass123
+    password: Pass123!
 ```
 # Contributors
 
