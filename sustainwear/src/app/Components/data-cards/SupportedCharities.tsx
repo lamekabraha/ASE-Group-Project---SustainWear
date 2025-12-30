@@ -9,12 +9,14 @@ export default async function SupportedCharities() {
     const userId = session?.user?.id;
     const uniqueCharities = await prisma.distribution.findMany({
         where: {
-            Items: {
+            items: {
                 some: {
                     donation: {
                         donorId: userId
                     }
-                }
+                },
+
+
             }
         },
         select: {charityId: true},

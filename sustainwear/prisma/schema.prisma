@@ -171,7 +171,7 @@ model Distribution {
   charity        Charity        @relation(fields: [charityId], references: [charityId])
   staffId        Int
   staff          User           @relation(fields: [staffId], references: [userId])
-  Items          DonationItem[]
+  items          DonationItem[]
 
   @@index([charityId])
   @@index([staffId])
@@ -189,3 +189,10 @@ enum DonationStatus {
   rejected  @map("rejected")
 }
 
+enum DistStatus {
+  Preparing
+  Pending
+  Shipped
+  Delivered
+  Completed
+}
