@@ -193,7 +193,6 @@ export default function InventoryPage() {
           Filter
         </button>
       </div>
-
       <div className="grid grid-cols-3 gap-6 mb-6">
         <div className="flex flex-col">
           <label className="text-gray-600 text-sm mb-1">Category</label>

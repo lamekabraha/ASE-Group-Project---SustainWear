@@ -36,6 +36,7 @@ model Charity {
 
   charityAddress CharityAddress[]
   Distribution   Distribution[]
+  Inventory      Inventory[]    
 
   @@map("charities")
 }
@@ -166,12 +167,15 @@ model Distribution {
   notes          String?
   charityId      Int
   charity        Charity        @relation(fields: [charityId], references: [charityId])
-  staffId        Int?
-  staff          User?           @relation(fields: [staffId], references: [userId])
+  staffId        Int
+  staff          User           @relation(fields: [staffId], references: [userId])
+  donorId        Int
+  donor          User           @relation(fields: [donorId], references: [userId])
   items          DonationItem[]
 
   @@index([charityId])
   @@index([staffId])
+  @@index([donorId])
   @@map("distributions")
 }
 

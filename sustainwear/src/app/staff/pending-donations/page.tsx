@@ -7,10 +7,17 @@ export default async function StaffPendingDonations() {
   const session = await getServerSession(authOptions);
 
   const pendingDonations = await prisma.donation.findMany({
-    where: { status: "Pending" }, 
+    where: { status: "Pending" },
     include: {
       donor: true,
-      items: true,
+      items: {
+        include: {
+          category: true,  
+          size: true,      
+          gender: true,    
+          condition: true,
+        }
+      },
     },
     orderBy: { donationDate: "asc" },
   });

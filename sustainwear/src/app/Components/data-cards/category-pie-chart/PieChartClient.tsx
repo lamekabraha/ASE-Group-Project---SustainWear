@@ -7,16 +7,16 @@ interface ChartData {
 }
 
 const COLORS = [
-  '#0088FE', // Blue
-  '#00C49F', // Teal
-  '#FFBB28', // Amber
-  '#FF8042', // Orange
-  '#AF19FF', // Purple
-  '#FF4560', // Red
-  '#775DD0', // Indigo
-  '#4CAF50', // Green
-  '#F9C80E', // Yellow
-  '#00B8D9'  // Cyan
+  '#0088FE',
+  '#00C49F',
+  '#FFBB28',
+  '#FF8042',
+  '#AF19FF',
+  '#FF4560',
+  '#775DD0',
+  '#4CAF50',
+  '#F9C80E',
+  '#00B8D9' 
 ];
 
 export default function PieChartClient({data}: {data:ChartData[]}) {

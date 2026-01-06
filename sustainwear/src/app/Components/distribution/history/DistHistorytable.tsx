@@ -49,13 +49,13 @@ export default async function DistributionHistoryTable() {
         return {
             distributionId: dist.distributionId,
             charityName: dist.charity?.charityName || 'Unknown',
-            date: dist.date, // Keep as Date object or serialize if passing to client component
+            date: dist.date, 
             staffId: dist.staffId,
             staffName: dist.staff ? `${dist.staff.firstName.charAt(0).toUpperCase() + dist.staff.firstName.slice(1)} ${dist.staff.lastName.charAt(0).toUpperCase() + dist.staff.lastName.slice(1)}` : 'Unknown',
             numItems,
             totalWeight: totalWeight.toFixed(2),
             categoryCount: uniqueCategories,
-            status: dist.status // Assuming a default or fetched status
+            status: dist.status 
         };
     });
 

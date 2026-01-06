@@ -14,7 +14,9 @@ export default async function SupportedCharities() {
                     donation: {
                         donorId: userId
                     }
-                }
+                },
+
+
             }
         },
         select: {charityId: true},
