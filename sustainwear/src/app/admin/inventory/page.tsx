@@ -27,6 +27,7 @@ export default function InventoryPage() {
     genderId: 0,
   });
 
+
   const fetchCategories = async () => {
     try {
       const res = await fetch("/api/inventory/categories");

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function GET() {
@@ -26,6 +27,7 @@ export async function GET() {
     const distributions = await prisma.distribution.findMany({
       where: {
         date: { gte: sixMonthsAgo },
+        status: "Completed" 
         status: "Completed" 
       },
       include: {
@@ -66,6 +68,8 @@ export async function GET() {
     return NextResponse.json({
       totalInventory: 1200,
       pendingCount: await prisma.donation.count({ where: { status: "PENDING" }}),
+      distributedKg: 500, 
+      chartData: Array.from(monthlyData.values()) 
       distributedKg: 500, 
       chartData: Array.from(monthlyData.values()) 
     });

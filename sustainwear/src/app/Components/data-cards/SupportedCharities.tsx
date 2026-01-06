@@ -26,7 +26,7 @@ export default async function SupportedCharities() {
     const data = uniqueCharities.length;
 
     return(
-        <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-6">
+        <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-6">
             <Image
                 src="/icons/charity-icon.png"
                 alt="wight icon"

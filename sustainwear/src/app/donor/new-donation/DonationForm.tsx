@@ -196,7 +196,7 @@ export default function DonationForm({
 
     return (
         <div className="p-10 p-b-5 space-y-5 h-screen">
-            <div className="border-2 border-green rounded-2xl p-6 bg-white h-fit">
+            <div className="border-3 border-green rounded-2xl p-6 bg-white h-fit">
                 <h2 className="font-bold text-lg mb-4 text-[#333C46]">
                     {items.length === 0 ? "Add New Item" : "Edit Item"}
                 </h2>
@@ -269,7 +269,7 @@ export default function DonationForm({
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`border-2 border-dashed rounded-xl h-32 flex flex-col items-center justify-center relative transition-colors ${dragActive ? 'border-green-500 bg-green-50' : 'border-[#BFE085] hover:bg-gray-50'}`}
+                        className={`border-3 border-dashed rounded-xl h-32 flex flex-col items-center justify-center relative transition-colors ${dragActive ? 'border-green-500 bg-green-50' : 'border-[#BFE085] hover:bg-gray-50'}`}
                     >
                         <input 
                             type="file" 
@@ -301,10 +301,10 @@ export default function DonationForm({
 
             <div className="space-y-4">
                 {items.length === 0 ? (
-                    <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">No items added yet.</div>
+                    <div className="text-center p-10 border-3 border-dashed rounded-xl text-gray-400">No items added yet.</div>
                 ) : (
                     items.map((item) => (
-                        <div key={item.tempId} className="border-2 border-[#BFE085] rounded-[22px] bg-white p-4 flex gap-4 items-center shadow-sm">
+                        <div key={item.tempId} className="border-3 border-[#BFE085] rounded-[22px] bg-white p-4 flex gap-4 items-center shadow-sm">
                             <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
                                 {item.imageUrl ? <img src={item.imageUrl} alt={item.description} className="w-full h-full object-cover" /> : <span className="text-xs">No Img</span>}
                             </div>

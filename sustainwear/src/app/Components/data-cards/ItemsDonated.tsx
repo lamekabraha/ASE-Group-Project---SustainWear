@@ -18,7 +18,7 @@ export default async function ItemsDonated() {
   });
 
   return (
-    <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-5">
+    <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-5">
       <Image
         src="/icons/tshirt-icon.png"
         alt="tshirt icon"

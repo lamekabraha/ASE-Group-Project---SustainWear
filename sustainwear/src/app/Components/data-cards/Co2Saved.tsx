@@ -25,7 +25,7 @@ export default async function Co2Saved() {
     }, 0);  
 
     return (
-        <div className="border-2 border-green rounded-2xl p-5 flex gap-4 col-span-6">
+        <div className="border-3 border-green rounded-2xl p-5 flex gap-4 col-span-6">
         <Image
                 src="/icons/co2-icon.png"
                 alt="co2 icon"

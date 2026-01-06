@@ -89,7 +89,7 @@ export default function InventoryPage() {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     fetchInventory();
     fetchCategories();
     fetchSizes();

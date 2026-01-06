@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "../../../lib/prisma";
-import Link from "next/link";
 import DistributionReqTable from "@/app/Components/distribution/request/DistReqTable";
 import DistributionHistoryTable from "@/app/Components/distribution/history/DistHistorytable";
 
@@ -40,8 +39,9 @@ export default async function Distribution(){
 
     const InventoryItem = await prisma.donationItem.findMany({
         where: {
-            distributionId: null,
-            status: "Approved"
+            status: {
+                in: ["Approved", "Collected"]
+            }
         },
         select: {
             itemId: true,
