@@ -11,7 +11,6 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // State for dropdown options
   const [categories, setCategories] = useState<any[]>([]);
   const [conditions, setConditions] = useState<any[]>([]);
   const [sizes, setSizes] = useState<any[]>([]);
@@ -27,8 +26,6 @@ export default function InventoryPage() {
     sizeId: null as number | null,
     genderId: 0,
   });
-
-  // --- FETCH FUNCTIONS ---
 
   const fetchCategories = async () => {
     try {
@@ -92,7 +89,6 @@ export default function InventoryPage() {
     }
   };
 
-  // Load all data on mount
   useEffect(() => {
     fetchInventory();
     fetchCategories();
@@ -282,7 +278,6 @@ export default function InventoryPage() {
             ) : (
               filteredInventory.map((item: any) => (
                 <tr key={item.inventoryId} className="border-t">
-                  {/* Category Column */}
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select
@@ -306,7 +301,6 @@ export default function InventoryPage() {
                     )}
                   </td>
 
-                  {/* Size Column */}
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select
@@ -332,7 +326,6 @@ export default function InventoryPage() {
                     )}
                   </td>
 
-                  {/* Gender Column */}
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select
@@ -356,7 +349,6 @@ export default function InventoryPage() {
                     )}
                   </td>
 
-                  {/* Condition Column */}
                   <td className="p-4">
                     {editingId === item.inventoryId ? (
                       <select

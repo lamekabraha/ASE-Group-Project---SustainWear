@@ -16,7 +16,6 @@ import {
 } from "recharts";
 import { Weight, Check, Truck } from "lucide-react";
 
-// ---------------- TYPES ----------------
 type DashboardData = {
   totalInventory: number;
   pendingCount: number;

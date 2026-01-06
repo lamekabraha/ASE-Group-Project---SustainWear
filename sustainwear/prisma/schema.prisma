@@ -36,7 +36,7 @@ model Charity {
 
   charityAddress CharityAddress[]
   Distribution   Distribution[]
-  Inventory      Inventory[]    // <--- THIS WAS THE MISSING LINE
+  Inventory      Inventory[]    
 
   @@map("charities")
 }
@@ -171,10 +171,13 @@ model Distribution {
   charity        Charity        @relation(fields: [charityId], references: [charityId])
   staffId        Int
   staff          User           @relation(fields: [staffId], references: [userId])
+  donorId        Int
+  donor          User           @relation(fields: [donorId], references: [userId])
   items          DonationItem[]
 
   @@index([charityId])
   @@index([staffId])
+  @@index([donorId])
   @@map("distributions")
 }
 

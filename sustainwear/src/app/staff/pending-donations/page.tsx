@@ -1,15 +1,23 @@
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import ReviewDonationButton from "@/app/Components/ReviewDonationButton";
 
 export default async function StaffPendingDonations() {
   const session = await getServerSession(authOptions);
 
   const pendingDonations = await prisma.donation.findMany({
-    where: { status: "Pending" }, 
+    where: { status: "Pending" },
     include: {
       donor: true,
-      items: true,
+      items: {
+        include: {
+          category: true,  
+          size: true,      
+          gender: true,    
+          condition: true,
+        }
+      },
     },
     orderBy: { donationDate: "asc" },
   });
@@ -20,7 +28,7 @@ export default async function StaffPendingDonations() {
         <h1 className="text-3xl font-bold text-gray-900">Pending Donations</h1>
         <span className="bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 rounded-full">
           {pendingDonations.length} To Review
-      </span>
+        </span>
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
@@ -37,7 +45,7 @@ export default async function StaffPendingDonations() {
           <tbody className="bg-white divide-y divide-gray-200">
             {pendingDonations.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-gray-500">
+                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                   No pending donations found.
                 </td>
               </tr>
@@ -56,7 +64,6 @@ export default async function StaffPendingDonations() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {donation.items.length} Items
                   </td>
-                  {}
                   
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2.5 py-0.5 rounded border border-yellow-200">
@@ -65,10 +72,7 @@ export default async function StaffPendingDonations() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {}
-                    <button className="text-blue-600 hover:text-blue-900 text-sm font-semibold">
-                        Review Details
-                    </button>
-                    {}
+                    <ReviewDonationButton donation={donation} />
                   </td>
                 </tr>
               ))

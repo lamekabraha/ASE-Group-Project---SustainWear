@@ -7,7 +7,6 @@ import {
 } from 'recharts';
 import { Cloud, Download, Filter, Calendar, ChevronRight } from 'lucide-react';
 
-// --- MOCK DATA (Matches your wireframe visuals) ---
 const lineData = [
   { name: 'Jan', data1: 10, data2: 20 },
   { name: 'Feb', data1: 20, data2: 30 },
@@ -38,11 +37,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 export default function ReportsPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto bg-white min-h-screen">
-      
-      {/* HEADER */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* LEFT COLUMN: FILTERS */}
         <div className="lg:col-span-3 space-y-6">
           <button className="flex items-center justify-center w-full py-2 border-2 border-gray-300 rounded-lg text-gray-600 font-semibold hover:bg-gray-50">
             <Filter className="w-4 h-4 mr-2" /> Filter
@@ -68,11 +63,7 @@ export default function ReportsPage() {
             </button>
           </div>
         </div>
-
-        {/* RIGHT COLUMN: CHARTS */}
         <div className="lg:col-span-9 space-y-8">
-          
-          {/* 1. LINE CHART: Category Breakdown */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -90,8 +81,6 @@ export default function ReportsPage() {
                Category <br /> Breakdown
             </div>
           </div>
-
-          {/* 2. BAR CHART: CO2 Saving */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -104,8 +93,6 @@ export default function ReportsPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            
-            {/* The CO2 Badge from your design */}
             <div className="mt-4 md:mt-0 md:ml-6 flex flex-col items-center justify-center p-6 border-2 border-green-400 rounded-xl bg-green-50">
               <div className="flex items-center text-green-600 mb-2">
                 <Cloud className="w-8 h-8 mr-2 fill-current" />
@@ -114,8 +101,6 @@ export default function ReportsPage() {
               <span className="text-4xl font-extrabold text-gray-800">4 kgCO2</span>
             </div>
           </div>
-
-          {/* 3. PIE CHART: Donations Over Time */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
