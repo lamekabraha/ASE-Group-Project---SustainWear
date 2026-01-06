@@ -1,19 +1,16 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-// Forces Next.js to fetch fresh data on every request
 export const dynamic = "force-dynamic";
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    // Get Pending Donations Count
     const pendingCount = await prisma.donation.count({
       where: { status: { in: ["PENDING", "pending"] } },
     });
 
-    // Get Current Inventory Weight (Available)
     const inventoryItems = await prisma.donationItem.findMany({
       where: {
         distributionId: null,
@@ -26,7 +23,6 @@ export async function GET() {
       return sum + Number(item.category.avgWeight || 0);
     }, 0);
 
-    // Get Total Distributed Weight (All Time)
     const distributedItems = await prisma.donationItem.findMany({
       where: { distributionId: { not: null } },
       include: { category: true },
@@ -36,7 +32,6 @@ export async function GET() {
       return sum + Number(item.category.avgWeight || 0);
     }, 0);
 
-    // Generate Monthly Data
     const monthlyData = await getMonthlyActivity();
 
     return NextResponse.json({
@@ -55,7 +50,6 @@ export async function GET() {
 }
 
 async function getMonthlyActivity() {
-  // Fetch Data
   const allDonations = await prisma.donation.findMany({
     where: { status: { in: ["COLLECTED", "collected"] } },
     include: { items: { include: { category: true } } },
@@ -65,14 +59,12 @@ async function getMonthlyActivity() {
     include: { items: { include: { category: true } } },
   });
 
-  // Set Time Range: Jan 1st to Dec 31st of CURRENT YEAR
   const currentYear = new Date().getFullYear();
   const startDate = new Date(currentYear, 0, 1);
   const endDate = new Date(currentYear, 11, 31);
 
   const chartData = [];
   
-  // Iterate Month by Month
   const iterator = new Date(startDate);
 
   while (iterator <= endDate) {
@@ -80,7 +72,6 @@ async function getMonthlyActivity() {
     const iterMonth = iterator.getMonth();
     const iterYear = iterator.getFullYear();
 
-    // Calculate Donations for this specific month
     const monthlyDonations = allDonations
       .filter((d) => {
         const date = new Date(d.donationDate);
@@ -90,14 +81,13 @@ async function getMonthlyActivity() {
          return acc + d.items.reduce((sum, item) => sum + (Number(item.category.avgWeight) || 0), 0);
       }, 0);
 
-    // Calculate Distributions for this specific month
     const monthlyDistributions = allDistributions
       .filter((d) => {
         const date = new Date(d.date);
         return date.getMonth() === iterMonth && date.getFullYear() === iterYear;
       })
       .reduce((acc, d) => {
-         return acc + d.items.reduce((sum, item) => sum + (Number(item.category.avgWeight) || 0), 0); // Assuming 'Items' is the correct property name for distribution items
+         return acc + d.items.reduce((sum, item) => sum + (Number(item.category.avgWeight) || 0), 0);
       }, 0);
 
     chartData.push({
@@ -106,7 +96,6 @@ async function getMonthlyActivity() {
       distributed: Math.round(monthlyDistributions),
     });
 
-    // Move to next month
     iterator.setMonth(iterator.getMonth() + 1);
   }
 

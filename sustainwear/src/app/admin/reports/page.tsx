@@ -9,9 +9,6 @@ import { Cloud, Download, Filter, ChevronRight, ChevronDown } from 'lucide-react
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-// --- MOCK DATASETS (Different for each category) ---
-
-// DATA FOR "ALL"
 const DATA_ALL = {
   line: [
     { name: 'Jan', data1: 50, data2: 60 }, { name: 'Feb', data1: 60, data2: 70 },
@@ -28,7 +25,6 @@ const DATA_ALL = {
   ]
 };
 
-// DATA FOR "MEN"
 const DATA_MEN = {
   line: [
     { name: 'Jan', data1: 20, data2: 25 }, { name: 'Feb', data1: 25, data2: 30 },
@@ -45,7 +41,6 @@ const DATA_MEN = {
   ]
 };
 
-// DATA FOR "WOMEN"
 const DATA_WOMEN = {
   line: [
     { name: 'Jan', data1: 30, data2: 35 }, { name: 'Feb', data1: 40, data2: 50 },
@@ -62,7 +57,6 @@ const DATA_WOMEN = {
   ]
 };
 
-// DATA FOR "KIDS"
 const DATA_KIDS = {
   line: [
     { name: 'Jan', data1: 10, data2: 12 }, { name: 'Feb', data1: 12, data2: 15 },
@@ -82,16 +76,12 @@ const DATA_KIDS = {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 export default function ReportsPage() {
-  
-  // --- STATE ---
+
   const [showDateMenu, setShowDateMenu] = useState(false);
   const [showCatMenu, setShowCatMenu] = useState(false);
-  
-  // Active Filters
   const [dateFilter, setDateFilter] = useState("All");     
   const [catFilter, setCatFilter] = useState("All");       
 
-  // --- FILTERING LOGIC ---
   const getCurrentData = () => {
     let selectedSet = DATA_ALL;
     if (catFilter === "Men") selectedSet = DATA_MEN;
@@ -111,10 +101,6 @@ export default function ReportsPage() {
   };
 
   const { line: currentLineData, bar: currentBarData, pie: currentPieData } = getCurrentData();
-
-  // --- DOWNLOAD FUNCTIONS ---
-  
-  // 1. CSV Download
   const handleDownloadCSV = () => {
     const headers = ["Month", "Items In", "Items Out"];
     const rows = currentLineData.map(item => [item.name, item.data1, item.data2]);
@@ -130,7 +116,6 @@ export default function ReportsPage() {
     document.body.removeChild(link);
   };
 
-  // 2. PDF Download
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
 
@@ -164,11 +149,7 @@ export default function ReportsPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto bg-white min-h-screen">
-      
-      {/* HEADER */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* LEFT COLUMN: FILTERS */}
         <div className="lg:col-span-3 space-y-6">
           
           <button className="flex items-center justify-center w-full py-2 border-3 border-gray-300 rounded-lg text-gray-600 font-semibold bg-gray-50">
@@ -177,8 +158,6 @@ export default function ReportsPage() {
           </button>
 
           <div className="space-y-2 border-t border-b border-gray-100 py-4">
-            
-            {/* DATE RANGE FILTER */}
             <div 
               className="flex justify-between items-center p-3 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"
               onClick={() => setShowDateMenu(!showDateMenu)}
@@ -203,8 +182,6 @@ export default function ReportsPage() {
                  </button>
               </div>
             )}
-
-            {/* CATEGORY FILTER */}
             <div 
               className="flex justify-between items-center p-3 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"
               onClick={() => setShowCatMenu(!showCatMenu)}
@@ -228,8 +205,6 @@ export default function ReportsPage() {
             )}
 
           </div>
-
-          {/* DOWNLOAD BUTTONS */}
           <div className="pt-4 space-y-3">
             <button 
               onClick={handleDownloadPDF}
@@ -245,11 +220,7 @@ export default function ReportsPage() {
             </button>
           </div>
         </div>
-
-        {/* RIGHT COLUMN: CHARTS */}
         <div className="lg:col-span-9 space-y-8">
-          
-          {/* 1. LINE CHART */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -267,8 +238,6 @@ export default function ReportsPage() {
                Category <br /> Breakdown
             </div>
           </div>
-
-          {/* 2. BAR CHART */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -281,7 +250,6 @@ export default function ReportsPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            
             <div className="mt-4 md:mt-0 md:ml-6 flex flex-col items-center justify-center p-6 border-3 border-green-400 rounded-xl bg-green-50">
               <div className="flex items-center text-green-600 mb-2">
                 <Cloud className="w-8 h-8 mr-2 fill-current" />
@@ -295,8 +263,6 @@ export default function ReportsPage() {
               </span>
             </div>
           </div>
-
-          {/* 3. PIE CHART */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-center">
             <div className="flex-1 w-full h-64">
               <ResponsiveContainer width="100%" height="100%">
