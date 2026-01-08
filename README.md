@@ -97,6 +97,29 @@ A role-based system aiming to promote sustainability by creating a streamlined p
         |   |--prisma.ts        <--Prisma client instance
         |--middlewear/          <--NextAuth middlewear protection
 ```
+
+## Database Setup (Importing dump.sql)
+
+To populate your database with the necessary schema and sample data, you need to import the `newDump.sql` file included in the project directory.
+
+**Using MySQL Workbench (Recommended)**
+
+1.  **Open MySQL Workbench** and connect to your local instance.
+2.  **Create a New Schema:**
+    - Click the **Create a new schema** icon (bucket with a `+` sign) in the top toolbar.
+    - Name the schema `sustainweardb` and click **Apply**.
+3.  **Import the Data:**
+    - Go to the top menu bar and select **Server** > **Data Import**.
+    - Select **Import from Self-Contained File** and click the `...` button to browse for the `newDump.sql` file located in this project folder.
+    - Under the **Default Target Schema** dropdown, select the `sustainweardb` database you just created.
+    - Click **Start Import** at the bottom right corner of the window.
+
+**Configure Environment:**
+Once the import is complete, ensure your `.env` file matches your local database credentials:
+```env
+DATABASE_URL="mysql://root:password@localhost:3306/sustainweardb"
+
+
 ## Usage
 
 **Register:** Create a new account as a donor via ```/auth/register```
